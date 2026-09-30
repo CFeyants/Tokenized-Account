@@ -36,7 +36,7 @@ export function CardHeader({
     <div className={cn('mb-5 flex items-start justify-between gap-4', className)}>
       <div className="min-w-0">
         {eyebrow && <div className="eyebrow mb-1.5">{eyebrow}</div>}
-        <h3 className="text-[19px] leading-tight">{title}</h3>
+        <h2 className="text-[19px] leading-tight">{title}</h2>
       </div>
       {aside && <div className="shrink-0">{aside}</div>}
     </div>

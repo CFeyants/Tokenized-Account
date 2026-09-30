@@ -67,6 +67,14 @@ function Movements({ id }: { id: string }) {
         <p className="text-[13.5px] text-muted">{A.noMovements}</p>
       ) : (
         <table className="w-full text-[13px]">
+          <thead className="sr-only">
+            <tr>
+              <th>{en.hood.cols.time}</th>
+              <th>{en.hood.cols.memo}</th>
+              <th>{en.hood.cols.amount}</th>
+              <th>{en.hood.cols.finality}</th>
+            </tr>
+          </thead>
           <tbody>
             {rows.map((l) => (
               <tr key={l.id} className="border-b border-line last:border-0">
@@ -226,6 +234,15 @@ function TokenisedPage({ id }: { id: AccountId }) {
         <Card>
           <CardHeader title={A.unitsHere} aside={<LayerTag layer="new" />} />
           <table className="w-full text-[13px]">
+            <thead className="sr-only">
+              <tr>
+                <th>{en.hood.cols.unit}</th>
+                <th>{en.hood.cols.memo}</th>
+                <th>{en.hood.cols.amount}</th>
+                <th>{en.accounts.rate}</th>
+                <th>{en.hood.cols.time}</th>
+              </tr>
+            </thead>
             <tbody>
               {units.map((u) => (
                 <tr key={u.id} className="border-b border-line last:border-0">

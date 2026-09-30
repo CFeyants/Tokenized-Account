@@ -182,15 +182,11 @@ function FundColumn() {
   const queued = state.fundOrders.filter((o) => o.status === 'queued');
   return (
     <Card className="flex flex-col">
-      <CardHeader
-        title={P.fund.title}
-        aside={
-          <span className="flex gap-1.5">
-            <LayerTag layer="traditional" />
-            <LayerTag layer="new" />
-          </span>
-        }
-      />
+      <CardHeader title={P.fund.title} className="mb-3" />
+      <span className="mb-4 flex gap-1.5">
+        <LayerTag layer="traditional" />
+        <LayerTag layer="new" />
+      </span>
       <p className="text-[13.5px] leading-relaxed text-muted">{P.fund.text}</p>
       <ul className="mt-4 space-y-2 text-[12.5px]">
         <li className="flex gap-2 text-muted">

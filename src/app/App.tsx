@@ -1,15 +1,28 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { AppShell } from '@/components/layout/AppShell';
 import { Home } from '@/screens/Home';
-import { Accounts } from '@/screens/Accounts';
-import { AccountPage } from '@/screens/AccountPage';
-import { Payments } from '@/screens/Payments';
-import { Rules } from '@/screens/Rules';
-import { Placements } from '@/screens/Placements';
-import { Guarantees } from '@/screens/Guarantees';
-import { Statements } from '@/screens/Statements';
-import { About } from '@/screens/About';
+
+// Screens other than the cockpit load on demand; charts come only with the account pages.
+const Accounts = lazy(() => import('@/screens/Accounts').then((m) => ({ default: m.Accounts })));
+const AccountPage = lazy(() =>
+  import('@/screens/AccountPage').then((m) => ({ default: m.AccountPage })),
+);
+const Payments = lazy(() => import('@/screens/Payments').then((m) => ({ default: m.Payments })));
+const Rules = lazy(() => import('@/screens/Rules').then((m) => ({ default: m.Rules })));
+const Placements = lazy(() =>
+  import('@/screens/Placements').then((m) => ({ default: m.Placements })),
+);
+const Guarantees = lazy(() =>
+  import('@/screens/Guarantees').then((m) => ({ default: m.Guarantees })),
+);
+const Statements = lazy(() =>
+  import('@/screens/Statements').then((m) => ({ default: m.Statements })),
+);
+const About = lazy(() => import('@/screens/About').then((m) => ({ default: m.About })));
+
+const page = (el: React.ReactNode) => <Suspense fallback={null}>{el}</Suspense>;
 
 export function App() {
   return (
@@ -18,14 +31,14 @@ export function App() {
         <Routes>
           <Route element={<AppShell />}>
             <Route index element={<Home />} />
-            <Route path="accounts" element={<Accounts />} />
-            <Route path="accounts/:id" element={<AccountPage />} />
-            <Route path="payments" element={<Payments />} />
-            <Route path="rules" element={<Rules />} />
-            <Route path="placements" element={<Placements />} />
-            <Route path="guarantees" element={<Guarantees />} />
-            <Route path="statements" element={<Statements />} />
-            <Route path="about" element={<About />} />
+            <Route path="accounts" element={page(<Accounts />)} />
+            <Route path="accounts/:id" element={page(<AccountPage />)} />
+            <Route path="payments" element={page(<Payments />)} />
+            <Route path="rules" element={page(<Rules />)} />
+            <Route path="placements" element={page(<Placements />)} />
+            <Route path="guarantees" element={page(<Guarantees />)} />
+            <Route path="statements" element={page(<Statements />)} />
+            <Route path="about" element={page(<About />)} />
             <Route path="*" element={<Home />} />
           </Route>
         </Routes>

@@ -138,6 +138,14 @@ function Viewer() {
             <p className="mt-2 text-[13px] text-muted">{S.noEntries}</p>
           ) : (
             <table className="mt-2 w-full text-[12.5px]">
+              <thead className="sr-only">
+                <tr>
+                  <th>{en.hood.cols.time}</th>
+                  <th>{en.hood.cols.memo}</th>
+                  <th>{en.hood.cols.finality}</th>
+                  <th>{en.hood.cols.amount}</th>
+                </tr>
+              </thead>
               <tbody>
                 {entries.map((l) => (
                   <tr key={l.id} className="border-b border-line last:border-0">

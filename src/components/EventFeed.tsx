@@ -70,6 +70,14 @@ export function EventFeed({ limit = 5 }: { limit?: number }) {
                   {isOpen && (
                     <div className="mt-2 overflow-hidden rounded-xl border border-line bg-surface-2/50">
                       <table className="w-full text-[11.5px]">
+                        <thead className="sr-only">
+                          <tr>
+                            <th>{en.hood.cols.time}</th>
+                            <th>{en.hood.cols.account}</th>
+                            <th>{en.hood.cols.amount}</th>
+                            <th>{en.hood.cols.finality}</th>
+                          </tr>
+                        </thead>
                         <tbody>
                           {entries.map((l) => (
                             <tr key={l.id} className="border-b border-line last:border-0">

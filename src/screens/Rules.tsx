@@ -97,7 +97,7 @@ function RuleCard({
           </label>
         }
       />
-      <div className={cn('flex-1 transition-opacity', !enabled && 'opacity-45')}>{children}</div>
+      <div className={cn('flex-1 transition-opacity', !enabled && 'grayscale')}>{children}</div>
       <details className="group mt-4 border-t border-line pt-3">
         <summary className="flex cursor-pointer list-none items-center justify-between text-[12px] text-muted hover:text-fg">
           <span className="flex items-center gap-1.5">
@@ -309,6 +309,7 @@ export function Rules() {
           <div className="grid grid-cols-2 gap-x-6">
             <Field label={R.funding.entity}>
               <select
+                aria-label={R.funding.entity}
                 value={funding.entity}
                 onChange={(e) => setFunding({ ...funding, entity: e.target.value })}
                 className="h-9 w-full rounded-lg border border-line-strong bg-surface px-2 text-[13px]"
@@ -322,6 +323,7 @@ export function Rules() {
             </Field>
             <Field label={R.funding.hours}>
               <select
+                aria-label={R.funding.hours}
                 value={funding.hours}
                 onChange={(e) =>
                   setFunding({ ...funding, hours: e.target.value as 'any' | 'business' })
