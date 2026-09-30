@@ -14,7 +14,7 @@ const shots = [
   { name: 'accounts', path: '/accounts?t=2026-10-05T23:00' },
   { name: 'tokenised-account', path: '/accounts/tok-paris?t=2026-10-07T21:30' },
   { name: 'current-account', path: '/accounts/cur-paris?t=2026-10-07T21:30' },
-  { name: 'payments', path: '/payments?t=2026-10-12T20:00' },
+  { name: 'payments', path: '/payments?t=2026-10-10T22:00&tab=ledger' },
   { name: 'rules', path: '/rules?t=2026-10-08T18:30' },
   { name: 'placements', path: '/placements?t=2026-10-12T10:00' },
   { name: 'guarantees', path: '/guarantees?t=2026-10-11T19:00' },
