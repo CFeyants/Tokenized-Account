@@ -1,0 +1,16 @@
+import { chromium } from '@playwright/test';
+const out = process.argv[2];
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
+await ctx.addInitScript(() => { localStorage.setItem('tcm.banner', 'true'); localStorage.setItem('tcm.theme', '"dark"'); });
+const p = await ctx.newPage();
+p.on('pageerror', (e) => console.log('ERR', e.message));
+await p.goto('http://localhost:5173/escrow?t=2026-10-12T11:00', { waitUntil: 'networkidle' });
+await p.getByRole('button', { name: 'Deploy on the tokenised account' }).click();
+await p.waitForTimeout(300);
+await p.getByRole('button', { name: /Send signed event: Competition/ }).click();
+await p.waitForTimeout(200);
+await p.getByRole('button', { name: /Send with a bad signature: Completion/ }).click();
+await p.waitForTimeout(400);
+await p.screenshot({ path: `${out}/escrow.png`, fullPage: true });
+await b.close();

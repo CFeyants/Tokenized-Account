@@ -139,7 +139,10 @@ export function TopBar() {
             <span className="size-1.5 rounded-full bg-new" />
           </MinuteRing>
           <div className="leading-tight">
-            <div className="tabular font-serif text-[26px] leading-none" aria-live="off">
+            <div
+              className="tabular whitespace-nowrap font-serif text-[26px] leading-none"
+              aria-live="off"
+            >
               {formatClock(t)}{' '}
               <span className="font-sans text-[12px] text-muted">{en.shell.cet}</span>
             </div>
