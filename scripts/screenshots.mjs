@@ -42,7 +42,7 @@ for (const s of shots) {
   await page.goto(base + s.path, { waitUntil: 'networkidle' });
   if (s.hood) await page.getByTestId('hood-toggle').click();
   await page.waitForTimeout(700);
-  await page.screenshot({ path: `${out}/${s.name}.png`, fullPage: !s.hood });
+  await page.screenshot({ path: `${out}/${s.name}.png`, fullPage: false });
   await ctx.close();
   console.log('shot', s.name);
 }
