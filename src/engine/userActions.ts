@@ -21,6 +21,9 @@ export type UserAction =
   | { kind: 'fund'; id: string; t: SimTime; amount: number }
   | { kind: 'block'; id: string; t: SimTime; amount: number; label: string };
 
+/** A user action before the store stamps it with an id and the current minute. */
+export type NewUserAction = UserAction extends infer U ? (U extends UserAction ? Omit<U, 'id' | 't'> : never) : never;
+
 const R = en.rulesNames;
 const ccyOf = { 'tok-munich': 'EUR', 'tok-sgd-singapore': 'SGD', 'tok-usd-chicago': 'USD' } as const;
 

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { useMemo } from 'react';
 import { SIM_END, SIM_START, type SimTime } from '@/engine/clock';
 import { buildTimeline, nextEvent, prevEvent, type Timeline } from '@/engine/timeline';
-import { actionToEvents, type UserAction } from '@/engine/userActions';
+import { actionToEvents, type NewUserAction, type UserAction } from '@/engine/userActions';
 import { computeCounters } from '@/engine/counters';
 import { snapshotAt } from '@/engine/accrual';
 
@@ -28,7 +28,7 @@ interface AppState {
   step: () => void;
   stepBack: () => void;
   restart: () => void;
-  addAction: (a: Omit<UserAction, 'id' | 't'>) => void;
+  addAction: (a: NewUserAction) => void;
   resetActions: () => void;
   setTheme: (t: 'dark' | 'light') => void;
   openHood: (tab?: HoodTab, accrualTarget?: string) => void;
