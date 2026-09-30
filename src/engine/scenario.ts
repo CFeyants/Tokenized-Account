@@ -361,7 +361,7 @@ export const SCENARIO: SimEvent[] = [
       c.orchestrate({
         rule: R.fund,
         decision: 'Queued order executed at fund opening',
-        instrument: '10,000,000 fund units at NAV 1.00',
+        instrument: '10,000,000 fund units at a net asset value of 1.00',
         rail: 'Ledger DvP — cash and units in one step',
         checks: [{ name: en.checks.fundHours, ok: true, detail: 'Open' }],
       });

@@ -90,12 +90,12 @@ export interface Bank {
 
 export const BANKS: Bank[] = [
   { id: 'bnp', name: 'Norvane Bank', ours: true, cutoff: '18:00' },
-  { id: 'bnpsg', name: 'Norvane Bank Singapore', ours: true, cutoff: '17:00 SGT' },
+  { id: 'bnpsg', name: 'Norvane Bank Singapore', ours: true, cutoff: '17:00 Singapore time' },
   { id: 'hsbc', name: 'HSBC', ours: false, cutoff: '17:30' },
   { id: 'db', name: 'Deutsche Bank', ours: false, cutoff: '17:45' },
   { id: 'san', name: 'Santander', ours: false, cutoff: '17:00' },
-  { id: 'bnptk', name: 'Norvane Bank Tokyo', ours: true, cutoff: '15:00 JST' },
-  { id: 'bnprh', name: 'Norvane Bank Riyadh', ours: true, cutoff: '15:00 AST' },
+  { id: 'bnptk', name: 'Norvane Bank Tokyo', ours: true, cutoff: '15:00 Tokyo time' },
+  { id: 'bnprh', name: 'Norvane Bank Riyadh', ours: true, cutoff: '15:00 Riyadh time' },
   { id: 'local', name: 'Local banks', ours: false, cutoff: 'local' },
 ];
 

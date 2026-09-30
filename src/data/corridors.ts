@@ -32,7 +32,7 @@ export const CORRIDORS: Corridor[] = [
   },
   {
     id: 'eur-usd',
-    label: 'EUR → USD, US partner bank',
+    label: 'EUR → USD, American partner bank',
     from: 'EUR',
     to: 'USD',
     counterparty: 'Great Lakes Trust (pilot participant)',
@@ -58,7 +58,7 @@ export const CORRIDORS: Corridor[] = [
     counterparty: 'Norvane Bank Tokyo, Riyadh, Singapore',
     rails: ['intragroup', 'traditional'],
     status: 'live',
-    hours: '24/7 within the night FX limit',
+    hours: '24/7 within the night foreign exchange limit',
   },
   {
     id: 'latam',
@@ -172,10 +172,10 @@ export const LATAM: LatamConfig[] = [
 ];
 
 export const CORRIDOR_PRICING = {
-  /** FX EUR/BRL quoted by our markets desk (range 25–45 bps). */
-  marketsBps: 35,
-  /** Partner as paying agent into the euro stablecoin (range 5–15 bps). */
-  partnerBps: 10,
+  /** FX spread BRL → euro stablecoin, kept by the off-ramp partner (range 25–45 bps). Not bank revenue. */
+  offRampFxBps: 35,
+  /** Off-ramp partner service fee (range 5–15 bps). */
+  offRampFeeBps: 10,
   networkFeeEur: 2,
   /** Redemption of the euro stablecoin at par on the master account. */
   redemptionBps: 0,

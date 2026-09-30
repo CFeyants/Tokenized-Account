@@ -12,7 +12,7 @@ export const ORACLES: Oracle[] = [
   {
     id: 'notary',
     name: 'Completion certificate',
-    provider: 'Notary platform API (signed webhook)',
+    provider: 'Notary platform interface (signed webhook)',
     milestones: ['completion'],
     auth: 'mTLS + ES256 signature',
   },
@@ -26,7 +26,7 @@ export const ORACLES: Oracle[] = [
   {
     id: 'customs',
     name: 'Bill of lading / delivery',
-    provider: 'Trade documents API',
+    provider: 'Trade documents interface',
     milestones: ['shipped', 'delivered'],
     auth: 'OAuth 2.0 client credentials + signature',
   },
@@ -101,7 +101,7 @@ export const TEMPLATES: EscrowTemplate[] = [
   },
   {
     id: 'mna',
-    name: 'M&A escrow — Aceros del Norte (Monterrey)',
+    name: 'acquisitions escrow — Aceros del Norte (Monterrey)',
     purpose:
       'Acquisition price, paid to the sellers only on completion; 10% retained for warranties',
     amount: 20_000_000,

@@ -19,7 +19,7 @@ export interface Person {
 export const PEOPLE = {
   marie: { name: 'Marie Lefèvre', role: 'Group Treasurer', mandate: 50e6 },
   thomas: { name: 'Thomas Garnier', role: 'Deputy Group Treasurer', mandate: 50e6 },
-  claire: { name: 'Claire Dumas', role: 'CFO', mandate: Infinity },
+  claire: { name: 'Claire Dumas', role: 'Chief Financial Officer', mandate: Infinity },
   kenji: { name: 'Kenji Sato', role: 'Treasurer, Lefèvre Japan', mandate: 5e6 },
   lukas: { name: 'Lukas Weber', role: 'Finance, Lefèvre GmbH', mandate: 2e6 },
 } satisfies Record<string, Person>;

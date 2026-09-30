@@ -65,7 +65,7 @@ export function BusinessCase() {
             onClick={() => setFtp(f)}
           >
             {fmtPct(f)}
-            {f === MARKET.estr ? ' (€STR)' : ''}
+            {f === MARKET.estr ? ' (euro short-term rate)' : ''}
           </Button>
         ))}
         <Chip tone="outside" className="ml-auto">
@@ -81,7 +81,7 @@ export function BusinessCase() {
             v={fmtEur(c.buffersInterest, 'EUR', 0)}
           />
           <Row
-            k={`${B.lines.hours} — ${Math.round(c.hours)} h, ${c.fte.toFixed(1)} FTE`}
+            k={`${B.lines.hours} — ${Math.round(c.hours)} h, ${c.fte.toFixed(1)} full-time equivalents`}
             v={fmtEur(c.hoursValue, 'EUR', 0)}
           />
           <Row

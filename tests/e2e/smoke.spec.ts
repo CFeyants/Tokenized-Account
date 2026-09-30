@@ -20,7 +20,7 @@ test('cockpit opens on Monday 08:30 with value, alerts and approvals — without
   await expect(page.getByRole('heading', { name: 'Group cash position' })).toBeVisible();
   await expect(page.locator('header')).toContainText('Mon 08:30');
   await expect(page.getByText('Local buffers released')).toBeVisible();
-  await expect(page.getByText('Tokyo needs JPY 1.37bn on Mon 12 Oct, 09:00 JST')).toBeVisible();
+  await expect(page.getByText('Tokyo needs JPY 1.37bn on Mon 12 Oct, 09:00 Tokyo time')).toBeVisible();
   await expect(page.getByText('Waiting for your approval')).toBeVisible();
   const total = await page.getByText('Total value, a year').locator('..').innerText();
   expect(total).toMatch(/EUR [1-9]/);
@@ -70,7 +70,7 @@ test('under the hood opens with its tabs and links to the business case', async 
   await page.goto('/week?t=2026-10-10T22:00');
   await page.getByTestId('hood-toggle').click();
   const panel = page.getByTestId('hood-panel');
-  for (const tab of ['Ledger', 'Orchestration', 'Accrual', 'ALM', 'Intragroup', 'Not yet']) {
+  for (const tab of ['Ledger', 'Orchestration', 'Accrual', 'Asset-liability management', 'Intragroup', 'Not yet']) {
     await panel.getByRole('tab', { name: tab }).click();
   }
   await panel.getByRole('tab', { name: 'Intragroup' }).click();
@@ -120,7 +120,7 @@ test('Brazil: the rate cannot be locked before the flow is qualified', async ({ 
 
 test('incidents, TMS and sweep pages render', async ({ page }) => {
   await page.goto('/incidents');
-  await expect(page.getByText('Tokyo — night FX limit reached')).toBeVisible();
+  await expect(page.getByText('Tokyo — night foreign exchange limit reached')).toBeVisible();
   await page.goto('/tms');
   await expect(page.getByText('The statement line your team reconciles')).toBeVisible();
   await page.goto('/sweep');
@@ -153,7 +153,7 @@ test('guided tour: ten steps, the presenter advances, each step on its page', as
   await expect(page.getByRole('heading', { name: 'Business case' })).toBeVisible();
 });
 
-test('brief of 30/09: stablecoin pre-validation, JIT FX cost, USD sweep, committed, group day', async ({
+test('brief of 30/09: stablecoin pre-validation, just-in-time foreign exchange cost, USD sweep, committed, group day', async ({
   page,
 }) => {
   await page.goto('/');
@@ -169,7 +169,7 @@ test('brief of 30/09: stablecoin pre-validation, JIT FX cost, USD sweep, committ
   await expect(page.getByText('Where the dollars come from, in order')).toBeVisible();
 
   await page.goto('/sweep');
-  await page.getByRole('tab', { name: 'Dollar — Lefèvre Inc (US)' }).click();
+  await page.getByRole('tab', { name: 'Dollar — Lefèvre Inc (United States)' }).click();
   await expect(page.getByText('The rule — surplus to a tokenised government fund')).toBeVisible();
 
   await page.goto('/minute#group-day');

@@ -17,23 +17,23 @@ export const HORIZONS: Record<string, HorizonInfo> = {
   brazil: {
     horizon: 'H2',
     dependencies: [
-      'Authorised partner (CASP) in Brazil',
+      'Authorised virtual-asset service provider in Brazil',
       'Euro stablecoin issuer',
-      'Local FX treatment',
+      'Local foreign exchange treatment',
     ],
   },
   sweep: { horizon: 'H2', dependencies: ['Tokenised money market fund on the ledger'] },
   tmmfUsd: {
     horizon: 'H2',
     dependencies: [
-      'Tokenised government 2a-7 fund accepting a bank deposit token as cash leg',
+      'Tokenised government 2a-7 fund accepting a tokenised bank deposit as cash leg',
       'Tokenised USD account, New York',
     ],
   },
   tmmfCollateral: {
     horizon: 'H3',
     dependencies: [
-      'Fund units accepted as margin by a clearing house (CFTC Letter 25-39 — to validate)',
+      'Fund units accepted as margin by a clearing house (Commodity Futures Trading Commission Letter 25-39 — to validate)',
       'No clearing house accepts them yet',
     ],
   },
@@ -44,9 +44,15 @@ export const HORIZONS: Record<string, HorizonInfo> = {
   },
   prevalidationLedger: {
     horizon: 'H3',
-    dependencies: ['Beneficiary bank on an interbank network (Pontes, TCH)'],
+    dependencies: ['Beneficiary bank on an interbank network (Pontes, The Clearing House)'],
   },
-  jit: { horizon: 'H2', dependencies: ['Group entities on the ledger', 'Night FX desk and limit'] },
+  jit: {
+    horizon: 'H2',
+    dependencies: ['Group entities on the ledger', 'Night foreign exchange desk and limit'],
+  },
   jitEur: { horizon: 'H1', dependencies: ['Tokenised account on one legal entity'] },
-  tms: { horizon: 'H1', dependencies: ['TMS connector (camt.052/053, rules API)'] },
+  tms: {
+    horizon: 'H1',
+    dependencies: ['Treasury system connector (camt.052/053, rules interface)'],
+  },
 };

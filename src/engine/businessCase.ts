@@ -4,13 +4,12 @@
  *  - Client: buffers released, hours saved, failures avoided, yield pickup on the swept surplus per
  *    currency — not interest to the minute.
  *  - Bank: deposits defended (the main line), deposits captured by source, what the units and the
- *    fund sweep cost, FX margins, fees, running costs, cost to serve, LCR — net with and without the
+ *    fund sweep cost, fees, running costs, cost to serve, LCR — net with and without the
  *    night FX margin.
  * Every figure is illustrative; every assumption is exported so the UI can show it on hover.
  */
 import { MARKET, RATES } from '@/data/rates';
 import { TOTAL_BUFFERS } from '@/data/buffers';
-import { CORRIDOR_PRICING } from '@/data/corridors';
 import { TMMF, US_ENTITY } from '@/data/tmmf';
 
 export type ProfileId = 'midcap' | 'large' | 'multi';
@@ -111,9 +110,6 @@ export const ASSUMPTIONS = {
   /** Share of released buffers that comes to our balance sheet (the rest pays down debt, goes to funds, stays elsewhere). */
   bridge: { captured: 0.5, debt: 0.2, funds: 0.2, elsewhere: 0.1 },
   paidOnCaptured: RATES.tokenised,
-  marketsBrlBps: CORRIDOR_PRICING.marketsBps,
-  marketsBrlRange: [25, 45] as [number, number],
-  partnerBrlRange: [5, 15] as [number, number],
   nightFxNetBps: 7,
   subscriptionPerRuleMonth: 150,
   feePreValidation: 1_500,
@@ -180,7 +176,6 @@ export function bankView(p: Profile, ftp: number = MARKET.estr) {
   const capturedNii = captured * (ftp - A.paidOnCaptured);
   const unitCost = -p.unitBalance * (RATES.overnightUnit - RATES.current);
   const sweepLost = -p.sweptEurToFund * (ftp - RATES.current);
-  const fxBrl = p.brlVolume * (A.marketsBrlBps / 10_000);
   const fees =
     p.activeRules * A.subscriptionPerRuleMonth * 12 +
     p.preValidations * A.feePreValidation +
@@ -209,7 +204,6 @@ export function bankView(p: Profile, ftp: number = MARKET.estr) {
       rate: RATES.overnightUnit - RATES.current,
     },
     { key: 'sweepLost', value: sweepLost, base: p.sweptEurToFund, rate: ftp - RATES.current },
-    { key: 'fxBrl', value: fxBrl, base: p.brlVolume, rate: A.marketsBrlBps / 10_000 },
     { key: 'fees', value: fees },
     { key: 'running', value: running },
     { key: 'costToServe', value: costToServe },

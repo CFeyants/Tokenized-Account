@@ -1,5 +1,5 @@
 /**
- * Actions added on top of the week: just-in-time funding in JPY / SAR / SGD from EUR or USD,
+ * Actions added on top of the week: Just-in-time funding in JPY / SAR / SGD from EUR or USD,
  * pre-validation of large payments, escrow with purpose-bound money driven by oracles, payments
  * through corridors (interbank tokenised deposits or traditional rails, from the current or the
  * tokenised account) and repatriation from Latin America through the stablecoin corridor.
@@ -148,7 +148,7 @@ export function jitQuote(
 export function repatriationQuote(cfg: LatamConfig, local: number) {
   const mid = FX_MID[cfg.currency];
   const gross = local / mid;
-  const bps = CORRIDOR_PRICING.marketsBps + CORRIDOR_PRICING.partnerBps;
+  const bps = CORRIDOR_PRICING.offRampFxBps + CORRIDOR_PRICING.offRampFeeBps;
   const fee = gross * (bps / 10_000) + CORRIDOR_PRICING.networkFeeEur;
   const trad = gross * (CORRIDOR_PRICING.tradBps / 10_000) + CORRIDOR_PRICING.tradFeesEur;
   return {
@@ -288,7 +288,7 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
               rule: R.marie,
               decision: A.preDecision,
               instrument: A.earmarkInstrument,
-              rail: a.onLedger ? A.ledgerRail : 'T2 (RTGS) on release',
+              rail: a.onLedger ? A.ledgerRail : 'T2 on release',
               checks,
             });
           },

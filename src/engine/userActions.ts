@@ -137,7 +137,7 @@ export function actionToEvents(a: UserAction): SimEvent[] {
                 c,
                 'tok-paris',
                 -a.amountEur,
-                `${isBusinessHours(c.t) ? 'FX' : 'Out-of-hours FX'} EUR → ${ccy}`,
+                `${isBusinessHours(c.t) ? 'Foreign exchange' : 'Out-of-hours foreign exchange'} EUR → ${ccy}`,
               );
               book(s, c, a.to, q.foreign, `${ccy} credited — intragroup funding`);
               if (!isBusinessHours(c.t)) s.fxNightUsed += a.amountEur;

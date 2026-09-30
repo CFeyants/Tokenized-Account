@@ -41,7 +41,7 @@ export const en = {
     e5: {
       title: 'USD 10m announced by the correspondent',
       detail:
-        'Receipt for the US subsidiary. Cover not yet on our nostro: pending, not earning yet.',
+        'Receipt for the American subsidiary. Cover not yet on our nostro: pending, not earning yet.',
     },
     e6: {
       title: 'Opening: overnight unit unwound, cash returned',
@@ -81,7 +81,7 @@ export const en = {
     e13: {
       title: 'Singapore funded on Saturday night, EUR 10m → SGD',
       detail:
-        'Supplier due Monday 08:00 in Singapore (Sunday 02:00 in Paris). Out-of-hours FX at the markets desk, within the night limit. The three-day unit is partly unwound to the minute.',
+        'Supplier due Monday 08:00 in Singapore (Sunday 02:00 in Paris). Out-of-hours foreign exchange at the markets desk, within the night limit. The three-day unit is partly unwound to the minute.',
     },
     e14: {
       title: 'Brazil tender lost: guarantee expired, EUR 15m released',
@@ -129,7 +129,7 @@ export const en = {
         'Expected customer receipt, final at once. Munich back to zero. It paid only for the minutes it borrowed.',
     },
     x3: {
-      title: 'Singapore supplier paid (Mon 08:00 SGT)',
+      title: 'Singapore supplier paid (Mon 08:00 Singapore time)',
       detail: 'Local payment from the Norvane Bank Singapore account, on time.',
     },
     x5: {
@@ -185,7 +185,7 @@ export const en = {
     fundQueued: 'Tokenised fund order queued (outside fund hours)',
     fundDvp: 'Tokenised fund subscription — delivery versus payment',
     partialUnwind: 'Unit partly unwound to the minute',
-    fxOut: 'Out-of-hours FX EUR → SGD (markets desk)',
+    fxOut: 'Out-of-hours foreign exchange EUR → SGD (markets desk)',
     fxIn: 'SGD credited — intragroup funding',
     release: 'Block released by rule (tender result)',
     unblockUnit: 'Unit part unblocked — transferable again',
@@ -209,7 +209,7 @@ export const en = {
     funding: 'Funding',
     release: 'Collateral release',
     fund: 'Fund order',
-    fx: 'Out-of-hours FX',
+    fx: 'Out-of-hours foreign exchange',
     marie: 'Instruction from Marie',
     receipt: 'Incoming payment',
   },
@@ -217,7 +217,7 @@ export const en = {
   nav: {
     home: 'Cockpit',
     approvals: 'Approvals',
-    tms: 'In your TMS',
+    tms: 'In your treasury system',
     incidents: 'Incidents',
     businessCase: 'Business case',
     control: 'Control & integration',
@@ -264,7 +264,7 @@ export const en = {
     banner:
       'You are Marie, group treasurer. Press Play to live a week. Green is what the ledger adds; grey is what already works today; dashed is outside the bank.',
     dismiss: 'Got it',
-    cet: 'CET',
+    cet: 'Paris',
     skip: 'Skip to content',
   },
 
@@ -348,7 +348,7 @@ export const en = {
     ruleSweep: 'Sweep above EUR 20m at 18:30 (EUR 5m on Friday)',
     ruleOvernight: 'Overnight unit on idle balance, 2.15% (three-day on Friday)',
     ruleReturn: 'Return at 07:00 — each bank gets its day’s need',
-    ruleFx: 'Out-of-hours FX for funding: EUR 25m per night',
+    ruleFx: 'Out-of-hours foreign exchange for funding: EUR 25m per night',
     nightSweep: 'Night sweep: HSBC and Deutsche Bank after cut-off',
     open: 'Open',
     showEntries: 'Ledger entries',
@@ -447,14 +447,14 @@ export const en = {
 
   hood: {
     title: 'Under the hood',
-    lead: 'What happens inside the bank, for colleagues from IT, ALM and compliance.',
+    lead: 'What happens inside the bank, for colleagues from technology, asset-liability management and compliance.',
     bankView: 'Bank view — business case, cost and revenue',
     tabs: {
       ledger: 'Ledger',
       orchestration: 'Orchestration',
       accrual: 'Accrual',
-      alm: 'ALM',
-      fx: 'FX & position',
+      alm: 'Asset-liability management',
+      fx: 'Foreign exchange & position',
       intragroup: 'Intragroup',
       notYet: 'Not yet',
     },
@@ -488,7 +488,7 @@ export const en = {
       tokSight: 'Tokenised sight',
       committed: 'Committed, not gone (earmarked, escrow)',
       committedNote:
-        'A stable deposit with a known end date: ALM can place it to the deadline. Run-off to validate with ALM.',
+        'A stable deposit with a known end date: asset-liability management can place it to the deadline. Run-off to validate with asset-liability management.',
       units: 'Term units by maturity',
       blocked: 'Blocked as collateral',
       overnight: 'Pure overnight (rule units)',
@@ -521,7 +521,7 @@ export const en = {
         year: '2028',
       },
       {
-        title: 'PvP FX with another bank',
+        title: 'Payment-versus-payment foreign exchange with another bank',
         text: 'Payment-versus-payment of two currencies between two banks’ ledgers.',
         year: '2028–2030',
       },
@@ -588,7 +588,7 @@ export const en = {
       hours: 'Allowed hours',
       any: 'Any hour',
       business: 'Business hours',
-      fx: 'Out-of-hours FX allowed within the night limit (EUR 25m)',
+      fx: 'Out-of-hours foreign exchange allowed within the night limit (EUR 25m)',
       credit: 'Prefer intraday credit when a receipt is expected before opening',
       gainLine: (m: string, a: string, b: string) =>
         `Munich, Wednesday night: ${m} of intraday credit cost ${a}. Charged by the day, it would have cost ${b}.`,
@@ -658,7 +658,7 @@ export const en = {
         'Outside fund hours: the order will be queued for the next opening at 09:00, the cash stays in the overnight unit meanwhile.',
       openNote: 'Fund hours: settled at once on the ledger.',
       held: 'Fund units held',
-      nav: 'NAV 1.00, net yield 2.25%',
+      nav: 'Net asset value 1.00, net yield 2.25%',
       pledge: 'Fund units can be pledged as collateral.',
     },
     positions: 'Positions',
@@ -688,7 +688,7 @@ export const en = {
   payments: {
     eyebrow: 'Payments',
     title: 'Payments — what works today, what the ledger adds.',
-    lead: 'SEPA, instant and cross-border payments work as they do today. The ledger adds transfers between group accounts at any hour, funding to the minute and out-of-hours FX for funding.',
+    lead: 'SEPA, instant and cross-border payments work as they do today. The ledger adds transfers between group accounts at any hour, funding to the minute and out-of-hours foreign exchange for funding.',
     tabs: { sepa: 'SEPA / Instant', cross: 'Cross-border', ledger: 'Intragroup on the ledger' },
     batches: 'Batches awaiting approval',
     batchCols: ['Batch', 'Payments', 'Amount', 'Execution', 'Status', ''],
@@ -745,9 +745,9 @@ export const en = {
       toChicago: 'Lefèvre Inc., Chicago — USD (Norvane Bank New York)',
       anyHour:
         'At any hour, final at once. From the tokenised account; units are unwound to the minute if needed.',
-      fxQuote: 'FX quote',
+      fxQuote: 'Foreign exchange quote',
       fxDay: 'Markets desk, business hours',
-      fxNight: 'Out-of-hours FX — for intragroup funding only',
+      fxNight: 'Out-of-hours foreign exchange — for intragroup funding only',
       nightLimit: 'Night limit used',
       overLimit: 'Above tonight’s limit. Wait for opening or reduce the amount.',
       screen: 'Run pre-screening',
@@ -769,7 +769,7 @@ export const en = {
         'Available when banks exchange tokenised deposits (interbank ledger, 2028). Use SCT Inst instead.',
       fallback: 'Send by SCT Inst instead',
       byDay: 'Business hours: sent through SEPA, as today.',
-      pvp: 'FX payment-versus-payment with another bank',
+      pvp: 'Foreign exchange payment-versus-payment with another bank',
       pvpText:
         'Exchange EUR against USD with a bank that is not on our ledger, both legs final together.',
     },
@@ -854,7 +854,7 @@ export const en = {
     interestLine: 'Interest accrued to the minute (PRTRY: MINT)',
     entries: 'Entries',
     noEntries: 'No entries on this day.',
-    ias7: 'IAS 7 helper',
+    ias7: 'Cash-flow accounting helper',
     ias7Lead: 'Informational only — confirm with your auditor.',
     cashEq: 'Cash and cash equivalents',
     cashEqNote: 'Current accounts, tokenised free balance, overnight units',
@@ -885,7 +885,7 @@ export const en = {
       'Press Play (or Space). One simulated hour lasts about 1.5 seconds.',
       'Use Next event to step through the week, or the calendar icon to jump to a moment.',
       'Drag the week timeline under the counters to move the clock freely.',
-      'Open "Under the hood" to see ledger entries, rule decisions, accruals and the ALM view.',
+      'Open "Under the hood" to see ledger entries, rule decisions, accruals and the asset-liability management view.',
       'Act yourself: buy or sell a unit, fund a subsidiary, subscribe to the fund. Your actions replay on the week; "Reset to scenario" removes them.',
       'Copy a link to share the exact moment you are looking at.',
     ],
@@ -898,18 +898,18 @@ export const en = {
       'Late cash earns: after 18:00, idle balances go into an overnight unit that minute (three-day on Friday), unwound at 07:00.',
       'Collateral keeps earning until the minute a rule releases it.',
       'Just-in-time funding at any hour: a subsidiary pays only for the minutes it borrows.',
-      'Out-of-hours FX is for intragroup funding only, within a published night limit.',
+      'Out-of-hours foreign exchange is for intragroup funding only, within a published night limit.',
       'The tokenised fund is an option, not the engine: bought from the tokenised account, settled on the ledger, within fund hours.',
       'The night sweep brings cash from other banks by instant transfer and returns only what each bank needs.',
       'Payments, payroll, tax, forecasting, statements, reconciliation, closing and netting do not change.',
-      'Across banks, not yet: paying non-clients at night, PvP with other banks, settlement with non-clients need the interbank layer (2028+).',
+      'Across banks, not yet: paying non-clients at night, payment-versus-payment with other banks, settlement with non-clients need the interbank layer (2028+).',
     ],
     illustrative: 'Illustrative',
     illustrativeText:
       'All rates, amounts, names, limits and spreads are indicative. The group, its subsidiaries and its counterparties are fictitious. A few events were added to make the week consistent; see docs/ASSUMPTIONS.md. The bank is anonymised as Norvane Bank; the corridor partner (Bitso) and the euro stablecoin (Qivalis) are named as placeholders to validate.',
     notBuilt: 'Not built',
     notBuiltText:
-      'Interbank tokenised deposits with banks outside the pilot corridors, PvP FX with non-participating banks, settlement with non-clients. They appear as "Not yet" with a fallback. Interbank use cases are labelled Not right away. The Latin American stablecoin repatriation is shown working, as a pilot.',
+      'Interbank tokenised deposits with banks outside the pilot corridors, Payment-versus-payment foreign exchange with non-participating banks, settlement with non-clients. They appear as "Not yet" with a fallback. Interbank use cases are labelled Not right away. The Latin American stablecoin repatriation is shown working, as a pilot.',
     roadmap: 'Roadmap',
     road: [
       {
@@ -922,7 +922,7 @@ export const en = {
       },
       {
         year: '2028–2030',
-        text: 'Interbank layer: pilot corridors first (eurozone partners 2027; USD and SGD 2028), then wider; PvP, settlement with non-clients. Stablecoin repatriation from Latin America as a pilot.',
+        text: 'Interbank layer: pilot corridors first (eurozone partners 2027; USD and SGD 2028), then wider; payment-versus-payment, settlement with non-clients. Stablecoin repatriation from Latin America as a pilot.',
       },
     ],
     legend: 'Colour code',
@@ -995,7 +995,7 @@ export const en = {
       conditional: {
         title: 'Pre-screened payments waiting for a condition',
         what: 'EUR 6m to the Warsaw contractor, screened at 10:30, released by rule when the acceptance certificate arrives at 16:45. The money is committed, not gone.',
-        who: 'Groups paying on milestones, documents or deliveries — construction, trade, M&A closings.',
+        who: 'Groups paying on milestones, documents or deliveries — construction, trade, acquisition closings.',
         verdict:
           'On a current account the money has usually left or is blocked at 0%. Earmarked on the tokenised account it earns every minute until departure; if the document slips overnight, it sits flagged in the overnight unit.',
         ifLate: 'If the certificate arrived tomorrow at 09:40',
@@ -1036,21 +1036,22 @@ export const en = {
     tabs: { jit: 'Just-in-time funding', large: 'Large payments — pre-validation' },
     presets: 'Situations',
     presetTokyo: {
-      title: 'Tokyo supplier, Monday 09:00 JST',
+      title: 'Tokyo supplier, Monday 09:00 Tokyo time',
       sub: 'Mon 02:00 in Paris — every European desk closed',
     },
     presetRiyadh: {
-      title: 'Riyadh payroll, Sunday 10:00 AST',
+      title: 'Riyadh payroll, Sunday 10:00 Riyadh time',
       sub: 'Sunday 09:00 in Paris — Saudi banks open, Paris closed',
     },
     presetSingapore: {
-      title: 'Singapore supplier, Monday 08:00 SGT',
+      title: 'Singapore supplier, Monday 08:00 Singapore time',
       sub: 'Sunday 02:00 in Paris',
     },
     entity: 'Subsidiary',
     source: 'Funded from',
     sourceEur: 'Euro — tokenised account, Paris',
-    sourceUsd: 'Dollar — tokenised account, US, refilled from the USD fund redemption (capped)',
+    sourceUsd:
+      'Dollar — tokenised account, United States, refilled from the USD fund redemption (capped)',
     usdNote:
       'SAR is pegged to the dollar: funding Riyadh from the dollar leg avoids a EUR/USD step.',
     amount: 'Amount (EUR m equivalent)',
@@ -1059,13 +1060,13 @@ export const en = {
     hoursNote:
       'Indicative hours for the week of 5 October (Paris on summer time; Tokyo +7 h, Riyadh +1 h, Saudi weekend Friday–Saturday). To confirm with Markets and Cash Management.',
     rows: {
-      parisDesk: 'Paris FX desk (spot)',
+      parisDesk: 'Paris foreign exchange desk (spot)',
       corrCutoff: 'Correspondent cut-off, same day',
-      t2: 'T2 (euro RTGS)',
+      t2: 'T2 (euro large-value payments)',
       cls: 'CLS settlement',
       tokyo: 'Tokyo — large-value payments',
       riyadh: 'Riyadh — SARIE',
-      ledger: 'Ledger instant FX — intragroup funding',
+      ledger: 'Ledger instant foreign exchange — intragroup funding',
     },
     now: 'Now',
     needMark: 'Need',
@@ -1089,7 +1090,7 @@ export const en = {
     schedule: 'Schedule at the minute of need',
     done: 'Done — see the subsidiary account under the hood',
     scheduled: (t: string) => `Scheduled for ${t}`,
-    limitLeft: (v: string) => `Night FX limit left tonight: ${v}`,
+    limitLeft: (v: string) => `Night foreign exchange limit left tonight: ${v}`,
     balances: 'Subsidiary accounts on the ledger',
     buffers: {
       title: 'Local buffers you no longer need',
@@ -1098,7 +1099,7 @@ export const en = {
         {
           city: 'Tokyo',
           today: 8,
-          risk: 'Supplier paid Monday 09:00 JST without pre-funding on Friday',
+          risk: 'Supplier paid Monday 09:00 Tokyo time without pre-funding on Friday',
         },
         {
           city: 'Riyadh',
@@ -1108,7 +1109,7 @@ export const en = {
         {
           city: 'Singapore',
           today: 6,
-          risk: 'Monday 08:00 SGT supplier run covered from Sunday night',
+          risk: 'Monday 08:00 Singapore time supplier run covered from Sunday night',
         },
       ],
       total: 'Released for the group',
@@ -1117,7 +1118,7 @@ export const en = {
     approvalSchedule: (bank: string, at: string) => `Just-in-time funding — ${bank}, at ${at}`,
     approvalNow: (bank: string) => `Just-in-time funding — ${bank}, now`,
     approvalDetail: (ccy: string, src: string) =>
-      `${src} → ${ccy} on the ledger, within the night FX limit.`,
+      `${src} → ${ccy} on the ledger, within the night foreign exchange limit.`,
     ruleTitle: (bank: string) => `Standing just-in-time rule — ${bank}`,
     ruleDetail: (ccy: string, src: string) =>
       `Every time the forecast shows a need, fund it in ${ccy} from the ${src} balance at T−5 minutes, any hour. Set once.`,
@@ -1136,17 +1137,17 @@ export const en = {
       floating: 'Floating at the minute',
       floatingSub: 'Priced in the window of the need',
       lock: 'Lock the rate on Friday, deliver at the minute',
-      lockSub: 'Friday desk price + carry; no night FX used',
+      lockSub: 'Friday desk price + carry; no night foreign exchange used',
       windows: { day: 'Day desk', thin: 'Thin session', closed: 'Market closed — gap premium' },
       windowAtNeed: 'Window at the minute of need',
       spread: 'Spread vs mid',
       cost: 'Cost of this conversion',
       byWindow: 'Same amount, by window',
       partial: (inLimit: string, rest: string) =>
-        `Beyond the night FX limit: ${inLimit} converted at the minute, ${rest} falls back to Friday pre-funding.`,
+        `Beyond the night foreign exchange limit: ${inLimit} converted at the minute, ${rest} falls back to Friday pre-funding.`,
       fallback:
         'The bank cannot price above its floor tonight for this currency: fall back to the Friday lock, or to pre-funding.',
-      withinLimit: 'Within the night FX limit.',
+      withinLimit: 'Within the night foreign exchange limit.',
       gain: (buffer: string, perYear: string, cost: string) =>
         `The gain comes from the buffer released (${buffer} here, ${perYear} a year), not from the rate: this conversion costs ${cost}.`,
       groupBuffers: (v: string) => `Group total released: ${v}.`,
@@ -1175,7 +1176,7 @@ export const en = {
         amount: 18,
       },
       mna: {
-        title: 'M&A completion — Aceros del Norte',
+        title: 'Acquisition completion — Aceros del Norte',
         payee: 'Sellers of Aceros del Norte (notary escrow)',
         bank: 'Banca Adriatica',
         condition: 'Completion certificate signed',
@@ -1233,14 +1234,14 @@ export const en = {
       },
       {
         k: 'Oracles',
-        v: 'Signed events through the API: notary, regulator, trade documents, calendar',
+        v: 'Signed events through the interface: notary, regulator, trade documents, calendar',
       },
       { k: 'Payees', v: 'Whitelist only — any other destination is refused by the ledger' },
     ],
     setup: 'Set it up',
     step1: '1 · Purpose and payees',
     step2: '2 · Conditions and oracles',
-    step3: '3 · Connect the oracle API',
+    step3: '3 · Connect the oracle interface',
     template: 'Template',
     purpose: 'Purpose',
     payees: 'Payees allowed',
@@ -1328,7 +1329,7 @@ export const en = {
       subsTitle: 'Cash in Latin American subsidiaries',
       walletsTitle: 'Partner wallets, visible in your eBanking',
       walletsLead:
-        'Bitso wallets of each subsidiary, connected by API: balances read in real time, conversions instructed from here.',
+        'Bitso wallets of each subsidiary, connected through an interface: balances read in real time, conversions instructed from here.',
       qeur: 'Qivalis euro stablecoin',
       connected: 'Connected',
       decideTitle: 'Decide to repatriate',
@@ -1338,7 +1339,7 @@ export const en = {
       rate: 'Rate (local per EUR)',
       receive: 'EUR credited on the tokenised account',
       fees: 'Fees (partner 30 bps + network)',
-      tradTitle: 'Traditional: local bank FX + SWIFT',
+      tradTitle: 'Traditional: local bank foreign exchange + SWIFT',
       tradReceive: 'EUR received',
       tradFees: 'Spread 60 bps + fees EUR 65',
       tradValue: 'Value D+2, rate fixed at execution, local cut-offs',
@@ -1359,9 +1360,9 @@ export const en = {
       complianceTitle: 'To validate before any client use',
       compliance: [
         'Partner due diligence and contract (Bitso), per country',
-        'Status of the euro stablecoin issuer under MiCA and redemption terms (Qivalis)',
+        'Status of the euro stablecoin issuer under the European rules for digital-asset markets and redemption terms (Qivalis)',
         'Travel rule data with each transfer; screening on both legs',
-        'Local FX and capital-flow rules in Brazil, Mexico, Colombia and Chile',
+        'Local foreign exchange and capital-flow rules in Brazil, Mexico, Colombia and Chile',
         'Accounting and tax treatment of the transit through the stablecoin',
       ],
     },
@@ -1460,7 +1461,7 @@ export const en = {
     onlyText: 'Only to the listed payees. Any other destination is refused.',
     ifNot: 'If the event never comes',
     ifNotText: (d: string) => `The rest returns to you on ${d}.`,
-    forIt: 'For your IT team: the event API and the rule',
+    forIt: 'For your systems team: the event interface and the rule',
     deploy: (a: string) => `Deploy — earmark ${a} on the tokenised account`,
     liveTitle: 'Your contracts',
     deployTitle: (n: string) => `Deploy contract — ${n}`,
@@ -1500,7 +1501,7 @@ export const en = {
       tokSub: 'Final, earning to the minute',
     },
     vsTrad: (trad: string, diff: string) =>
-      `Traditional FX + SWIFT: ${trad} in two days, rate fixed at execution — ${diff} less.`,
+      `Traditional foreign exchange + SWIFT: ${trad} in two days, rate fixed at execution — ${diff} less.`,
     hint: 'Then turn on Demo mode and press Next event (⏭) to follow it.',
     qualify: {
       title: 'Qualify the flow — before any rate is locked',
@@ -1529,7 +1530,7 @@ export const en = {
       },
       common: [
         'Foreign-exchange registration and reporting in Brazil — to validate with local counsel',
-        'IOF on this operation — rate depends on the operation, to validate with local tax',
+        'Brazilian financial transactions tax on this operation — rate depends on the operation, to validate with local tax',
         'Central bank treatment of the stablecoin leg as a foreign-exchange operation — to validate',
       ],
       ready: 'Qualified — the rate can be locked.',
@@ -1539,39 +1540,40 @@ export const en = {
       pending: 'Tick every item to unlock the rate.',
     },
     gap: {
-      title: 'Why the corridor gives you more than FX + SWIFT',
-      spread: 'FX spread: 30 bps instead of 60 bps',
+      title: 'Why the corridor gives you more than foreign exchange + SWIFT',
+      spread: 'Foreign exchange spread: 30 bps instead of 60 bps',
       fees: 'Fees: EUR 2 network instead of EUR 65 SWIFT and correspondents',
       days: 'Value days: EUR on the account today instead of D+2 (at 2.15%)',
       total: 'Difference',
     },
-    fees: 'Fees: our markets 35 bps + partner (paying agent) 10 bps + network',
+    fees: 'Fees: off-ramp partner — EUR/BRL spread 35 bps + service 10 bps — and network. Not bank revenue.',
     freq: {
       title: 'Frequency',
       monthly: 'Monthly',
       weekly: 'Weekly',
       loanFramework: 'Intercompany loan framework agreement over 365 days',
       iofAlert: (v: string) =>
-        `Short intercompany loan: IOF 3.5% per transfer — about ${v} a year. Keep monthly, or sign a framework agreement over 365 days.`,
+        `Short intercompany loan: Brazilian financial transactions tax 3.5% per transfer — about ${v} a year. Keep monthly, or sign a framework agreement over 365 days.`,
       iofRates:
-        'IOF reminder: dividend 0%; intercompany loan under 365 days 3.5% — to validate with local tax.',
+        'Brazilian financial transactions tax reminder: dividend 0%; intercompany loan under 365 days 3.5% — to validate with local tax.',
     },
     value: {
       title: (v: string, n: number) => `What it is worth — ${v} a year, ${n} operations`,
       rows: {
         spread: 'Fees and spread: 0 to 20 bps (a range, not a point)',
         days: 'Value days: 2 days per operation · 4 on a Friday (Fri 18:00 → Tue)',
-        exposure: 'FX exposure removed per operation (1σ, BRL vol ≈ 12%)',
+        exposure: 'Foreign exchange exposure removed per operation (1σ, BRL vol ≈ 12%)',
         frequency: 'Monthly → weekly: average exposure',
-        carry: 'Carry given up per day earlier (CDI 13.65% vs €STR 2.40%)',
-        iof: 'If requalified as a short loan (IOF 3.5% per transfer), a year',
+        carry:
+          'Carry given up per day earlier (Brazilian interbank rate 13.65% vs euro short-term rate 2.40%)',
+        iof: 'If requalified as a short loan (Brazilian financial transactions tax 3.5% per transfer), a year',
       },
       nature: { gain: 'Gain', risk: 'Risk removed', cost: 'Cost', guard: 'Guardrail' },
       message: 'Faster repatriation is a risk and control decision, not a yield decision.',
     },
     weekend:
       'The conversion can run at the weekend; the qualification and the documents are prepared before.',
-    partner: 'Authorised partner (CASP) — outside the bank',
+    partner: 'Authorised virtual-asset service provider — outside the bank',
     approvalTitle: (kind: string, amt: string) => `Repatriate ${amt} from Brazil — ${kind}`,
     approvalDetail: (eur: string) =>
       `Rate locked for 15 minutes once approved; ${eur} expected on the tokenised account.`,
@@ -1636,18 +1638,18 @@ export const en = {
     eyebrow: 'Inbound stablecoin — Brazil repatriation',
     title: 'A pre-approved corridor: what makes "at any hour" possible',
     status: 'Corridor pre-approved',
-    lead: 'On an inbound transfer we are the beneficiary VASP: we hold the door. Without pre-validation, an incomplete Travel Rule data set blocks the transfer for three to seven business days. Everything that can be checked once is checked when the corridor opens; the rest runs automatically at each transfer — and the decision stays with us.',
+    lead: 'On an inbound transfer we are the beneficiary virtual-asset service provider: we hold the door. Without pre-validation, an incomplete Travel Rule data set blocks the transfer for three to seven business days. Everything that can be checked once is checked when the corridor opens; the rest runs automatically at each transfer — and the decision stays with us.',
     atPartner: 'At the partner',
     onceTitle: 'Checked once, when the corridor opens',
     once: [
       {
         k: 'Counterparties',
-        v: 'Authorised bank or VASP / CASP, licence valid at the date, outside the eFX framework (BCB Resolution 561, October 2026 — to validate with local counsel), a second provider under contract',
+        v: 'Authorised bank or virtual-asset service provider, licence valid at the date, outside the eFX framework (Central Bank of Brazil Resolution 561, October 2026 — to validate with local counsel), a second provider under contract',
         partner: true,
       },
       {
         k: 'Eligible issuer',
-        v: 'Euro e-money stablecoin under MiCA (EMT). Qivalis: EMI licence pending — shown as dependency',
+        v: 'Euro e-money stablecoin under the European rules for digital-asset markets. Qivalis: e-money institution licence pending — shown as dependency',
         partner: true,
         pending: true,
       },
@@ -1721,7 +1723,7 @@ export const en = {
     start: 'Start the guided tour',
     startSub: 'Marie’s week in ten steps — five minutes. You press Next; nothing runs on its own.',
     explore: 'Explore freely',
-    cfo: '3-minute CFO tour',
+    cfo: '3-minute Chief Financial Officer tour',
     bankTour: 'Bank view tour',
     step: (i: number, n: number) => `Step ${i} of ${n}`,
     what: 'What happens',
@@ -1763,9 +1765,11 @@ export const en = {
         title: 'Brazil dividend — qualified once, executed in minutes',
         what: 'The dividend framework was qualified once; the corridor is pre-approved. Rate locked at 10:15, EUR on the tokenised account at 10:20.',
         marieV: (eur: string, sigma: string) =>
-          `${eur} home; FX exposure of ≈ ${sigma} (1σ, two days) removed`,
-        bankV: (v: string) => `${v} FX margin on our markets desk`,
-        today: 'FX + SWIFT: value D+2, rate fixed at execution, FX exposure open meanwhile.',
+          `${eur} home; foreign exchange exposure of ≈ ${sigma} (1σ, two days) removed`,
+        bankV: (v: string) =>
+          `${v} lands on our tokenised account, 24/7 — the EUR/BRL spread stays with the off-ramp partner`,
+        today:
+          'Foreign exchange + SWIFT: value D+2, rate fixed at execution, foreign exchange exposure open meanwhile.',
       },
       bidbond: {
         title: 'Wednesday — the bid bond, backed by cash that keeps earning',
@@ -1785,14 +1789,14 @@ export const en = {
         title: 'Friday 18:30 — sweep and the three-day unit',
         what: 'After the cut-off, the rules sweep the surplus and put everything idle into a three-day unit — blocked and earmarked amounts too, flagged.',
         marieV: (m: string, v: string) => `${m} in the weekend unit — ${v} over the weekend`,
-        bankV: (v: string) => `${v} margin: overnight money priced €STR − 25 bps`,
+        bankV: (v: string) => `${v} margin: overnight money priced euro short-term rate − 25 bps`,
         today: 'Idle at 0.50% by the day over the weekend.',
       },
       incident: {
         title: 'Saturday — a partial Travel Rule acknowledgement',
         what: 'An inbound stablecoin transfer arrives with incomplete originator data. A partial acknowledgement is a refusal: suspended, followed up, decision logged.',
         marieV: 'Nothing lost: suspended, not sent back into the void',
-        bankV: 'We hold the door as beneficiary VASP — decision logged',
+        bankV: 'We hold the door as beneficiary virtual-asset service provider — decision logged',
         today: 'Blocked three to seven business days.',
       },
       riyadh: {
@@ -1804,7 +1808,7 @@ export const en = {
       },
       tokyo: {
         title: 'Monday 02:00 — Tokyo, at the minute of need',
-        what: 'The standing rule funds Tokyo at 01:55 Paris, 08:55 in Tokyo. Under the hood, the bank’s FX & position view shows where the yen come from.',
+        what: 'The standing rule funds Tokyo at 01:55 Paris, 08:55 in Tokyo. Under the hood, the bank’s foreign exchange & position view shows where the yen come from.',
         marieV: (b: string, c: string) =>
           `The ${b} buffer is gone; the conversion cost ${c} — the gain is the buffer, not the rate`,
         bankV: (floor: string, quote: string, m: string) =>
@@ -1821,14 +1825,14 @@ export const en = {
       },
       bc: {
         title: 'The annual business case',
-        what: 'For the chosen profile: deposits defended, deposits captured by source, what the units cost, and the net with and without night FX.',
+        what: 'For the chosen profile: deposits defended, deposits captured by source, what the units cost, and the net with and without night foreign exchange.',
         marieV: 'Client value a year: buffers, time, failures',
         bankV: 'Defended and captured deposits carry the case — not the fees',
         today:
           'Without the programme, part of these deposits leaves for funds, stablecoins or a competitor’s deposit.',
       },
       alm: {
-        title: 'ALM — what the balance sheet sees',
+        title: 'Asset-liability management — what the balance sheet sees',
         what: 'Operational sight, tokenised sight, units by maturity, collateral with lock and release dates, pure overnight money.',
         marieV: 'Nothing changes for Marie',
         bankV: 'Stability visible on the ledger',
@@ -1845,7 +1849,7 @@ export const en = {
       'Interest: current account by the day, tokenised account and units to the minute, against the traditional twin (current account, classic deposit, cash gage, pre-funding).',
       'Buffers: Tokyo, Riyadh and Singapore buffers no longer needed once funding runs at the minute of need.',
       'Failures avoided: fundings executed while every European desk was closed.',
-      'Bank: net interest income on the balances kept with us (FTP = €STR) vs the traditional twin, plus FX margins above the floor.',
+      'Bank: net interest income on the balances kept with us (internal transfer price = euro short-term rate) vs the traditional twin, plus the night foreign exchange margin above the floor on just-in-time funding.',
     ],
   },
 
@@ -1872,7 +1876,7 @@ export const en = {
     alerts: [
       {
         key: 'tokyo',
-        title: 'Tokyo needs JPY 1.37bn on Mon 12 Oct, 09:00 JST',
+        title: 'Tokyo needs JPY 1.37bn on Mon 12 Oct, 09:00 Tokyo time',
         text: 'That is Monday 02:00 in Paris — every European desk and cut-off is closed.',
         action: 'Schedule just in time',
         gain: 'Removes the EUR 8m local buffer',
@@ -1880,7 +1884,7 @@ export const en = {
       },
       {
         key: 'riyadh',
-        title: 'Riyadh payroll SAR 20m on Sun 11 Oct, 10:00 AST',
+        title: 'Riyadh payroll SAR 20m on Sun 11 Oct, 10:00 Riyadh time',
         text: 'Saudi banks open on Sunday; Paris is closed. Today it is pre-funded on Thursday.',
         action: 'Fund on Sunday, on time',
         gain: 'Removes the EUR 5m buffer; no late payroll',
@@ -1905,7 +1909,7 @@ export const en = {
     atBank: 'at Norvane Bank',
     elsewhere: 'at other banks',
     forecastTitle: 'Forecast vs actual',
-    forecastLead: 'From your TMS forecast. Actuals fill in as the days close.',
+    forecastLead: 'From your treasury system forecast. Actuals fill in as the days close.',
     forecastCols: ['', 'Today (D)', 'Tomorrow (D+1)', 'D+5'],
     forecastRows: { closing: 'Closing forecast', actual: 'Actual', gap: 'Gap' },
     cutoffsTitle: 'Cut-offs today (Paris time)',
@@ -1926,36 +1930,36 @@ export const en = {
       {
         key: 'overnightUnit',
         k: 'Overnight unit',
-        note: '€STR − 25 bps, by rule after 18:00, three-day on Friday',
+        note: 'Euro short-term rate − 25 bps, by rule after 18:00, three-day on Friday',
       },
       {
         key: 'units',
         k: 'Term units 1–12 months',
-        note: '€STR − 15 to 0 bps; sold before maturity, never broken',
+        note: 'Euro short-term rate − 15 to 0 bps; sold before maturity, never broken',
       },
       {
         key: 'mmf',
         k: 'Tokenised money market fund (EUR)',
-        note: '€STR − 15 bps net, fund hours 09:00–15:00',
+        note: 'Euro short-term rate − 15 bps net, fund hours 09:00–15:00',
       },
     ],
     ratesRef: (estr: string, dfr: string) =>
-      `References: €STR ${estr}, ECB deposit facility ${dfr}. Each rate is a parameter.`,
+      `References: Euro short-term rate ${estr}, European Central Bank deposit facility ${dfr}. Each rate is a parameter.`,
     useCases: 'All use cases',
   },
 
   tms: {
-    title: 'In your TMS',
-    lead: 'The ledger shows up in your treasury management system (e.g. Kyriba, SAP) as ordinary bank accounts. Positions arrive by camt.052 / camt.053, rules are set by API, and a tokenised movement reconciles like any other cash line.',
+    title: 'In your treasury system',
+    lead: 'The ledger shows up in your treasury management system (e.g. Kyriba, SAP) as ordinary bank accounts. Positions arrive by camt.052 / camt.053, rules are set through an interface, and a tokenised movement reconciles like any other cash line.',
     frame: 'Treasury management system · Cash position · Norvane Bank connected',
     cols: ['Bank account', 'Entity', 'Ccy', 'Balance', 'Source'],
     intraday: 'camt.052 intraday',
     eod: 'camt.053 end of day',
     other: 'camt.053 from other bank',
     subBalances: 'sub-balances: free / blocked / in unit',
-    apiTitle: 'A rule set up from the TMS, by API',
+    apiTitle: 'A rule set up from the treasury system, through an interface',
     apiLead:
-      'The same just-in-time rule as in the portal — created from the TMS, then approved by a second signatory before it runs.',
+      'The same just-in-time rule as in the portal — created from the treasury system, then approved by a second signatory before it runs.',
     responseNote:
       'Response 202: accepted, waiting for the second signature. Nothing runs before it.',
     stmtTitle: 'The statement line your team reconciles',
@@ -1979,13 +1983,13 @@ export const en = {
         s: 'progress',
       },
       {
-        k: 'TMS connection',
-        v: 'camt.052 / camt.053 feeds, rules API, single sign-on',
+        k: 'Treasury system connection',
+        v: 'camt.052 / camt.053 feeds, rules interface, single sign-on',
         s: 'progress',
       },
       {
         k: 'Auditor pre-validation',
-        v: 'IAS 7: free balance as cash equivalent, blocked as restricted cash',
+        v: 'Cash-flow accounting: free balance as cash equivalent, blocked as restricted cash',
         s: 'todo',
       },
       {
@@ -2019,7 +2023,7 @@ export const en = {
         notified: [
           'Marie Lefèvre',
           'Compliance officer on duty',
-          'Partner (CASP) operations',
+          'Partner (virtual-asset service provider) operations',
           'Finance, Lefèvre do Brasil',
         ],
         resolution:
@@ -2051,7 +2055,7 @@ export const en = {
       {
         key: 'limit',
         path: '/just-in-time?preset=tokyo',
-        title: 'Tokyo — night FX limit reached',
+        title: 'Tokyo — night foreign exchange limit reached',
         when: 'Mon 12 Oct, 01:50',
         steps: [
           '01:50 Just-in-time for Tokyo requested: EUR 18m into JPY',
@@ -2068,7 +2072,7 @@ export const en = {
       {
         key: 'sanctions',
         path: '/pre-validation',
-        title: 'M&A closing — screening hit at release',
+        title: 'Acquisition closing — screening hit at release',
         when: 'Mon 12 Oct, 16:44',
         steps: [
           '16:44 Completion certificate received; release requested',
@@ -2092,7 +2096,7 @@ export const en = {
 
   bc: {
     title: 'Business case',
-    lead: 'The bank’s view, for the chosen client profile. What the client gains, what it costs the bank, what the bank earns. Illustrative — to validate with ALM and Finance.',
+    lead: 'The bank’s view, for the chosen client profile. What the client gains, what it costs the bank, what the bank earns. Illustrative — to validate with asset-liability management and Finance.',
     profile: 'Client profile',
     clientTitle: 'Value for the client, a year',
     lines: {
@@ -2110,15 +2114,15 @@ export const en = {
       niiNew: 'Net interest income with the ledger',
       niiDelta: 'Change in net interest income',
       subscriptions: 'Subscriptions (per active rule)',
-      nightFx: 'Night FX margin (10 bps)',
+      nightFx: 'Night foreign exchange margin (10 bps)',
       cannibalisation: 'Intraday credit lines no longer used',
       net: 'Net for the bank',
     },
-    fxMarginWeek: 'FX margin above the floor (JIT, repatriation)',
+    fxMarginWeek: 'Night foreign exchange margin above the floor (just-in-time funding)',
     niiNote:
-      'The overnight unit costs margin: money that sat on the current account at 0.50% now earns €STR − 25 bps. The case holds on the deposits it defends and captures — not on fees.',
-    ftp: 'Funds transfer price (FTP)',
-    ftpNote: 'Default €STR. The net at other levels is shown below.',
+      'The overnight unit costs margin: money that sat on the current account at 0.50% now earns euro short-term rate − 25 bps. The case holds on the deposits it defends and captures — not on fees.',
+    ftp: 'Internal funds transfer price',
+    ftpNote: 'Default euro short-term rate. The net at other levels is shown below.',
     failureTypes: (t: string) => `Failures counted: ${t}. Illustrative cost per failure.`,
     eurPickup: 'Yield pickup on the EUR surplus swept into term units (vs current account)',
     usdPickup:
@@ -2129,32 +2133,35 @@ export const en = {
       captured: 'Deposits captured, by source (table below)',
       unitCost: 'Overnight units: margin given up vs the current account',
       sweepLost:
-        'EUR surplus swept to a fund = balance-sheet outflow (fees go to the group’s asset manager, outside this P&L)',
-      fxBrl: 'EUR/BRL margin quoted by our markets desk (partner = paying agent)',
+        'EUR surplus swept to a fund = balance-sheet outflow (fees go to the group’s asset manager, outside this account)',
       fees: 'Fees: rules, pre-validation, escrow agent, cash-backed guarantees, fund cash leg',
       running:
-        'Running costs: 24/7, compliance, Travel Rule, address screening, two partners per corridor, TMS connectors, build',
+        'Running costs: 24/7, compliance, Travel Rule, address screening, two partners per corridor, treasury system connectors, build',
       costToServe: 'Cost to serve, per transaction',
       swiftLost: 'SWIFT and correspondent fees no longer earned',
       cannibalisation: 'Intraday credit lines no longer used',
     },
     lineTip: (base: string, rate: string) => `${base} × ${rate}`,
-    netWithout: 'Net for the bank — without night FX',
-    nightFxLine: 'Night FX: (price − floor) × incremental volume only',
+    netWithout: 'Net for the bank — without night foreign exchange',
+    nightFxLine: 'Night foreign exchange: (price − floor) × incremental volume only',
     nightFxTip: (vol: string, bps: string) =>
-      `${vol} of off-hours volume that would not come to us by day × ${bps} above the floor. Day-time FX is not counted: it happens already.`,
-    netWith: 'Net for the bank — with night FX',
-    sensTitle: 'Sensitivity to the FTP',
-    sensCols: ['FTP', 'Net without night FX', 'Net with night FX'],
+      `${vol} of off-hours volume that would not come to us by day × ${bps} above the floor. Day-time foreign exchange is not counted: it happens already.`,
+    netWith: 'Net for the bank — with night foreign exchange',
+    sensTitle: 'Sensitivity to the internal transfer price',
+    sensCols: [
+      'Internal transfer price',
+      'Net without night foreign exchange',
+      'Net with night foreign exchange',
+    ],
     sourcesTitle: 'Deposits captured, by source (average balance)',
     sources: {
       jitBuffers: 'Local buffers released by just-in-time, brought to us',
       collateral: 'Collateral (bid bonds, margin)',
-      escrow: 'Escrow (M&A, average over the period)',
+      escrow: 'Escrow (acquisitions, average over the period)',
       earmarked: 'Earmarked amounts, cascades',
       preValidated: 'Pre-validated payments, provisioned',
       brazil: 'Brazil repatriation in transit to use',
-      usFunds: 'Captured from US money funds (cash leg)',
+      usFunds: 'Captured from American money funds (cash leg)',
       total: 'Total',
     },
     bridgeTitle: 'Where each released euro goes',
@@ -2167,28 +2174,29 @@ export const en = {
       funds: 'Goes to money funds',
       elsewhere: 'Stays at other banks',
     },
-    lcrTitle: 'Liquidity (LCR) in figures',
-    lcr: 'Operational deposits (rules installed, paid at least 5 bps below market) run off at 25%, non-operational at 40%, beyond 30 days at 0%. The overnight unit is priced near market: not operational. To validate with ALM.',
+    lcrTitle: 'Liquidity (liquidity coverage ratio) in figures',
+    lcr: 'Operational deposits (rules installed, paid at least 5 bps below market) run off at 25%, non-operational at 40%, beyond 30 days at 0%. The overnight unit is priced near market: not operational. To validate with asset-liability management.',
     lcrRows: {
-      operational: 'Operational (collateral, escrow, earmarked, pre-validated, JIT buffers)',
-      nonOperational: 'Non-operational (overnight units, transit, US cash leg)',
-      hqla: 'HQLA to hold with the ledger',
-      saved: 'HQLA saved vs all non-operational',
-      value: (r: string) => `Value of the HQLA saved (carry ${r})`,
+      operational:
+        'Operational (collateral, escrow, earmarked, pre-validated, just-in-time buffers)',
+      nonOperational: 'Non-operational (overnight units, transit, American cash leg)',
+      hqla: 'High-quality liquid assets to hold with the ledger',
+      saved: 'High-quality liquid assets saved vs all non-operational',
+      value: (r: string) => `Value of the high-quality liquid assets saved (carry ${r})`,
     },
-    competitionTitle: 'Competition, US',
+    competitionTitle: 'Competition, United States',
     competition:
-      'A US bank with its own tokenised deposit, tokenised money fund and payment network can capture a French group through its US subsidiary — public information, to validate.',
+      'An American bank with its own tokenised deposit, tokenised money fund and payment network can capture a French group through its American subsidiary — public information, to validate.',
     keepTitle: 'Why the client stays',
     keep: 'Each installed rule keeps the deposit on our balance sheet: a sweep, a block, a standing funding rule, an escrow. The bank that orchestrates, not the rail.',
     horizonsTitle: 'What exists when, and what it depends on',
     hcols: ['Use case', 'Horizon', 'Depends on'],
-    illustrative: 'Illustrative — to validate with ALM and Finance',
+    illustrative: 'Illustrative — to validate with asset-liability management and Finance',
   },
 
   horizon: {
     dependsOn: 'Depends on',
-    labels: { today: 'Available today', H1: 'H1 · 2027', H2: 'H2 · 2028', H3: 'H3 · 2029+' },
+    labels: { today: 'Available today', H1: '2027', H2: '2028', H3: '2029 and later' },
   },
 
   sweep: {
@@ -2219,17 +2227,17 @@ export const en = {
     onceTitle: 'One-off subscription — tokenised fund',
     onceDetail:
       'From the tokenised account, settled on the ledger at once (delivery versus payment) inside fund hours; queued otherwise.',
-    tabs: { eur: 'Euro — Paris', usd: 'Dollar — Lefèvre Inc (US)' },
+    tabs: { eur: 'Euro — Paris', usd: 'Dollar — Lefèvre Inc (United States)' },
     dest: 'Destination',
     destUnit: 'Term unit — stays on our balance sheet (default)',
     destUnitSub: (r: string) => `Tokenised term unit at ${r}, same-day break`,
     destFund: 'Tokenised money market fund (option)',
     destFundSub: (r: string) => `${r} net, off our balance sheet`,
     usd: {
-      entityTitle: 'Lefèvre Inc (US) today',
+      entityTitle: 'Lefèvre Inc (United States) today',
       entity: [
         ['Bank', 'Norvane Bank New York'],
-        ['Model', 'Earnings credit (ECR): balances earn credits that only offset fees'],
+        ['Model', 'Earnings credit: balances earn credits that only offset fees'],
       ] as [string, string][],
       ecr: (r: string) => `Earnings credit rate ${r}`,
       fees: (v: string) => `Fees offset a year: ${v}`,
@@ -2253,7 +2261,7 @@ export const en = {
       },
       eligTitle: 'Eligibility — to validate',
       elig: [
-        ['USYC', 'Open to non-US persons only — to validate'],
+        ['USYC', 'Open to investors outside the United States only — to validate'],
         ['BUIDL', 'Qualified purchasers, high minimum subscription — to validate'],
         [
           'Euro',
@@ -2262,7 +2270,7 @@ export const en = {
       ] as [string, string][],
       collateralTitle: 'Fund units as collateral',
       collateral:
-        'Posting fund units as margin, without redeeming them. CFTC Letter 25-39 opens the door (to validate with counsel); no clearing house accepts them yet.',
+        'Posting fund units as margin, without redeeming them. Commodity Futures Trading Commission Letter 25-39 opens the door (to validate with counsel); no clearing house accepts them yet.',
       setRule: 'Make it a standing rule — USD',
       ruleApproval: 'Standing rule — USD surplus to the tokenised government fund',
       ruleDetail: (thr: string) =>
@@ -2271,8 +2279,8 @@ export const en = {
     caveatTitle: 'To validate before any client use',
     caveats: [
       'A money market fund is not a deposit: different risk and liquidity profile, disclosed to the client',
-      'Classification as cash equivalent under IAS 7 — to confirm with the client’s auditor',
-      'Redemption at constant NAV and settlement cut-offs of the fund',
+      'Classification as cash equivalent under the cash-flow accounting standard — to confirm with the client’s auditor',
+      'Redemption at constant net asset value and settlement cut-offs of the fund',
     ],
   },
 
@@ -2285,10 +2293,10 @@ export const en = {
     buffersTip: (n: number, per: string, r: string) =>
       `${n} subsidiaries in time zones where European desks are closed when they need cash keep ${per} in total "just in case". Funded just in time, the buffer goes; redeployed at ${r} (overnight unit — conservative; paying down debt is worth more). Illustrative.`,
     hours: 'Treasury time saved',
-    hoursMain: (h: string, fte: string) => `${h} h · ${fte} FTE`,
+    hoursMain: (h: string, fte: string) => `${h} h · ${fte} full-time equivalents`,
     valueSub: (v: string) => `${v} a year`,
     hoursTip: (h: string, share: string, per: number, cost: string) =>
-      `${h} hours a year of pre-funding, manual sweeps, releases and repatriations; ${share} handled by standing rules. ${per} hours per FTE at ${cost}. Illustrative.`,
+      `${h} hours a year of pre-funding, manual sweeps, releases and repatriations; ${share} handled by standing rules. ${per} hours per full-time equivalent at ${cost}. Illustrative.`,
     failures: 'Failures avoided',
     failuresMain: (n: number) => `${n} a year`,
     failuresTip: (n: number, share: string, cost: string) =>
@@ -2339,7 +2347,7 @@ export const en = {
       `Converted by the markets desk on the ledger and credited on ${bank} at once, final. Interest counted to the minute on both sides.`,
     jitMemo: (ccy: string) => `${ccy} credited — just-in-time intragroup funding`,
     fxMemo: (from: string, to: string, day: boolean) =>
-      `${day ? 'FX' : 'Out-of-hours FX'} ${from} → ${to} (markets desk)`,
+      `${day ? 'Foreign exchange' : 'Out-of-hours foreign exchange'} ${from} → ${to} (markets desk)`,
     mirrorMemo: 'Mirror intragroup balance created at the same instant.',
     jitDecision: (src: string, ccy: string, rate: string, bps: number) =>
       `${src} → ${ccy} at ${rate} (mid − ${bps} bps)`,
@@ -2357,15 +2365,20 @@ export const en = {
       ['Sanctions & embargo screening', 'Payee, beneficiary bank, goods / target cleared'],
       ['Verification of payee', 'Name matches the account'],
       [
-        'KYC / beneficial owners',
+        'Customer due diligence / beneficial owners',
         cat === 'mna' ? 'Sellers and escrow agent identified' : 'Supplier file up to date',
       ],
-      ['Approvals', cat === 'mna' ? 'Board resolution + two signatories' : 'CFO + two signatories'],
+      [
+        'Approvals',
+        cat === 'mna'
+          ? 'Board resolution + two signatories'
+          : 'Chief Financial Officer + two signatories',
+      ],
       ['Limit', 'One-off payment limit raised for this transaction'],
       ['Liquidity', 'Funded from the tokenised account and units, sold to the minute if needed'],
       ...(onLedger
         ? ([['Beneficiary bank on the ledger', 'Final at once, at any hour']] as [string, string][])
-        : ([['Rail at release', 'T2 (RTGS), Mon–Fri 07:00–17:00']] as [string, string][])),
+        : ([['Rail at release', 'T2, Mon–Fri 07:00–17:00']] as [string, string][])),
     ],
     releaseTitle: 'Condition met: pre-validated payment released',
     releaseDetail: 'No new checks at release — they were done in advance.',
@@ -2452,7 +2465,8 @@ export const en = {
     pending: 'Pending cover on nostro — no accrual',
     balance: 'Available balance',
     fundHours: 'Fund hours 09:00–15:00',
-    fxLimit: (used: string, limit: string) => `Night FX limit: ${used} of ${limit} used`,
+    fxLimit: (used: string, limit: string) =>
+      `Night foreign exchange limit: ${used} of ${limit} used`,
     notYet: 'Interbank ledger not live (2028)',
   },
 } as const;

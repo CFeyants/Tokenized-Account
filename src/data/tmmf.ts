@@ -5,7 +5,7 @@
 import { MARKET, SPREADS } from './rates';
 
 export const US_ENTITY = {
-  name: 'Lefèvre Inc (US)',
+  name: 'Lefèvre Inc (United States)',
   bank: 'Norvane Bank New York',
   /** Average USD surplus above the operating threshold. */
   surplusUsd: 45e6,

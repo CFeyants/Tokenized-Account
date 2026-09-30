@@ -2,9 +2,8 @@
  * The week so far, for the client and for the bank — one engine for the tour banner, the narrator
  * and the recap. Everything is computed from the timeline and the actions replayed on it.
  */
-import { MARKET, RATES, FX_MID } from '@/data/rates';
+import { MARKET, RATES } from '@/data/rates';
 import { bufferOf } from '@/data/buffers';
-import { CORRIDOR_PRICING } from '@/data/corridors';
 import { integrateEod, integrateMinutes } from './accrual';
 import { computeCounters } from './counters';
 import { compareJit, type JitCcy } from './markets';
@@ -13,9 +12,6 @@ import { JIT_TARGET } from './advanced';
 import type { SimTime } from './clock';
 import type { Timeline } from './timeline';
 import type { UserAction } from './userActions';
-
-/** Margin our markets desk earns on a repatriation (EUR/BRL), bps. The partner is a paying agent. */
-export const MARKETS_BRL_BPS = CORRIDOR_PRICING.marketsBps;
 
 export interface WeekMetrics {
   /** Interest with the ledger minus traditional set-up, this week. */
@@ -26,7 +22,7 @@ export interface WeekMetrics {
   failuresAvoided: number;
   /** Bank: change in net interest income this week vs the traditional twin (FTP = €STR). */
   bankNii: number;
-  /** Bank: FX margin earned this week (repatriations, JIT above floor). */
+  /** Bank: night FX margin above the floor this week (just-in-time funding only; the Brazil spread is the off-ramp partner’s). */
   bankFx: number;
   bankTotal: number;
 }
@@ -54,20 +50,6 @@ export function weekMetrics(
       )
         failures += 1;
       fx += Math.max(0, fxFloor(tgt.ccy, a.amountEur, a.t, a.lockFriday).marginEur);
-    }
-    if (a.kind === 'repatriate') {
-      const eur =
-        a.local /
-        FX_MID[
-          a.country === 'BR'
-            ? 'BRL'
-            : a.country === 'MX'
-              ? 'MXN'
-              : a.country === 'CO'
-                ? 'COP'
-                : 'CLP'
-        ];
-      fx += (eur * CORRIDOR_PRICING.marketsBps) / 10_000;
     }
   }
 

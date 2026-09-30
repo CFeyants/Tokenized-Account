@@ -19,7 +19,7 @@ import { fxCostEur, fxFloor } from '@/engine/fx';
 import { minuteAccrual } from '@/engine/accrual';
 import { fmtEur, fmtM } from '@/engine/format';
 import { BRAZIL_BID_BOND } from '@/engine/scenario';
-import { MARKETS_BRL_BPS, weekMetrics } from '@/engine/weekMetrics';
+import { weekMetrics } from '@/engine/weekMetrics';
 
 const M = 1_000_000;
 const T = en.tour;
@@ -131,7 +131,7 @@ export const FULL: TourStep[] = [
       return S.brazil.marieV(fmtEur(q.eur, 'EUR', 0), fmtEur(oneSigma, 'EUR', 0));
     },
     bank: () =>
-      S.brazil.bankV(fmtEur(((BRAZIL_DIVIDEND_BRL / 6.05) * MARKETS_BRL_BPS) / 10_000, 'EUR', 0)),
+      S.brazil.bankV(fmtEur(repatriationQuote(LATAM[0], BRAZIL_DIVIDEND_BRL).eur, 'EUR', 0)),
   },
   {
     id: 'bidbond',
@@ -261,13 +261,13 @@ export const BANK: TourStep[] = [
     id: 'alm',
     t: at(4, '20:00'),
     path: '/week',
-    label: 'ALM',
+    label: 'Asset-liability management',
     ...S.alm,
     enter: { hood: 'alm' },
     marie: () => S.alm.marieV,
     bank: () => S.alm.bankV,
   },
-  { ...byId('tokyo'), id: 'fxpos', label: 'FX & position' },
+  { ...byId('tokyo'), id: 'fxpos', label: 'Foreign exchange & position' },
   { ...byId('incident'), label: 'Incidents' },
 ];
 
