@@ -168,3 +168,31 @@ building.
   week counters and on the account summary; the split between tokenised account/units and the
   current account is shown underneath.
 - **A-44 · Vercel.** `vercel.json` rewrites every path to `index.html` so deep links work.
+
+### Brief of 30/09/2026
+
+- **A-45 · Rates.** DFR 2.50% (since 10/09/2026), €STR 2.40%, Selic 13.75%, CDI 13.65%, USD on
+  SOFR / Fed funds 3.60%. Every product rate is derived from `MARKET` + `SPREADS` in
+  `src/data/rates.ts`. A-41's older figures (1.80%, FTP 1.50%) are superseded by the Business case
+  page: FTP is a parameter (default €STR) with a sensitivity table.
+- **A-46 · Inbound stablecoin, Brazil.** Corridor-level checks once (counterparty licences, BCB
+  Resolution 561 of October 2026 — to validate with local counsel; issuer eligibility under MiCA;
+  wallet whitelist with proof of control; framework qualification; limits) and per-transfer checks
+  (sanctions, Travel Rule with blocking acknowledgement, pivot reference, off-ramp capacity, 12-item
+  evidence file). Partner-side checks are dashed; the decision is always the bank's.
+- **A-47 · JIT FX cost.** Client spread by window: day desk 3 bps, thin session 12 bps, market closed
+  25 bps; "lock on Friday, deliver at the minute" 6 bps and uses no night FX limit. Beyond the night
+  limit: partial execution, the rest falls back to Friday pre-funding. The gain is the buffer
+  released (EUR 19m for the group), not the rate.
+- **A-48 · US money funds.** Lefèvre Inc (US) on an earnings-credit model (ECR 2.00%). Tokenised
+  government 2a-7 fund yielding SOFR − 15 bps net; cash leg on a tokenised USD account, noting that no
+  tokenised fund settles against a tokenised bank deposit today (USDC fallback). Night redemption cap
+  USD 10m; cascade: tokenised account → overnight unit → fund (capped) → intraday line. Eligibility
+  (USYC, BUIDL, euro funds) and fund units as collateral (CFTC Letter 25-39, H3) — all to validate.
+- **A-49 · Committed, not gone.** Earmarked and escrowed amounts stay on the account and earn the
+  tokenised rate; a pre-validated payment carries a deadline after which the earmark is lifted by
+  itself. Earmarked = published cash; irrevocable escrow = restricted cash — to validate with the
+  auditor. For ALM, a stable deposit with a known end date.
+- **A-50 · Multi-time-zone day.** EUR 50m held by Singapore from Paris midnight, sent to Paris at
+  14:00 Paris, priced at €STR as an arm's-length intragroup rate. Group effect ≈ 0; the allocation
+  between entities changes (transfer pricing, local tax — to validate).

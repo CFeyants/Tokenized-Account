@@ -95,10 +95,12 @@ Choices made where the brief was silent: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.
 | | |
 |---|---|
 | ![Smart contracts](docs/screenshots/smart-contracts.png) **Smart contracts** — event → payments, guardrails, API for IT. | ![Brazil](docs/screenshots/repatriation.png) **Brazil repatriation** — qualify, lock, follow the money. |
-| ![Collateral](docs/screenshots/put-to-work.png) **Put the balance to work** — collateral, beneficiary, published figures. | ![Just in time](docs/screenshots/just-in-time.png) **Just in time** — buffers released, who is open, standing rule. |
-| ![Pre-validation](docs/screenshots/pre-validation.png) **Pre-validation** — orchestration available today. | ![Sweep](docs/screenshots/sweep.png) **Sweep to the tokenised fund** — by standing rule. |
+| ![Collateral](docs/screenshots/put-to-work.png) **Put the balance to work** — collateral, beneficiary, published figures. | ![Just in time](docs/screenshots/just-in-time.png) **Just in time** — buffers released, who is open, FX cost by window, lock on Friday, USD cascade. |
+| ![Pre-validation](docs/screenshots/pre-validation.png) **Pre-validation** — inbound stablecoin corridor checks, and large payments (available today). | ![Sweep](docs/screenshots/sweep.png) **Sweep** — EUR to a term unit (or fund), USD to a tokenised government fund. |
 | ![TMS](docs/screenshots/tms.png) **In your TMS** — position, rule by API, statement line, onboarding. | ![Business case](docs/screenshots/business-case.png) **Business case** — client value, bank account, horizons. |
 | ![Incidents](docs/screenshots/incidents.png) **Incidents** — what stops, who is notified, how it is resolved. | ![Approvals](docs/screenshots/approvals.png) **Approvals & audit** — maker / checker, standing rules, trail. |
+
+![Why the minute](docs/screenshots/minute.png) **Why the minute** — seven cases, including a multi-time-zone day between Singapore and Paris.
 
 Light mode: ![Light](docs/screenshots/home-light.png)
 

@@ -4,7 +4,7 @@
  * snapshot at end of day) with counting to the minute, on the same balance path.
  * Live cases read the scenario; illustrative cases take parameters.
  */
-import { RATES } from '@/data/rates';
+import { MARKET, RATES } from '@/data/rates';
 import { MIN_PER_DAY, at, type SimTime } from './clock';
 import { integrateMinutes, minuteAccrual, minutesWhere } from './accrual';
 import { collateralInterest } from './counters';
@@ -251,4 +251,56 @@ export function timezoneCase() {
       RATES.tokenised,
     ),
   ];
+}
+
+// 7 ─ A multi-time-zone day: one intragroup transfer, two entities, two conventions ─────────
+export interface EntityDay {
+  entity: 'singapore' | 'paris';
+  from: SimTime;
+  to: SimTime;
+  days: number;
+  dayInterest: number;
+  minuteInterest: number;
+}
+
+/**
+ * Singapore holds the cash from Paris midnight and sends it to Paris at `sendAt`, before Singapore's
+ * own midnight (18:00 Paris). By the day, Singapore's snapshot misses it and Paris's catches it; to
+ * the minute each entity earns for the time it held it. The group total barely moves; the
+ * allocation between entities does — which matters for arm's-length intragroup interest.
+ */
+export function groupDay(
+  amount = 50_000_000,
+  rate = MARKET.estr,
+  sendAt: SimTime = at(1, '14:00'),
+) {
+  const start = at(1, '00:00');
+  const end = at(2, '00:00');
+  const legs: EntityDay[] = (
+    [
+      ['singapore', start, sendAt],
+      ['paris', sendAt, end],
+    ] as const
+  ).map(([entity, from, to]) => {
+    const days = daysCounted(from, to, entity);
+    return {
+      entity,
+      from,
+      to,
+      days,
+      dayInterest: perDay(amount, rate, days),
+      minuteInterest: perMinute(amount, rate, to - from),
+    };
+  });
+  const dayTotal = legs.reduce((a, l) => a + l.dayInterest, 0);
+  const minuteTotal = legs.reduce((a, l) => a + l.minuteInterest, 0);
+  return {
+    amount,
+    rate,
+    sendAt,
+    range: [start, end] as [SimTime, SimTime],
+    legs,
+    dayTotal,
+    minuteTotal,
+  };
 }

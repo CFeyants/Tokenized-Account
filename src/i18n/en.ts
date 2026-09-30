@@ -486,6 +486,9 @@ export const en = {
     alm: {
       operational: 'Operational sight (current accounts)',
       tokSight: 'Tokenised sight',
+      committed: 'Committed, not gone (earmarked, escrow)',
+      committedNote:
+        'A stable deposit with a known end date: ALM can place it to the deadline. Run-off to validate with ALM.',
       units: 'Term units by maturity',
       blocked: 'Blocked as collateral',
       overnight: 'Pure overnight (rule units)',
@@ -933,7 +936,7 @@ export const en = {
     nav: 'Why the minute',
     eyebrow: 'Remuneration to the minute',
     title: 'Where the minute counts.',
-    lead: 'The tokenised account pays 0.10%. Counting to the minute rarely changes a treasurer’s year — it changes what is counted. These are the six situations where money stays on the account and the minute matters, with the amounts, however small.',
+    lead: 'The tokenised account pays 0.10%. Counting to the minute rarely changes a treasurer’s year — it changes what is counted. These are the seven situations where money stays on the account and the minute matters, with the amounts, however small.',
     honest:
       'Read the amounts as they are: at 0.10% the minute is worth little per euro. Its value is being exact — no euro counted for a day it was not there, none ignored because it left before midnight — and it is what lets units, blocks and releases run to the minute.',
     live: 'Live in the scenario',
@@ -1009,6 +1012,19 @@ export const en = {
         zoneNames: { paris: 'Paris', singapore: 'Singapore', newYork: 'New York' },
         note: 'Read the first row carefully: by the day, Paris pays more (EUR 27.78) for four hours of money, because its midnight happens to fall inside the four hours — Singapore and New York pay nothing for the same flow. To the minute, everyone pays for four hours (EUR 4.63). Fairer, not always higher.',
       },
+      groupDay: {
+        title: 'A multi-time-zone day',
+        what: 'Lefèvre Singapore holds EUR 50m from midnight Paris and sends it to Paris at 14:00 Paris (20:00 in Singapore). By the day, Singapore’s snapshot at its own midnight (18:00 Paris) misses it, Paris’s catches it. To the minute, each entity earns for the hours it held the cash.',
+        who: 'Groups that charge intragroup interest between entities in several zones.',
+        verdict:
+          'For the group, the effect is close to zero: what one entity loses, the other gains. What changes is the allocation between entities — which is what arm’s-length intragroup interest, transfer pricing and local tax look at (to validate with tax).',
+        cols: ['Entity', 'Held (Paris time)', 'Day convention', 'To the minute'],
+        entities: { singapore: 'Lefèvre Singapore', paris: 'Lefèvre Industries, Paris' },
+        group: 'Group',
+        rateNote: (r: string) => `At ${r}, as an arm’s-length intragroup rate — illustrative.`,
+        badge: 'Counted to the minute',
+        fromHood: 'How intragroup balances are counted: a multi-time-zone day',
+      },
     },
   },
 
@@ -1034,7 +1050,7 @@ export const en = {
     entity: 'Subsidiary',
     source: 'Funded from',
     sourceEur: 'Euro — tokenised account, Paris',
-    sourceUsd: 'Dollar — tokenised account, US (USD unit sold to the minute if needed)',
+    sourceUsd: 'Dollar — tokenised account, US, refilled from the USD fund redemption (capped)',
     usdNote:
       'SAR is pegged to the dollar: funding Riyadh from the dollar leg avoids a EUR/USD step.',
     amount: 'Amount (EUR m equivalent)',
@@ -1113,6 +1129,42 @@ export const en = {
       `Cap per night: ${cap}`,
     ],
     setRule: 'Set it once — standing rule',
+    fx: {
+      title: 'What the conversion costs you',
+      eyebrow: 'A cost, not just a rate. Illustrative spreads, to confirm with Markets.',
+      modeLabel: 'Rate',
+      floating: 'Floating at the minute',
+      floatingSub: 'Priced in the window of the need',
+      lock: 'Lock the rate on Friday, deliver at the minute',
+      lockSub: 'Friday desk price + carry; no night FX used',
+      windows: { day: 'Day desk', thin: 'Thin session', closed: 'Market closed — gap premium' },
+      windowAtNeed: 'Window at the minute of need',
+      spread: 'Spread vs mid',
+      cost: 'Cost of this conversion',
+      byWindow: 'Same amount, by window',
+      partial: (inLimit: string, rest: string) =>
+        `Beyond the night FX limit: ${inLimit} converted at the minute, ${rest} falls back to Friday pre-funding.`,
+      fallback:
+        'The bank cannot price above its floor tonight for this currency: fall back to the Friday lock, or to pre-funding.',
+      withinLimit: 'Within the night FX limit.',
+      gain: (buffer: string, perYear: string, cost: string) =>
+        `The gain comes from the buffer released (${buffer} here, ${perYear} a year), not from the rate: this conversion costs ${cost}.`,
+      groupBuffers: (v: string) => `Group total released: ${v}.`,
+    },
+    cascade: {
+      title: 'Where the dollars come from, in order',
+      eyebrow: '24/7 is the payment, not the fund. Illustrative balances.',
+      rows: {
+        tok: 'Tokenised USD account, New York',
+        overnight: 'Overnight USD unit',
+        tmmf: 'Tokenised government fund — redemption, capped per night',
+        intraday: 'Intraday credit line (last resort)',
+      },
+      take: 'Used',
+      avail: 'Available',
+      need: (v: string) => `Need: ${v}`,
+      unlimited: 'balance',
+    },
     large: {
       presetsTitle: 'Transactions to prepare',
       equipment: {
@@ -1580,6 +1632,70 @@ export const en = {
     trad: 'A cash gage at 0%, a separate buffer on a current account, and nothing earned overnight.',
   },
 
+  stablecoinPv: {
+    eyebrow: 'Inbound stablecoin — Brazil repatriation',
+    title: 'A pre-approved corridor: what makes "at any hour" possible',
+    status: 'Corridor pre-approved',
+    lead: 'On an inbound transfer we are the beneficiary VASP: we hold the door. Without pre-validation, an incomplete Travel Rule data set blocks the transfer for three to seven business days. Everything that can be checked once is checked when the corridor opens; the rest runs automatically at each transfer — and the decision stays with us.',
+    atPartner: 'At the partner',
+    onceTitle: 'Checked once, when the corridor opens',
+    once: [
+      {
+        k: 'Counterparties',
+        v: 'Authorised bank or VASP / CASP, licence valid at the date, outside the eFX framework (BCB Resolution 561, October 2026 — to validate with local counsel), a second provider under contract',
+        partner: true,
+      },
+      {
+        k: 'Eligible issuer',
+        v: 'Euro e-money stablecoin under MiCA (EMT). Qivalis: EMI licence pending — shown as dependency',
+        partner: true,
+        pending: true,
+      },
+      {
+        k: 'Wallet whitelist',
+        v: 'Proof-of-control artefact for each wallet; one deposit address per payer',
+      },
+      {
+        k: 'Flow qualification and framework agreement',
+        v: 'Dividend, loan repayment or royalties — qualified once per framework, not at each transfer',
+      },
+      { k: 'Limits', v: 'Per operation, per day, and for the weekend' },
+    ],
+    eachTitle: 'Checked automatically, at each transfer',
+    each: [
+      { k: 'Sanctions screening', v: 'Parties and addresses, risk score at the date' },
+      {
+        k: 'Travel Rule',
+        v: 'Complete data set with a blocking acknowledgement: Accept / Review / Reject. A partial acknowledgement is a refusal',
+        partner: true,
+      },
+      {
+        k: 'Pivot reference',
+        v: 'Assigned before any on-chain movement; carried to the ledger credit',
+      },
+      { k: 'Off-ramp capacity', v: 'Confirmed before the stablecoin is issued' },
+      { k: 'Evidence file', v: '12 items archived with us, not at the partner' },
+    ],
+    evidenceTitle: 'The evidence file — 12 items',
+    evidence: [
+      'Framework qualification and supporting documents',
+      'Counterparty licence check at the date',
+      'Issuer eligibility at the date',
+      'Wallet whitelist entry and proof of control',
+      'Sanctions screening result — parties',
+      'Sanctions screening result — addresses',
+      'Travel Rule data set as received',
+      'Travel Rule acknowledgement (Accept / Review / Reject) and time',
+      'Pivot reference and on-chain transaction reference',
+      'Rate lock and quote',
+      'Off-ramp confirmation and ledger credit',
+      'Maker / checker approvals',
+    ],
+    toBrazil: 'Open the repatriation',
+    decision:
+      'Dashed: checks performed at the partner. The decision — Accept, Review, Reject — is always ours, and logged.',
+  },
+
   fxTab: {
     lead: 'The night price can never go below what delivering the currency costs the bank. For each conversion: the bank’s position at that minute, where the currency comes from, until when, and the margin left.',
     rule: 'Quote ≥ floor; otherwise fall back to Friday pre-funding.',
@@ -1734,6 +1850,19 @@ export const en = {
   },
 
   cockpit: {
+    committed: {
+      title: 'Committed, not gone',
+      eyebrow:
+        'Earmarked or escrowed — still on your account, still earning until the condition is met',
+      empty: 'Nothing committed yet. Pre-validate a large payment or set up an escrow.',
+      cols: ['Payee', 'Amount', 'Condition', 'Deadline', 'Interest since commitment'],
+      returns:
+        'If the condition is not met by the deadline, the amount comes back to the account by itself — nothing to chase.',
+      compare:
+        'Today without the ledger: on a notary account at 0%, or wired the day before and gone.',
+      accounting:
+        'Accounting (to validate with the auditor): earmarked = published cash; irrevocable escrow = restricted cash.',
+    },
     lastMove: (amt: string, memo: string, t: string) => `${amt} · ${memo} · ${t}`,
     eyebrow: 'Monday morning cash meeting',
     eyebrowLater: 'Cash position',
@@ -1992,12 +2121,15 @@ export const en = {
     ftpNote: 'Default €STR. The net at other levels is shown below.',
     failureTypes: (t: string) => `Failures counted: ${t}. Illustrative cost per failure.`,
     eurPickup: 'Yield pickup on the EUR surplus swept into term units (vs current account)',
-    usdPickup: 'USD surplus already in money funds: a change of rail, not a pickup',
+    usdPickup:
+      'Yield pickup on the USD surplus moved from earnings credits into the tokenised government fund',
+    usdNote: 'USD already in money funds: a change of rail, not a pickup.',
     lineLabels: {
       defended: 'Deposits defended — without the programme, 30% leave by 2030',
       captured: 'Deposits captured, by source (table below)',
       unitCost: 'Overnight units: margin given up vs the current account',
-      sweepLost: 'EUR surplus swept to a fund: leaves the balance sheet',
+      sweepLost:
+        'EUR surplus swept to a fund = balance-sheet outflow (fees go to the group’s asset manager, outside this P&L)',
       fxBrl: 'EUR/BRL margin quoted by our markets desk (partner = paying agent)',
       fees: 'Fees: rules, pre-validation, escrow agent, cash-backed guarantees, fund cash leg',
       running:
@@ -2068,11 +2200,17 @@ export const en = {
       'Redeemed automatically, same day, when the balance falls below the threshold or a need is forecast',
       'Outside fund hours, the overnight unit covers the night; redemptions queue for 09:00',
     ],
+    ruleLinesUnit: [
+      'Every business day at 14:30',
+      'Surplus above the threshold → tokenised term unit, on our balance sheet',
+      'Broken the same day, to the minute, when the balance falls below the threshold or a need is forecast',
+      'Outside business hours, the overnight unit covers the night',
+    ],
     weekTitle: 'If this rule had run last week',
     cols: ['Day', 'Swept at 14:30', 'Days held', 'Gain vs current account'],
     weekGain: (v: string) => `${v} over the week`,
-    perYear: (v: string, avg: string) =>
-      `${v} a year on an average ${avg} in the fund (2.25% vs 0.50%)`,
+    perYear: (v: string, avg: string, r: string) =>
+      `${v} a year on an average ${avg} swept (${r} vs 0.50%)`,
     setRule: 'Make it a standing rule',
     runOnce: (a: string) => `Sweep ${a} once, now`,
     ruleTitle: 'Standing rule — sweep to the tokenised fund',
@@ -2081,6 +2219,55 @@ export const en = {
     onceTitle: 'One-off subscription — tokenised fund',
     onceDetail:
       'From the tokenised account, settled on the ledger at once (delivery versus payment) inside fund hours; queued otherwise.',
+    tabs: { eur: 'Euro — Paris', usd: 'Dollar — Lefèvre Inc (US)' },
+    dest: 'Destination',
+    destUnit: 'Term unit — stays on our balance sheet (default)',
+    destUnitSub: (r: string) => `Tokenised term unit at ${r}, same-day break`,
+    destFund: 'Tokenised money market fund (option)',
+    destFundSub: (r: string) => `${r} net, off our balance sheet`,
+    usd: {
+      entityTitle: 'Lefèvre Inc (US) today',
+      entity: [
+        ['Bank', 'Norvane Bank New York'],
+        ['Model', 'Earnings credit (ECR): balances earn credits that only offset fees'],
+      ] as [string, string][],
+      ecr: (r: string) => `Earnings credit rate ${r}`,
+      fees: (v: string) => `Fees offset a year: ${v}`,
+      surplus: (v: string, thr: string) =>
+        `Average surplus ${v} above an operating threshold of ${thr}`,
+      ruleTitle: 'The rule — surplus to a tokenised government fund',
+      ruleLines: [
+        'Every business day, surplus above the threshold → tokenised government money market fund (2a-7)',
+        'Cash leg: tokenised USD account at Norvane Bank New York — delivery versus payment',
+        'Redeemed by rule when a need is forecast; within the nightly cap out of hours',
+      ],
+      norm: 'In dollars, the money market fund is the norm: our role is the cash leg and the rule, not the fund.',
+      cashLegNote:
+        'No tokenised money market fund settles against a tokenised bank deposit today — to validate with the fund managers.',
+      fallback: 'Fallback cash leg: USDC via an authorised partner',
+      yields: 'What the surplus earns, a year',
+      yieldRows: {
+        ecr: 'Left on earnings credits (offsets fees only)',
+        tmmf: 'Tokenised government fund, net',
+        cashLeg: 'Tokenised USD account while waiting',
+      },
+      eligTitle: 'Eligibility — to validate',
+      elig: [
+        ['USYC', 'Open to non-US persons only — to validate'],
+        ['BUIDL', 'Qualified purchasers, high minimum subscription — to validate'],
+        [
+          'Euro',
+          'Only one tokenised euro fund settles in a euro stablecoin today (Spiko, EURC) — to validate',
+        ],
+      ] as [string, string][],
+      collateralTitle: 'Fund units as collateral',
+      collateral:
+        'Posting fund units as margin, without redeeming them. CFTC Letter 25-39 opens the door (to validate with counsel); no clearing house accepts them yet.',
+      setRule: 'Make it a standing rule — USD',
+      ruleApproval: 'Standing rule — USD surplus to the tokenised government fund',
+      ruleDetail: (thr: string) =>
+        `Every business day, surplus above ${thr} into the tokenised government fund; cash leg on the tokenised USD account.`,
+    },
     caveatTitle: 'To validate before any client use',
     caveats: [
       'A money market fund is not a deposit: different risk and liquidity profile, disclosed to the client',
@@ -2183,6 +2370,11 @@ export const en = {
     releaseTitle: 'Condition met: pre-validated payment released',
     releaseDetail: 'No new checks at release — they were done in advance.',
     releasedMemo: (p: string) => `Pre-validated payment released — ${p}`,
+    returnTitle: (a: string, p: string) =>
+      `Condition not met in time — ${a} back on the account (${p})`,
+    returnDetail:
+      'Deadline reached without the condition: the earmark is lifted, nothing was paid.',
+    returnMemo: (p: string) => `Earmark lifted — deadline passed, ${p}`,
     releasedNow: 'Released now',
     alreadyScreened: 'Screening',
     noRecheck: 'Done at pre-validation, still valid',

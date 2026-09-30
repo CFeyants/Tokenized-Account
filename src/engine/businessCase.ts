@@ -11,6 +11,7 @@
 import { MARKET, RATES } from '@/data/rates';
 import { TOTAL_BUFFERS } from '@/data/buffers';
 import { CORRIDOR_PRICING } from '@/data/corridors';
+import { TMMF, US_ENTITY } from '@/data/tmmf';
 
 export type ProfileId = 'midcap' | 'large' | 'multi';
 
@@ -35,6 +36,8 @@ export interface Profile {
   sweptEurToFund: number;
   /** Average USD surplus in money market funds today, and share captured through our cash leg. */
   usdInFunds: number;
+  /** USD surplus left on earnings-credit balances today (US subsidiaries). */
+  usdOnEcr: number;
   /** EUR equivalent repatriated from Brazil a year. */
   brlVolume: number;
   /** Night FX that is incremental (off-hours premium on volume that would not come to us by day). */
@@ -62,6 +65,7 @@ const P = (id: ProfileId, s: number, o: Partial<Profile>): Profile => ({
   unitBalance: 90e6 * s,
   sweptEurToFund: 20e6 * s,
   usdInFunds: 60e6 * s,
+  usdOnEcr: 20e6 * s,
   brlVolume: 72e6 * s,
   nightFxIncremental: 120e6 * s,
   activeRules: Math.round(18 * s),
@@ -134,7 +138,8 @@ export function clientValue(p: Profile) {
   const failuresValue = failures * p.costPerFailure;
   // Yield pickup on the swept surplus, per currency.
   const eurPickup = p.sweptEurToFund * (RATES.unit3m - RATES.current);
-  const usdPickup = p.usdInFunds * A.usdCaptureShare * 0; // already in funds: no pickup, a change of rail
+  // USD already in funds: a change of rail. The pickup is on balances left on earnings credits.
+  const usdPickup = p.usdOnEcr * (TMMF.yield - US_ENTITY.ecr);
   return {
     buffers: p.buffers,
     buffersInterest,

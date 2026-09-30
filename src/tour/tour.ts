@@ -47,6 +47,7 @@ export const TOUR_ACTIONS: UserAction[] = [
     amount: COMMITTED_EUR,
     condition: 'Factory acceptance certificate',
     onLedger: false,
+    deadline: at(3, '09:30') + 14 * 24 * 60,
   },
   {
     kind: 'jit',

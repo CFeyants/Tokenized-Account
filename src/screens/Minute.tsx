@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { AccountSummary } from '@/components/AccountSummary';
 import { useApp, useSim } from '@/app/store';
 import { en } from '@/i18n/en';
 import { MIN_PER_DAY, at, formatClock, formatDate, hhmm, type SimTime } from '@/engine/clock';
-import { fmtEur, fmtMinutes } from '@/engine/format';
+import { fmtEur, fmtMinutes, fmtPct } from '@/engine/format';
 import {
   EOD,
   collateralCase,
   conditionalCase,
   floatCase,
+  groupDay,
   timezoneCase,
   transitCase,
   waitingCase,
@@ -134,6 +136,7 @@ function CaseCard({
   className,
   day,
   minute,
+  defaultOpen,
 }: {
   n: number;
   title: string;
@@ -146,17 +149,18 @@ function CaseCard({
   className?: string;
   day: number;
   minute: number;
+  defaultOpen?: boolean;
 }) {
   const setT = useApp((s) => s.setT);
   const setPlaying = useApp((s) => s.setPlaying);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(!!defaultOpen);
   return (
     <Card tone={live ? 'new' : 'default'} className={cn('flex flex-col py-5', className)}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
         aria-expanded={open}
-        className="grid cursor-pointer grid-cols-[36px_1fr_150px_150px_110px_20px] items-center gap-4 text-left"
+        className="grid cursor-pointer grid-cols-[36px_1fr_140px_140px_150px_20px] items-center gap-4 text-left"
       >
         <span className="tabular font-serif text-[26px] leading-none text-muted">{n}</span>
         <span>
@@ -218,6 +222,11 @@ export function Minute() {
   const w = waitingCase(tl, t);
   const tr = transitCase(transit * M, at(7, '07:00') + dep, residual * 1000);
   const cd = conditionalCase(tl, t, true);
+  const gd = groupDay();
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (hash) document.querySelector(hash)?.scrollIntoView({ block: 'start' });
+  }, [hash]);
   const zones = timezoneCase();
 
   return (
@@ -441,6 +450,62 @@ export function Minute() {
           </table>
           <p className="mt-3 text-[12.5px] leading-relaxed text-muted">{C.zones.note}</p>
         </CaseCard>
+
+        <div id="group-day">
+          <CaseCard
+            n={7}
+            defaultOpen={hash === '#group-day'}
+            {...C.groupDay}
+            live={false}
+            day={gd.legs[0].dayInterest}
+            minute={gd.legs[0].minuteInterest}
+          >
+            <DayStrip
+              range={gd.range}
+              windows={[
+                { from: gd.range[0], to: gd.sendAt, amount: 50 * M },
+                { from: gd.sendAt, to: gd.range[1], amount: 50 * M },
+              ]}
+              zones={['paris', 'singapore', 'newYork']}
+            />
+            <table className="mt-4 w-full text-[13px]">
+              <thead>
+                <tr className="text-left text-muted">
+                  {C.groupDay.cols.map((c, i) => (
+                    <th key={c} className={cn('pb-1.5 font-normal', i > 1 && 'text-right')}>
+                      {c}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="tabular">
+                {gd.legs.map((l) => (
+                  <tr key={l.entity} className="border-t border-line">
+                    <td className="py-2 pr-2">{C.groupDay.entities[l.entity]}</td>
+                    <td className="py-2 text-muted">
+                      {hhmm(l.from)}–{l.to === gd.range[1] ? '24:00' : hhmm(l.to)}
+                    </td>
+                    <td className="py-2 text-right">
+                      {T.daysShort(l.days)}
+                      <div className="text-[11px] text-muted">{fmtEur(l.dayInterest)}</div>
+                    </td>
+                    <td className="py-2 text-right text-new">
+                      {fmtMinutes(l.to - l.from)}
+                      <div className="text-[11px]">{fmtEur(l.minuteInterest)}</div>
+                    </td>
+                  </tr>
+                ))}
+                <tr className="border-t border-line font-medium">
+                  <td className="py-2">{C.groupDay.group}</td>
+                  <td />
+                  <td className="py-2 text-right">{fmtEur(gd.dayTotal)}</td>
+                  <td className="py-2 text-right text-new">{fmtEur(gd.minuteTotal)}</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="mt-3 text-[12px] text-muted">{C.groupDay.rateNote(fmtPct(gd.rate))}</p>
+          </CaseCard>
+        </div>
       </div>
     </div>
   );

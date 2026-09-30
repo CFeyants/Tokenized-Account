@@ -20,6 +20,7 @@ import { fmtAmount, fmtEur, fmtM, fmtPct } from '@/engine/format';
 import type { State } from '@/engine/types';
 import { Dialog, SheetContent } from '@/components/ui/dialog';
 import { Chip } from '@/components/ui/chip';
+import { FX_MID } from '@/data/rates';
 import { Row } from '@/components/Page';
 import { InfoTip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -312,7 +313,10 @@ function AlmTab() {
       u.tenor === 'overnight' || u.tenor === 'weekend'
         ? 'overnight / weekend'
         : `${u.tenor}${u.currency === 'USD' ? ' (USD, EUR eq.)' : ''}`;
-    byTenor.set(k, (byTenor.get(k) ?? 0) + (u.currency === 'USD' ? u.amount / 1.08 : u.amount));
+    byTenor.set(
+      k,
+      (byTenor.get(k) ?? 0) + (u.currency === 'USD' ? u.amount / FX_MID.USD : u.amount),
+    );
   }
   const pureOvernight = byTenor.get('overnight / weekend') ?? 0;
   const col = state.collateral.filter((c) => c.status === 'active');
@@ -335,6 +339,19 @@ function AlmTab() {
         <Row k={H.alm.tokSight} v={fmtM(d.tokFree)} />
         {bar(Math.max(0, d.tokFree), 'bg-new')}
       </div>
+      {(() => {
+        const committed = state.conditional.filter(
+          (c) => c.status === 'waiting' || c.status === 'awaitingRail',
+        );
+        const total = committed.reduce((a, c) => a + c.amount, 0);
+        return (
+          <div>
+            {' '}
+            <Row k={H.alm.committed} v={fmtM(total)} /> {bar(total, 'bg-new')}{' '}
+            <p className="mt-1 text-[11.5px] text-muted">{H.alm.committedNote}</p>{' '}
+          </div>
+        );
+      })()}
       <div>
         <Row k={H.alm.units} v={fmtM(d.termUnits + d.usdUnitsEur)} />
         {[...byTenor.entries()].map(([k, v]) => (
@@ -387,6 +404,13 @@ function IntragroupTab() {
         {H.igLead}
         <InfoTip content={en.tips.mirror} />
       </p>
+      <Link
+        to="/minute#group-day"
+        className="flex items-center gap-2 rounded-xl border border-new/30 px-3 py-2 text-[12.5px] text-new hover:bg-new-soft"
+      >
+        <Chip tone="new">{en.minute.cases.groupDay.badge}</Chip>
+        {en.minute.cases.groupDay.fromHood}
+      </Link>
       {state.mirrors.length === 0 && <p className="text-[13px] text-muted">{H.igEmpty}</p>}
       {state.mirrors.map((m) => (
         <div key={m.id} className="rounded-xl border border-new/30 p-4">

@@ -152,3 +152,27 @@ test('guided tour: ten steps, the presenter advances, each step on its page', as
   await page.getByTestId('tour-finish').click();
   await expect(page.getByRole('heading', { name: 'Business case' })).toBeVisible();
 });
+
+test('brief of 30/09: stablecoin pre-validation, JIT FX cost, USD sweep, committed, group day', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.getByText('Committed, not gone').first()).toBeVisible();
+
+  await page.goto('/pre-validation');
+  await expect(page.getByText('Inbound stablecoin — Brazil repatriation')).toBeVisible();
+  await expect(page.getByText('Checked automatically, at each transfer')).toBeVisible();
+
+  await page.goto('/just-in-time?preset=riyadh');
+  await expect(page.getByText('What the conversion costs you')).toBeVisible();
+  await page.getByRole('radio', { name: /Lock the rate on Friday/ }).click();
+  await expect(page.getByText('Where the dollars come from, in order')).toBeVisible();
+
+  await page.goto('/sweep');
+  await page.getByRole('tab', { name: 'Dollar — Lefèvre Inc (US)' }).click();
+  await expect(page.getByText('The rule — surplus to a tokenised government fund')).toBeVisible();
+
+  await page.goto('/minute#group-day');
+  await expect(page.getByText('A multi-time-zone day')).toBeVisible();
+  await expect(page.getByText('Lefèvre Singapore', { exact: true })).toBeVisible();
+});

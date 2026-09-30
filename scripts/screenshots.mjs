@@ -22,6 +22,7 @@ const shots = [
   { name: 'incidents', path: '/incidents' },
   { name: 'approvals', path: '/approvals' },
   { name: 'hood', path: '/week?t=2026-10-10T22:00', hood: true },
+  { name: 'minute', path: '/minute#group-day' },
 ].filter((s) => only.length === 0 || only.includes(s.name));
 
 const browser = await chromium.launch();
@@ -43,7 +44,7 @@ for (const s of shots) {
   await page.goto(base + s.path, { waitUntil: 'networkidle' });
   if (s.hood) await page.getByTestId('hood-toggle').click();
   await page.waitForTimeout(700);
-  await page.screenshot({ path: `${out}/${s.name}.png`, fullPage: false });
+  await page.screenshot({ path: `${out}/${s.name}.png`, fullPage: !!process.env.FULL });
   await ctx.close();
   console.log('shot', s.name);
 }

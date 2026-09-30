@@ -53,7 +53,7 @@ export function weekMetrics(
         compareJit(tgt.ccy as JitCcy, a.amountEur, a.t + 5, a.t).closedAtNeed.includes('parisDesk')
       )
         failures += 1;
-      fx += Math.max(0, fxFloor(tgt.ccy, a.amountEur, a.t).marginEur);
+      fx += Math.max(0, fxFloor(tgt.ccy, a.amountEur, a.t, a.lockFriday).marginEur);
     }
     if (a.kind === 'repatriate') {
       const eur =

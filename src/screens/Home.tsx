@@ -5,7 +5,7 @@ import { COCKPIT_START, useApp, useSim } from '@/app/store';
 import { useGov, PEOPLE, personLabel } from '@/app/governance';
 import { en } from '@/i18n/en';
 import { bankById, entityById } from '@/data/entities';
-import { FX_MID } from '@/data/rates';
+import { FX_MID, RATES } from '@/data/rates';
 import {
   MIN_PER_DAY,
   dayIndex,
@@ -19,7 +19,7 @@ import {
 import { WINDOWS, nextOpen } from '@/engine/markets';
 import { accountRows, drawers } from '@/engine/selectors';
 import { snapshotAt } from '@/engine/accrual';
-import { fmtAmount, fmtM, fmtMinutes, numM } from '@/engine/format';
+import { fmtAmount, fmtEur, fmtM, fmtMinutes, numM } from '@/engine/format';
 import type { State } from '@/engine/types';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -342,6 +342,72 @@ function TourStart() {
   );
 }
 
+/** Committed, not gone: earmarked and escrowed amounts still on the account, still earning. */
+function Committed() {
+  const { t, state } = useSim();
+  const K = C.committed;
+  const list = state.conditional.filter(
+    (c) => c.status === 'waiting' || c.status === 'awaitingRail',
+  );
+  const total = list.reduce((a, c) => a + c.amount, 0);
+  return (
+    <Card tone="new" data-tour="cockpit-committed">
+      <CardHeader
+        title={K.title}
+        eyebrow={K.eyebrow}
+        aside={<span className="tabular font-serif text-[20px] text-new">{fmtM(total)}</span>}
+      />
+      {list.length === 0 && <p className="text-[13px] text-muted">{K.empty}</p>}
+      <table className="w-full text-[12.5px]">
+        {list.length > 0 && (
+          <thead>
+            <tr className="text-left text-[11px] text-muted">
+              {K.cols.map((h, i) => (
+                <th
+                  key={h}
+                  className={cn('pb-2 font-normal', i === 0 || i === 2 ? '' : 'text-right')}
+                >
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+        )}
+        <tbody className="tabular">
+          {list.map((c) => {
+            const deadline = c.deadline ?? c.escrow?.expiry;
+            const interest =
+              (c.amount * RATES.tokenised * Math.max(0, t - c.since)) / (360 * MIN_PER_DAY);
+            return (
+              <tr key={c.id} className="border-t border-line align-top">
+                <td className="py-2 pr-3">
+                  <Link
+                    to={c.kind === 'escrow' ? '/smart-contracts' : '/pre-validation'}
+                    className="hover:text-new hover:underline"
+                  >
+                    {c.payee}
+                  </Link>
+                </td>
+                <td className="py-2 pr-3 text-right">{fmtM(c.amount)}</td>
+                <td className="py-2 pr-3 text-muted">{c.escrow?.purpose ?? c.condition}</td>
+                <td className="py-2 pr-3 text-right text-muted">
+                  {deadline !== undefined ? formatDate(deadline) : '—'}
+                </td>
+                <td className="py-2 text-right text-new">{fmtEur(interest, 'EUR', 0)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <ul className="mt-4 space-y-1.5 text-[12px] leading-relaxed text-muted">
+        <li>{K.returns}</li>
+        <li>{K.compare}</li>
+        <li>{K.accounting}</li>
+      </ul>
+    </Card>
+  );
+}
+
 export function Home() {
   const { t } = useSim();
   return (
@@ -363,6 +429,7 @@ export function Home() {
       <div className="grid grid-cols-12 gap-6">
         <div className="col-span-12 space-y-6 xl:col-span-8">
           <Position />
+          <Committed />
           <Forecast />
         </div>
         <div className="col-span-12 space-y-6 xl:col-span-4">

@@ -59,6 +59,8 @@ export interface ConditionalPayment {
   amount: number;
   condition: string;
   since: SimTime;
+  /** Pre-validated payments: automatic return if the condition is not met by then. */
+  deadline?: SimTime;
   /** awaitingRail: condition met, waiting for the external rail (T2) to open; still earmarked. */
   status: 'waiting' | 'awaitingRail' | 'released' | 'returned';
   releasedAt?: SimTime;

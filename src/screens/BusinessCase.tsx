@@ -100,7 +100,8 @@ export function BusinessCase() {
           />
           <div className="mt-3 border-t border-line pt-2 text-[12.5px]">
             <Row k={B.eurPickup} v={fmtEur(c.eurPickup, 'EUR', 0)} />
-            <p className="text-[12px] text-muted">{B.usdPickup}</p>
+            <Row k={B.usdPickup} v={fmtEur(c.usdPickup, 'EUR', 0)} />
+            <p className="text-[12px] text-muted">{B.usdNote}</p>
           </div>
         </Card>
 

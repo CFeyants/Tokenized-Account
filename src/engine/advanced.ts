@@ -40,7 +40,16 @@ export const JIT_TARGET: Record<JitTarget, { ccy: string; bank: string; entity: 
 };
 
 export type AdvancedAction =
-  | { kind: 'jit'; id: string; t: SimTime; to: JitTarget; source: 'EUR' | 'USD'; amountEur: number }
+  | {
+      kind: 'jit';
+      id: string;
+      t: SimTime;
+      to: JitTarget;
+      source: 'EUR' | 'USD';
+      amountEur: number;
+      /** Rate locked on the Friday desk, delivered at the minute: no night FX used. */
+      lockFriday?: boolean;
+    }
   | {
       kind: 'prevalidate';
       id: string;
@@ -50,6 +59,8 @@ export type AdvancedAction =
       amount: number;
       condition: string;
       onLedger: boolean;
+      /** If the condition is not met by then, the earmark comes back to the account by itself. */
+      deadline?: SimTime;
     }
   | { kind: 'release'; id: string; t: SimTime; target: string }
   | { kind: 'escrow'; id: string; t: SimTime; template: string }
@@ -196,7 +207,7 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
           title: A.jitTitle(fmtM(a.amountEur), tgt.ccy, a.source),
           detail: A.jitDetail(tgt.bank),
           apply: (s, c) => {
-            const q = jitQuote(tgt.ccy, a.source, a.amountEur, c.t);
+            const q = jitQuote(tgt.ccy, a.source, a.amountEur, c.t, a.lockFriday);
             if (a.source === 'EUR') {
               ensureTok(s, c, a.amountEur);
               if (tgt.ccy === 'EUR') {
@@ -215,7 +226,7 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
               );
             }
             book(s, c, a.to, q.foreign, A.jitMemo(tgt.ccy));
-            if (!isBusinessHours(c.t)) s.fxNightUsed += a.amountEur;
+            if (!isBusinessHours(c.t) && !a.lockFriday) s.fxNightUsed += a.amountEur;
             s.mirrors.push({
               id: nextId(s, 'IG'),
               t: c.t,
@@ -269,6 +280,7 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
               amount: a.amount,
               condition: a.condition,
               since: c.t,
+              deadline: a.deadline,
               status: 'waiting',
               checks,
             });
@@ -281,6 +293,27 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
             });
           },
         },
+        ...(a.deadline === undefined
+          ? []
+          : [
+              {
+                ...base,
+                id: `${a.id}-return`,
+                t: a.deadline,
+                actor: 'rule' as const,
+                layer: 'new' as const,
+                title: A.returnTitle(fmtM(a.amount), a.payee),
+                detail: A.returnDetail,
+                apply: (s: State, c: C) => {
+                  const p = s.conditional.find((x) => x.id === a.id && x.status === 'waiting');
+                  if (!p) return;
+                  payOutEarmarked(s, c, p.amount, A.returnMemo(p.payee));
+                  book(s, c, 'tok-paris', p.amount, A.returnMemo(p.payee));
+                  p.status = 'returned';
+                  p.releasedAt = c.t;
+                },
+              },
+            ]),
       ];
     case 'release':
       return [

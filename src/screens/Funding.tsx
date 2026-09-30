@@ -11,6 +11,7 @@ import {
   at,
   formatDate,
   formatDateTime,
+  isBusinessHours,
   weekday,
   type SimTime,
 } from '@/engine/clock';
@@ -23,6 +24,9 @@ import {
   type JitCcy,
 } from '@/engine/markets';
 import { JIT_TARGET, jitQuote, type JitTarget } from '@/engine/advanced';
+import { FRIDAY_LOCK_BPS, WINDOW_BPS, fxCostEur, fxFloor, fxWindow } from '@/engine/fx';
+import { TOTAL_BUFFERS, bufferOf } from '@/data/buffers';
+import { cascade } from '@/data/tmmf';
 import { fmtAmount, fmtEur, fmtM } from '@/engine/format';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -142,6 +146,137 @@ const PRESETS: {
   },
 ];
 
+/** FX cost of the JIT conversion: window, spread, lock vs floating, night limit. */
+function FxCost({
+  ccy,
+  amountEur,
+  execAt,
+  lock,
+  setLock,
+  limitLeft,
+  entity,
+}: {
+  ccy: string;
+  amountEur: number;
+  execAt: SimTime;
+  lock: boolean;
+  setLock: (v: boolean) => void;
+  limitLeft: number;
+  entity: string;
+}) {
+  const X = F.fx;
+  const w = fxWindow(execAt);
+  const bps = lock ? FRIDAY_LOCK_BPS : w.bps;
+  const cost = fxCostEur(amountEur, bps);
+  const night = !isBusinessHours(execAt) && !lock;
+  const floor = fxFloor(ccy, amountEur, execAt, lock);
+  const buffer = bufferOf(entity);
+  return (
+    <Card data-tour="jit-fxcost">
+      <CardHeader title={X.title} eyebrow={X.eyebrow} />
+      <div className="grid grid-cols-12 gap-6">
+        <div
+          className="col-span-12 space-y-1.5 md:col-span-4"
+          role="radiogroup"
+          aria-label={X.modeLabel}
+        >
+          {[false, true].map((v) => (
+            <button
+              key={String(v)}
+              role="radio"
+              aria-checked={lock === v}
+              onClick={() => setLock(v)}
+              className={cn(
+                'w-full cursor-pointer rounded-xl border px-3 py-2 text-left text-[12.5px]',
+                lock === v ? 'border-new/50 bg-new-soft' : 'border-line hover:bg-surface-2',
+              )}
+            >
+              <div className="font-medium">{v ? X.lock : X.floating}</div>
+              <div className="text-[11.5px] text-muted">{v ? X.lockSub : X.floatingSub}</div>
+            </button>
+          ))}
+        </div>
+        <div className="col-span-12 md:col-span-4">
+          <Row k={X.windowAtNeed} v={lock ? X.lock.split(',')[0] : X.windows[w.kind]} />
+          <Row k={X.spread} v={`${bps} bps`} />
+          <Row
+            k={<span className="text-fg">{X.cost}</span>}
+            v={<span className="font-serif text-[20px]">{fmtEur(cost, 'EUR', 0)}</span>}
+            className="border-t border-line"
+          />
+          <p className="mt-2 text-[11.5px] text-muted">
+            {floor.fallback && !lock
+              ? X.fallback
+              : night && amountEur > limitLeft
+                ? X.partial(fmtM(limitLeft, 'EUR', 0), fmtM(amountEur - limitLeft, 'EUR', 0))
+                : X.withinLimit}
+          </p>
+        </div>
+        <div className="col-span-12 md:col-span-4">
+          <div className="eyebrow mb-1">{X.byWindow}</div>
+          {(Object.keys(WINDOW_BPS) as (keyof typeof WINDOW_BPS)[]).map((k) => (
+            <Row
+              key={k}
+              k={`${X.windows[k]} · ${WINDOW_BPS[k]} bps`}
+              v={fmtEur(fxCostEur(amountEur, WINDOW_BPS[k]), 'EUR', 0)}
+              className={cn(!lock && k === w.kind && 'font-medium text-fg')}
+            />
+          ))}
+          <Row
+            k={`${X.lock.split(',')[0]} · ${FRIDAY_LOCK_BPS} bps`}
+            v={fmtEur(fxCostEur(amountEur, FRIDAY_LOCK_BPS), 'EUR', 0)}
+            className={cn(lock && 'font-medium text-fg')}
+          />
+        </div>
+      </div>
+      <p className="mt-4 rounded-xl bg-new-soft px-4 py-3 text-[13px] leading-relaxed">
+        {X.gain(
+          fmtM(buffer, 'EUR', 0),
+          fmtEur(buffer * RATES.overnightUnit, 'EUR', 0),
+          fmtEur(cost, 'EUR', 0),
+        )}{' '}
+        {X.groupBuffers(fmtM(TOTAL_BUFFERS, 'EUR', 0))}
+      </p>
+    </Card>
+  );
+}
+
+/** USD liquidity cascade for an out-of-hours need funded from the dollar leg. */
+function UsdCascade({ needUsd, tokUsd }: { needUsd: number; tokUsd: number }) {
+  const C = F.cascade;
+  const rows = cascade(needUsd, { tok: Math.max(0, tokUsd), overnight: 5 * M, tmmf: 45 * M });
+  const usd = (v: number) => `USD ${fmtAmount(v / M, 1)}m`;
+  return (
+    <Card data-tour="jit-cascade">
+      <CardHeader
+        title={C.title}
+        eyebrow={C.eyebrow}
+        aside={<span className="text-[12px] text-muted">{C.need(usd(needUsd))}</span>}
+      />
+      <table className="w-full text-[13px]">
+        <thead>
+          <tr className="text-left text-[11.5px] text-muted">
+            <th className="pb-2 font-normal" />
+            <th className="pb-2 text-right font-normal">{C.avail}</th>
+            <th className="pb-2 text-right font-normal">{C.take}</th>
+          </tr>
+        </thead>
+        <tbody className="tabular">
+          {rows.map((r, i) => (
+            <tr key={r.key} className="border-t border-line">
+              <td className="py-2">
+                {i + 1}. {C.rows[r.key]}
+              </td>
+              <td className="py-2 text-right text-muted">{usd(r.avail)}</td>
+              <td className={cn('py-2 text-right', r.take > 0 && 'text-new')}>{usd(r.take)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </Card>
+  );
+}
+
 export function JitTab() {
   const { t, state } = useSim();
   const [params] = useSearchParams();
@@ -156,10 +291,11 @@ export function JitTab() {
   const [amount, setAmount] = useState(PRESETS[first].amount);
   const [source, setSource] = useState<'EUR' | 'USD'>(PRESETS[first].source);
   const [, setDone] = useState<string | null>(null);
+  const [lock, setLock] = useState(false);
   const tgt = JIT_TARGET[to];
   const ccy = tgt.ccy as JitCcy;
   const execAt = Math.max(t, need - 5);
-  const q = jitQuote(tgt.ccy, source, amount * M, execAt);
+  const q = jitQuote(tgt.ccy, source, amount * M, execAt, lock);
   const cmp = compareJit(ccy, amount * M, need, t);
   const limitLeft = Math.max(0, NIGHT_FX_LIMIT_EUR - state.fxNightUsed);
 
@@ -298,7 +434,7 @@ export function JitTab() {
                 title: F.approvalSchedule(JIT_TARGET[to].bank, formatDateTime(need - 5)),
                 detail: F.approvalDetail(tgt.ccy, source),
                 amountEur: amount * M,
-                action: { kind: 'jit', to, source, amountEur: amount * M },
+                action: { kind: 'jit', to, source, amountEur: amount * M, lockFriday: lock },
                 at: need - 5,
               }}
             >
@@ -310,7 +446,7 @@ export function JitTab() {
                 title: F.approvalNow(JIT_TARGET[to].bank),
                 detail: F.approvalDetail(tgt.ccy, source),
                 amountEur: amount * M,
-                action: { kind: 'jit', to, source, amountEur: amount * M },
+                action: { kind: 'jit', to, source, amountEur: amount * M, lockFriday: lock },
               }}
             >
               <Zap /> {F.execNow}
@@ -369,6 +505,19 @@ export function JitTab() {
           )}
         </Card>
       </div>
+
+      {source === 'USD' && (
+        <UsdCascade needUsd={q.sourceAmount} tokUsd={state.bal['tok-usd-chicago']} />
+      )}
+      <FxCost
+        ccy={tgt.ccy}
+        amountEur={amount * M}
+        execAt={execAt}
+        lock={lock}
+        setLock={setLock}
+        limitLeft={limitLeft}
+        entity={to.split('-')[2] ?? ''}
+      />
 
       <Card>
         <CardHeader title={F.balances} />
@@ -444,6 +593,7 @@ export function LargeTab() {
                     amount: x.amount * M,
                     condition: x.condition,
                     onLedger,
+                    deadline: t + 14 * MIN_PER_DAY,
                   },
                 }}
               >

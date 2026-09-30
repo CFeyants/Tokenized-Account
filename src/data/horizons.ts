@@ -23,6 +23,20 @@ export const HORIZONS: Record<string, HorizonInfo> = {
     ],
   },
   sweep: { horizon: 'H2', dependencies: ['Tokenised money market fund on the ledger'] },
+  tmmfUsd: {
+    horizon: 'H2',
+    dependencies: [
+      'Tokenised government 2a-7 fund accepting a bank deposit token as cash leg',
+      'Tokenised USD account, New York',
+    ],
+  },
+  tmmfCollateral: {
+    horizon: 'H3',
+    dependencies: [
+      'Fund units accepted as margin by a clearing house (CFTC Letter 25-39 — to validate)',
+      'No clearing house accepts them yet',
+    ],
+  },
   work: { horizon: 'H1', dependencies: ['Tokenised account on one legal entity'] },
   prevalidation: {
     horizon: 'today',
