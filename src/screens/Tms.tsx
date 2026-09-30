@@ -38,7 +38,7 @@ const STMT = `<Ntry>
   <BkTxCd><Domn><Cd>CAMT</Cd><Fmly><Cd>ACCB</Cd><SubFmlyCd>SWEP</SubFmlyCd></Fmly></Domn></BkTxCd>
   <NtryDtls><TxDtls>
     <Refs><EndToEndId>RULE-OVERNIGHT-U-004</EndToEndId></Refs>
-    <AddtlTxInf>Overnight unit unwound — 1.80% × 750 min, interest in MINT line</AddtlTxInf>
+    <AddtlTxInf>Overnight unit unwound — 2.15% × 750 min, interest in MINT line</AddtlTxInf>
   </TxDtls></NtryDtls>
 </Ntry>`;
 

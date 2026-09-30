@@ -111,7 +111,7 @@ export function runOvernightUnit(s: State, ctx: Ctx): void {
     rule: R.overnight,
     decision: `${friday ? 'Three-day' : 'Overnight'} unit on idle ${fmtM(free)}${blockedMsg}`,
     instrument: u
-      ? `Unit ${u.id}, ${friday ? 'three-day' : 'overnight'}, 1.80%`
+      ? `Unit ${u.id}, ${friday ? 'three-day' : 'overnight'}, 2.15%`
       : 'No idle balance',
     rail: 'Internal ledger',
     checks: [

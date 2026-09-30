@@ -1,28 +1,60 @@
 /**
- * Indicative rates used by the mock-up (annual, Actual/360). Illustrative only.
- * Doctrine: the tokenised account never pays more than the current account.
+ * Rates used by the mock-up (annual, Actual/360). Every product rate is derived from a market
+ * reference plus a spread, so recalibrating one reference moves every screen consistently.
+ * Market references as given in the brief of 30 September 2026 — update them to the day.
+ * Doctrine: the tokenised account never pays more than the current account; yield lives in units
+ * and in the sweep.
  */
+export const MARKET = {
+  /** ECB deposit facility rate, since 10 September 2026. */
+  dfr: 0.025,
+  /** Euro short-term rate. */
+  estr: 0.024,
+  /** Brazil: Selic and CDI. */
+  selic: 0.1375,
+  cdi: 0.1365,
+  /** USD overnight reference (SOFR). Parameter — set it to the day's fixing. */
+  sofr: 0.036,
+};
+
+/** Spreads to the reference (negative = below). */
+export const SPREADS = {
+  overnightUnit: -0.0025,
+  unit1m: -0.0015,
+  unit3m: -0.001,
+  unit6m: -0.0005,
+  unit12m: 0,
+  mmfNet: -0.0015,
+  intradayDebit: 0.0025,
+  usdUnit1m: -0.002,
+};
+
 export const RATES = {
   current: 0.005,
   tokenised: 0.001,
-  overnightUnit: 0.018,
-  weekendUnit: 0.018,
-  unit1m: 0.0205,
-  unit3m: 0.022,
-  unit6m: 0.023,
-  unit12m: 0.0235,
-  mmf: 0.0195,
-  classicTD: { '1m': 0.0205, '3m': 0.022, '6m': 0.023, '12m': 0.0235 },
-  usdUnit1m: 0.039,
+  overnightUnit: MARKET.estr + SPREADS.overnightUnit,
+  weekendUnit: MARKET.estr + SPREADS.overnightUnit,
+  unit1m: MARKET.estr + SPREADS.unit1m,
+  unit3m: MARKET.estr + SPREADS.unit3m,
+  unit6m: MARKET.estr + SPREADS.unit6m,
+  unit12m: MARKET.estr + SPREADS.unit12m,
+  mmf: MARKET.estr + SPREADS.mmfNet,
+  classicTD: {
+    '1m': MARKET.estr + SPREADS.unit1m,
+    '3m': MARKET.estr + SPREADS.unit3m,
+    '6m': MARKET.estr + SPREADS.unit6m,
+    '12m': MARKET.estr + SPREADS.unit12m,
+  },
+  usdUnit1m: MARKET.sofr + SPREADS.usdUnit1m,
   usdCurrent: 0.005,
-  /** Intraday credit on the tokenised account, counted to the minute (assumption A-5). */
-  intradayDebit: 0.025,
+  /** Intraday credit on the tokenised account, counted to the minute. */
+  intradayDebit: MARKET.estr + SPREADS.intradayDebit,
 } as const;
 
 export const PRICING = {
   /** Term unit sold back to the bank: par + accrued − 2 bps of nominal. */
   unitSpreadBps: 2,
-  /** Out-of-hours FX quote: mid ± 10 bps. */
+  /** Out-of-hours FX quote: mid ± 10 bps (see engine/fx.ts for the window-based quote). */
   fxNightBps: 10,
   /** Money market fund: constant NAV. */
   mmfNav: 1.0,

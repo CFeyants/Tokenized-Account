@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { buildTimeline, stateAfter, stateAt } from '@/engine/timeline';
 import { drawers } from '@/engine/selectors';
 import { at } from '@/engine/clock';
+import { RATES } from '@/data/rates';
 
 const tl = buildTimeline();
 const m = (v: number) => Math.round((v / 1_000_000) * 1000) / 1000;
@@ -45,11 +46,11 @@ describe('scenario — state table of §3.1', () => {
     expect(s.bal['tok-usd-chicago']).toBe(0);
   });
 
-  it('row 7: USD becomes final at Tue 10:30 and sits in a 1-month unit at 3.90%', () => {
+  it('row 7: USD becomes final at Tue 10:30 and sits in a 1-month USD unit', () => {
     const s = stateAfter(tl, 'e7');
     const u = s.units.find((x) => x.currency === 'USD');
     expect(u?.amount).toBe(10_000_000);
-    expect(u?.rate).toBeCloseTo(0.039);
+    expect(u?.rate).toBeCloseTo(RATES.usdUnit1m);
     expect(s.pending[0].finalAt).toBe(at(1, '10:30'));
   });
 

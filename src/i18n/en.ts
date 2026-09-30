@@ -51,7 +51,7 @@ export const en = {
     e7: {
       title: 'USD cover received: USD 10m is final',
       detail:
-        'Default choice applied: kept in USD and placed in a 1-month term unit at 3.90%. Interest counts from 10:30, not from Monday.',
+        'Default choice applied: kept in USD and placed in a 1-month term unit at 3.40%. Interest counts from 10:30, not from Monday.',
     },
     e8: {
       title: 'Bid bond for Brazil: EUR 15m blocked as collateral',
@@ -61,7 +61,7 @@ export const en = {
     e9: {
       title: 'Durable surplus: 3-month term unit, EUR 50m',
       detail:
-        'The cash forecast (traditional tool) shows EUR 50m of durable surplus. EUR 50m moved from the current account, 3-month unit bought at 2.20%.',
+        'The cash forecast (traditional tool) shows EUR 50m of durable surplus. EUR 50m moved from the current account, 3-month unit bought at 2.30%.',
     },
     e10: {
       title: 'Tokenised fund order, EUR 10m — queued',
@@ -156,7 +156,7 @@ export const en = {
     t2: 'Instant collection EUR 12m',
     t7: 'USD 10m credited on USD current account',
     t8: 'Cash gage EUR 15m on a blocked account at 0%',
-    t9: 'Classic 3-month term deposit EUR 50m at 2.20%',
+    t9: 'Classic 3-month term deposit EUR 50m at 2.30%',
     t11: 'Money market fund EUR 10m (order executed next day)',
     t13: 'Singapore pre-funded Friday before cut-off',
     t14: 'Weekend collections EUR 44m on the current account',
@@ -284,9 +284,9 @@ export const en = {
     jitTitle: 'Intraday credit (just-in-time)',
     jitSub: (cost: string) => `cost ${cost}`,
     newFormula:
-      'Current account: end-of-day balance × 0.50% / 360, once a day. Tokenised account: balance × 0.10% × minutes / 518,400. Term units: amount × unit rate × minutes / 518,400. Fund: 1.95% to the minute. Minus intraday credit (2.50% to the minute) and the 2 bps spread on units sold.',
+      'Current account: end-of-day balance × 0.50% / 360, once a day. Tokenised account: balance × 0.10% × minutes / 518,400. Term units: amount × unit rate × minutes / 518,400. Fund: 2.25% to the minute. Minus intraday credit (2.65% to the minute) and the 2 bps spread on units sold.',
     tradFormula:
-      'Everything on the current account: end-of-day balance × 0.50% / 360. Classic 3-month deposit 2.20% (daily), fund 1.95%. Blocked collateral: cash gage at 0%. Nothing placed overnight or at the weekend. Breaking the deposit on Monday costs the accrued interest on EUR 20m plus 5 bps.',
+      'Everything on the current account: end-of-day balance × 0.50% / 360. Classic 3-month deposit 2.30% (daily), fund 2.25%. Blocked collateral: cash gage at 0%. Nothing placed overnight or at the weekend. Breaking the deposit on Monday costs the accrued interest on EUR 20m plus 5 bps.',
     diffTip:
       'The gap comes from late cash earning the overnight rate, collateral that keeps earning, the weekend unit and selling a unit instead of breaking a deposit. The ledger pays nothing extra on sight balances: 0.10% is below the current account.',
     hoursTip:
@@ -294,7 +294,7 @@ export const en = {
     sweptTip:
       'Gross amount swept by instant transfer from HSBC and Deutsche Bank after their cut-off, and what is still held after each morning’s return rule. Balances left at other banks are counted at 0%.',
     jitTip:
-      'Minutes a group account spent below zero on the ledger, and what it cost: |balance| × 2.50% × minutes / 518,400. Only the minutes borrowed are paid.',
+      'Minutes a group account spent below zero on the ledger, and what it cost: |balance| × 2.65% × minutes / 518,400. Only the minutes borrowed are paid.',
     actual360: 'Actual/360 throughout.',
   },
 
@@ -346,7 +346,7 @@ export const en = {
     trad: 'Already there today',
     tradSub: 'The tools you use every day, unchanged.',
     ruleSweep: 'Sweep above EUR 20m at 18:30 (EUR 5m on Friday)',
-    ruleOvernight: 'Overnight unit on idle balance, 1.80% (three-day on Friday)',
+    ruleOvernight: 'Overnight unit on idle balance, 2.15% (three-day on Friday)',
     ruleReturn: 'Return at 07:00 — each bank gets its day’s need',
     ruleFx: 'Out-of-hours FX for funding: EUR 25m per night',
     nightSweep: 'Night sweep: HSBC and Deutsche Bank after cut-off',
@@ -405,7 +405,7 @@ export const en = {
     sameCurrentHow: 'Counted for the full day at 0.50% on the end-of-day balance.',
     sameTok: 'Tokenised account + overnight unit',
     sameTokHow:
-      '12 hours in the overnight unit at 1.80% (19:00 → 07:00), then 2 hours on the account at 0.10% until it leaves.',
+      '12 hours in the overnight unit at 2.15% (19:00 → 07:00), then 2 hours on the account at 0.10% until it leaves.',
     poolingTitle: 'Cash pooling — zero-balancing',
     poolingText:
       'Munich and Madrid current accounts are zero-balanced into the Paris header every evening, as today. The pool is where the night sweep starts.',
@@ -562,7 +562,7 @@ export const en = {
       title: 'Overnight unit',
       friday: 'Three-day unit on Friday',
       blocked: 'Include blocked amounts (flagged not transferable)',
-      text: 'Every balance final after 18:00 is placed into an overnight unit that minute, at 1.80%, and unwound at 07:00.',
+      text: 'Every balance final after 18:00 is placed into an overnight unit that minute, at 2.15%, and unwound at 07:00.',
       gainLine: (g: string) => `${g} earned in overnight and weekend units this week`,
     },
     ret: {
@@ -628,7 +628,7 @@ export const en = {
     classic: {
       title: 'Classic term deposit',
       text: 'Fixed amount, fixed rate, 1 to 12 months. To get the money back early you break it: the accrued interest on the broken part is lost and a break cost applies.',
-      rates: 'Rates 2.05% – 2.35%',
+      rates: 'Rates 2.25% – 2.40%',
       example: 'Breaking EUR 20m of a 3-month deposit after 4 days',
       forfeited: 'Accrued interest forfeited',
       fee: 'Break cost (5 bps)',
@@ -654,7 +654,7 @@ export const en = {
         'Outside fund hours: the order will be queued for the next opening at 09:00, the cash stays in the overnight unit meanwhile.',
       openNote: 'Fund hours: settled at once on the ledger.',
       held: 'Fund units held',
-      nav: 'NAV 1.00, net yield 1.95%',
+      nav: 'NAV 1.00, net yield 2.25%',
       pledge: 'Fund units can be pledged as collateral.',
     },
     positions: 'Positions',
@@ -963,7 +963,7 @@ export const en = {
         verdict:
           'Most of the amount is earned inside the overnight and weekend units, not on the account. The minute matters at both ends: the block starts at 11:00 and ends at 19:00, not at a day boundary.',
         onAccount: 'On the account by day (0.10%)',
-        inUnit: 'In units at night (1.80%)',
+        inUnit: 'In units at night (2.15%)',
         gage: 'Cash gage at 0%',
       },
       waiting: {
@@ -1095,7 +1095,7 @@ export const en = {
         },
       ],
       total: 'Released for the group',
-      perYear: (v: string) => `${v} a year redeployed at 1.80% — more if it pays down debt`,
+      perYear: (v: string) => `${v} a year redeployed at 2.15% — more if it pays down debt`,
     },
     approvalSchedule: (bank: string, at: string) => `Just-in-time funding — ${bank}, at ${at}`,
     approvalNow: (bank: string) => `Just-in-time funding — ${bank}, now`,
@@ -1486,7 +1486,7 @@ export const en = {
       title: 'Why the corridor gives you more than FX + SWIFT',
       spread: 'FX spread: 30 bps instead of 60 bps',
       fees: 'Fees: EUR 2 network instead of EUR 65 SWIFT and correspondents',
-      days: 'Value days: EUR on the account today instead of D+2 (at 1.80%)',
+      days: 'Value days: EUR on the account today instead of D+2 (at 2.15%)',
       total: 'Difference',
     },
     weekend:
@@ -1546,7 +1546,7 @@ export const en = {
     fund: 'Fund a subsidiary from it',
     nightTitle: 'At night, all of it goes into a unit',
     nightLead:
-      'After 18:00, free, blocked and earmarked amounts are placed in an overnight unit at 1.80% — flagged when blocked, so nothing can move them.',
+      'After 18:00, free, blocked and earmarked amounts are placed in an overnight unit at 2.15% — flagged when blocked, so nothing can move them.',
     nightNow: 'In overnight or weekend units now',
     tradTitle: 'Today',
     trad: 'A cash gage at 0%, a separate buffer on a current account, and nothing earned overnight.',
@@ -1606,21 +1606,30 @@ export const en = {
     opensAt: (t: string) => `opens ${t}`,
     ratesTitle: 'Rates (indicative, Actual/360)',
     rates: [
-      { k: 'Current account', v: 0.005, note: 'by the day, end-of-day balance' },
+      { key: 'current', k: 'Current account', note: 'by the day, end-of-day balance' },
       {
+        key: 'tokenised',
         k: 'Tokenised account',
-        v: 0.001,
-        note: 'to the minute — a service account, never above the current account',
+        note: 'to the minute — a service account, never above the current account: the yield comes from units and the sweep',
       },
-      { k: 'Overnight unit', v: 0.018, note: 'by rule after 18:00, three-day on Friday' },
       {
-        k: 'Term units 1–12 months',
-        v: 0.0205,
-        v2: 0.0235,
-        note: 'sold before maturity, never broken',
+        key: 'overnightUnit',
+        k: 'Overnight unit',
+        note: '€STR − 25 bps, by rule after 18:00, three-day on Friday',
       },
-      { k: 'Tokenised money market fund', v: 0.0195, note: 'net, fund hours 09:00–15:00' },
+      {
+        key: 'units',
+        k: 'Term units 1–12 months',
+        note: '€STR − 15 to 0 bps; sold before maturity, never broken',
+      },
+      {
+        key: 'mmf',
+        k: 'Tokenised money market fund (EUR)',
+        note: '€STR − 15 bps net, fund hours 09:00–15:00',
+      },
     ],
+    ratesRef: (estr: string, dfr: string) =>
+      `References: €STR ${estr}, ECB deposit facility ${dfr}. Each rate is a parameter.`,
     useCases: 'All use cases',
   },
 
@@ -1763,7 +1772,7 @@ export const en = {
     bank: {
       retained: 'Deposits on the ledger (tokenised + units)',
       captured: 'of which captured from other banks',
-      remuneration: 'Remuneration paid (0.10% tokenised, 1.80% units)',
+      remuneration: 'Remuneration paid (0.10% tokenised, 2.15% units)',
       niiToday: 'Net interest income on these balances today',
       niiNew: 'Net interest income with the ledger',
       niiDelta: 'Change in net interest income',
@@ -1773,7 +1782,7 @@ export const en = {
       net: 'Net for the bank',
     },
     niiNote:
-      'The overnight unit costs margin: money that sat on the current account at 0.50% now earns 1.80%. The case holds on subscriptions, night FX and deposits captured from other banks — and on keeping the client.',
+      'The overnight unit costs margin: money that sat on the current account at 0.50% now earns 2.15%. The case holds on subscriptions, night FX and deposits captured from other banks — and on keeping the client.',
     lcrTitle: 'Liquidity (LCR)',
     lcr: 'Deposits tied to installed rules (sweeps, collateral, standing funding) behave like operational balances; overnight units are overnight money. The treatment of each category is to validate with ALM.',
     keepTitle: 'Why the client stays',
@@ -1801,7 +1810,7 @@ export const en = {
     cols: ['Day', 'Swept at 14:30', 'Days held', 'Gain vs current account'],
     weekGain: (v: string) => `${v} over the week`,
     perYear: (v: string, avg: string) =>
-      `${v} a year on an average ${avg} in the fund (1.95% vs 0.50%)`,
+      `${v} a year on an average ${avg} in the fund (2.25% vs 0.50%)`,
     setRule: 'Make it a standing rule',
     runOnce: (a: string) => `Sweep ${a} once, now`,
     ruleTitle: 'Standing rule — sweep to the tokenised fund',

@@ -1,3 +1,4 @@
+import { RATES } from '@/data/rates';
 /**
  * Business case, annualised, for three client profiles. The value to the client is measured where
  * it really is — buffers released, hours saved, failures avoided — not in interest to the minute.
@@ -90,7 +91,7 @@ export const PROFILES: Record<ProfileId, Profile> = {
 
 export const ASSUMPTIONS = {
   /** Released buffers redeployed in the overnight unit (conservative; debt reduction is worth more). */
-  redeployRate: 0.018,
+  redeployRate: RATES.overnightUnit,
   /** Share of manual hours automated by standing rules. */
   automatedShare: 0.6,
   hoursPerFte: 1_600,

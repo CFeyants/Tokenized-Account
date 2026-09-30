@@ -189,7 +189,7 @@ export const SCENARIO: SimEvent[] = [
       c.orchestrate({
         rule: R.receipt,
         decision: 'Cover on nostro: final. Default choice: USD 1-month unit.',
-        instrument: 'USD term unit 3.90%',
+        instrument: 'USD term unit 3.40%',
         rail: 'Correspondent → ledger',
         checks: [
           {
@@ -263,7 +263,7 @@ export const SCENARIO: SimEvent[] = [
       rule: R.funding,
       decision:
         'Receipt of EUR 4.0m expected 06:30: cover with intraday credit, do not unwind units',
-      instrument: 'Intraday credit to the minute, 2.50%',
+      instrument: 'Intraday credit to the minute, 2.65%',
       rail: 'SCT Inst out',
       checks: [
         screeningCheck,
@@ -301,7 +301,7 @@ export const SCENARIO: SimEvent[] = [
       c.orchestrate({
         rule: R.marie,
         decision: 'Durable surplus per forecast: 3-month unit',
-        instrument: '3-month term unit, 2.20%',
+        instrument: '3-month term unit, 2.30%',
         rail: 'Internal ledger',
         checks: [{ name: 'Source', ok: true, detail: 'Cash forecast (traditional tool)' }],
       });
@@ -445,7 +445,7 @@ export const SCENARIO: SimEvent[] = [
     c.orchestrate({
       rule: R.overnight,
       decision: 'Late cash earns: unit bought the minute it is final',
-      instrument: 'Weekend unit to Mon 07:00, 1.80%',
+      instrument: 'Weekend unit to Mon 07:00, 2.15%',
       rail: 'SCT Inst in → ledger',
       checks: [
         { name: en.checks.finality, ok: true, detail: 'Instant transfer: final on receipt' },

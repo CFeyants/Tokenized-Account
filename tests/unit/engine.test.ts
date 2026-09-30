@@ -82,7 +82,11 @@ describe('accrual', () => {
     const tok =
       minuteAccrual(1_000_000, RATES.overnightUnit, 12 * 60) +
       minuteAccrual(1_000_000, RATES.tokenised, 120);
-    expect(tok).toBeCloseTo(25.23, 2);
+    expect(tok).toBeCloseTo(
+      (1_000_000 * RATES.overnightUnit * 12) / 8640 + (1_000_000 * RATES.tokenised * 2) / 8640,
+      6,
+    );
+    expect(tok).toBeGreaterThan(current);
   });
 
   it('integrates constant segments exactly', () => {
