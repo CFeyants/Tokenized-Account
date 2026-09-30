@@ -997,6 +997,95 @@ export const en = {
     },
   },
 
+  /** Engine copy for funding, large payments, escrow and corridors. */
+  adv: {
+    jitTitle: (a: string, ccy: string, src: string) =>
+      `Just-in-time funding ${a} → ${ccy} (from ${src})`,
+    jitDetail: (bank: string) =>
+      `Converted by the markets desk on the ledger and credited on ${bank} at once, final. Interest counted to the minute on both sides.`,
+    jitMemo: (ccy: string) => `${ccy} credited — just-in-time intragroup funding`,
+    fxMemo: (from: string, to: string, day: boolean) =>
+      `${day ? 'FX' : 'Out-of-hours FX'} ${from} → ${to} (markets desk)`,
+    mirrorMemo: 'Mirror intragroup balance created at the same instant.',
+    jitDecision: (src: string, ccy: string, rate: string, bps: number) =>
+      `${src} → ${ccy} at ${rate} (mid − ${bps} bps)`,
+    ledgerRail: 'Ledger — final at once',
+    purposeCheck: 'Purpose',
+    purposeOk: 'Funding a group entity — not trading',
+    preTitle: (a: string, p: string) => `Large payment pre-validated: ${a} to ${p}`,
+    preDetail: (cond: string) =>
+      `All checks done in advance. Earmarked on the tokenised account until: ${cond}. Keeps earning to the minute.`,
+    preMemo: (p: string) => `Earmarked — pre-validated payment to ${p}`,
+    preDecision: 'Pre-validate now, release in seconds when the condition is met',
+    earmarkInstrument: 'Earmarked sub-balance, tokenised account',
+    onLedgerCheck: 'Beneficiary bank on the ledger',
+    preChecks: (cat: 'equipment' | 'mna', onLedger: boolean): [string, string][] => [
+      ['Sanctions & embargo screening', 'Payee, beneficiary bank, goods / target cleared'],
+      ['Verification of payee', 'Name matches the account'],
+      [
+        'KYC / beneficial owners',
+        cat === 'mna' ? 'Sellers and escrow agent identified' : 'Supplier file up to date',
+      ],
+      ['Approvals', cat === 'mna' ? 'Board resolution + two signatories' : 'CFO + two signatories'],
+      ['Limit', 'One-off payment limit raised for this transaction'],
+      ['Liquidity', 'Funded from the tokenised account and units, sold to the minute if needed'],
+      ...(onLedger
+        ? ([['Beneficiary bank on the ledger', 'Final at once, at any hour']] as [string, string][])
+        : ([['Rail at release', 'T2 (RTGS), Mon–Fri 07:00–17:00']] as [string, string][])),
+    ],
+    releaseTitle: 'Condition met: pre-validated payment released',
+    releaseDetail: 'No new checks at release — they were done in advance.',
+    releasedMemo: (p: string) => `Pre-validated payment released — ${p}`,
+    releasedNow: 'Released now',
+    alreadyScreened: 'Screening',
+    noRecheck: 'Done at pre-validation, still valid',
+    awaitT2: (a: string) => `${a} waits for T2 to open — still earmarked, still earning`,
+    t2Closed: 'T2 closed — the beneficiary bank is not on the ledger',
+    t2OpenTitle: 'T2 opens: pre-validated payment leaves',
+    t2OpenDetail: 'The payment departs at the first minute the rail allows.',
+    escrowRule: 'Escrow rule',
+    escrowTitle: (a: string, n: string) => `Escrow opened: ${a} — ${n}`,
+    escrowDetail:
+      'Purpose-bound money on the tokenised account: it can only go to the listed payees, when the oracle confirms each milestone.',
+    escrowMemo: (n: string) => `Escrow — ${n}`,
+    escrowDecision: 'Open escrow from template; bind oracle; whitelist payees',
+    pbmInstrument: 'Purpose-bound sub-balance, tokenised account',
+    payeeWhitelist: 'Payee whitelist',
+    oracleTitle: (m: string, ok: boolean) =>
+      ok ? `Oracle event received: ${m}` : `Oracle event rejected: ${m}`,
+    oracleOk: 'Signature verified, milestone matched, the rule executes.',
+    oracleRejected: 'Invalid signature: nothing moves.',
+    oracleRejectedDecision: 'Event rejected — no movement',
+    duplicate: 'Milestone already met — ignored',
+    badSignature: 'Signature does not match the registered key',
+    signatureCheck: 'Oracle signature',
+    escrowPaid: (m: string) => `Escrow release — ${m}`,
+    paidOut: (a: string) => `Paid ${a} to the whitelisted payee`,
+    conditionMet: 'Condition met — nothing to pay at this step',
+    corridorTitle: (a: string, p: string, rail: 'interbank' | 'traditional') =>
+      `Payment ${a} to ${p} — ${rail === 'interbank' ? 'interbank tokenised deposit' : 'traditional rail'}`,
+    corridorDetail: (fromTok: boolean, rail: 'interbank' | 'traditional') =>
+      `${fromTok ? 'From the tokenised account (counted to the minute until departure)' : 'From the current account (daily convention)'}; ${rail === 'interbank' ? 'final on both banks’ ledgers at once.' : 'SCT Inst or T2.'}`,
+    corridorMemo: (p: string, b: string, rail: 'interbank' | 'traditional') =>
+      `${rail === 'interbank' ? 'Interbank tokenised deposit' : 'SCT Inst'} — ${p} (${b})`,
+    interbankLeg: 'Interbank ledger: deposit transferred to the partner bank, final',
+    interbankRail: 'Interbank ledger (pilot corridor)',
+    corridorRule: 'Stablecoin corridor',
+    repDetail: (ccy: string) =>
+      `Repatriation ${ccy} → EUR through the partner wallet and the euro stablecoin.`,
+    repLock: (a: string, rate: string) => `Rate locked for 15 minutes: ${a} at ${rate}`,
+    repWallet: (rail: string) => `Local account → partner wallet by ${rail}`,
+    repWalletMemo: (rail: string) => `To partner wallet by ${rail}`,
+    repConvert: 'Converted into the Qivalis euro stablecoin at the locked rate',
+    repSend: 'Euro stablecoin sent to the master account address',
+    repCredit: 'Redeemed at par: EUR credited on the tokenised account, final',
+    repCreditDecision: (a: string) => `${a} credited — off-ramped at par on the master account`,
+    stablecoinRail: 'Partner wallet → euro stablecoin → master account',
+    travelRule: 'Travel rule',
+    travelRuleOk: 'Originator and beneficiary data received with the transfer',
+    redeemedAtPar: 'Redeemed 1:1 — final on our books',
+  },
+
   actors: { rule: 'Rule', marie: 'Marie', event: 'Event' },
   layers: { new: 'New', traditional: 'Today', notYet: 'Not yet', none: '' },
 

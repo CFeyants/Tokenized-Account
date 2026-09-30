@@ -17,6 +17,28 @@ export interface Drawers {
   tokOtherCcyEur: number;
 }
 
+/** Tokenised accounts of foreign subsidiaries (USD, SGD, JPY, SAR), EUR equivalent. */
+export const foreignTokEur = (s: State) =>
+  s.bal['tok-usd-chicago'] / FX_MID.USD +
+  s.bal['tok-sgd-singapore'] / FX_MID.SGD +
+  s.bal['tok-jpy-tokyo'] / FX_MID.JPY +
+  s.bal['tok-sar-riyadh'] / FX_MID.SAR;
+
+/** Latin American subsidiaries' local bank accounts, EUR equivalent. */
+export const latamLocalEur = (s: State) =>
+  s.bal['loc-brl-saopaulo'] / FX_MID.BRL +
+  s.bal['loc-mxn-monterrey'] / FX_MID.MXN +
+  s.bal['loc-cop-bogota'] / FX_MID.COP +
+  s.bal['loc-clp-santiago'] / FX_MID.CLP;
+
+/** Balances with the corridor partner, EUR equivalent. */
+export const walletsEur = (s: State) =>
+  s.wallets['bitso-brl'] / FX_MID.BRL +
+  s.wallets['bitso-mxn'] / FX_MID.MXN +
+  s.wallets['bitso-cop'] / FX_MID.COP +
+  s.wallets['bitso-clp'] / FX_MID.CLP +
+  s.wallets['bitso-qeur'];
+
 const isShort = (u: Unit) => u.tenor === 'overnight' || u.tenor === 'weekend';
 
 /** The five columns of the §3.1 table (EUR), plus what is outside the bank. */
@@ -29,11 +51,16 @@ export function drawers(s: State): Drawers {
       s.blocked + s.earmarked + eurUnits.filter((u) => u.blocked).reduce((a, u) => a + u.amount, 0),
     termUnits: eurUnits.filter((u) => !u.blocked).reduce((a, u) => a + u.amount, 0),
     fund: s.fundUnits,
-    otherBanks: s.bal['hsbc-paris'] + s.bal['db-munich'] + STATIC_OTHER_BANKS_EUR,
+    otherBanks:
+      s.bal['hsbc-paris'] +
+      s.bal['db-munich'] +
+      STATIC_OTHER_BANKS_EUR +
+      latamLocalEur(s) +
+      walletsEur(s),
     usdUnitsEur: s.units
       .filter((u) => u.currency === 'USD')
       .reduce((a, u) => a + u.amount / FX_MID.USD, 0),
-    tokOtherCcyEur: s.bal['tok-usd-chicago'] / FX_MID.USD + s.bal['tok-sgd-singapore'] / FX_MID.SGD,
+    tokOtherCcyEur: foreignTokEur(s),
     pendingEur: s.pending
       .filter((p) => p.status === 'pendingCover')
       .reduce((a, p) => a + p.amount / FX_MID[p.currency], 0),
@@ -51,7 +78,15 @@ export function minuteWeight(s: State): number {
   const tokEur = ['tok-paris', 'tok-munich'] as const;
   for (const a of tokEur) w += Math.max(0, s.bal[a]) * RATES.tokenised;
   w += (Math.max(0, s.bal['tok-usd-chicago']) / FX_MID.USD) * RATES.tokenised;
-  w += (Math.max(0, s.bal['tok-sgd-singapore']) / FX_MID.SGD) * RATES.tokenised;
+  w +=
+    (Math.max(0, s.bal['tok-sgd-singapore']) / FX_MID.SGD +
+      Math.max(0, s.bal['tok-jpy-tokyo']) / FX_MID.JPY +
+      Math.max(0, s.bal['tok-sar-riyadh']) / FX_MID.SAR) *
+    RATES.tokenised;
+  w +=
+    (Math.max(0, s.bal['tok-jpy-tokyo']) / FX_MID.JPY +
+      Math.max(0, s.bal['tok-sar-riyadh']) / FX_MID.SAR) *
+    RATES.tokenised;
   w += (s.blocked + s.earmarked) * RATES.tokenised;
   for (const u of s.units) w += (u.amount / (u.currency === 'USD' ? FX_MID.USD : 1)) * u.rate;
   w += s.fundUnits * RATES.mmf;

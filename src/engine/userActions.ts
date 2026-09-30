@@ -20,6 +20,7 @@ import { fxNightQuote, unitSaleQuote } from './pricing';
 import { screeningCheck } from './rules';
 import { fmtEur, fmtM } from './format';
 import type { SimEvent, State } from './types';
+import { advancedToEvents, type AdvancedAction } from './advanced';
 
 export type UserAction =
   | {
@@ -42,7 +43,8 @@ export type UserAction =
   | { kind: 'buyUnit'; id: string; t: SimTime; tenor: UnitTenor; amount: number }
   | { kind: 'sellUnit'; id: string; t: SimTime; unitId: string; amount: number }
   | { kind: 'fund'; id: string; t: SimTime; amount: number }
-  | { kind: 'block'; id: string; t: SimTime; amount: number; label: string };
+  | { kind: 'block'; id: string; t: SimTime; amount: number; label: string }
+  | AdvancedAction;
 
 /** A user action before the store stamps it with an id and the current minute. */
 export type NewUserAction = UserAction extends infer U
@@ -72,6 +74,16 @@ export function nextFundOpening(t: SimTime): SimTime {
 }
 
 export function actionToEvents(a: UserAction): SimEvent[] {
+  if (
+    a.kind === 'jit' ||
+    a.kind === 'prevalidate' ||
+    a.kind === 'release' ||
+    a.kind === 'escrow' ||
+    a.kind === 'oracle' ||
+    a.kind === 'corridorPay' ||
+    a.kind === 'repatriate'
+  )
+    return advancedToEvents(a);
   const base = { id: a.id, t: a.t, actor: 'marie' as const, kind: 'user' as const };
   switch (a.kind) {
     case 'payment':

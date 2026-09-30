@@ -12,6 +12,12 @@ export type AccountId =
   | 'tok-munich'
   | 'tok-usd-chicago'
   | 'tok-sgd-singapore'
+  | 'tok-jpy-tokyo'
+  | 'tok-sar-riyadh'
+  | 'loc-brl-saopaulo'
+  | 'loc-mxn-monterrey'
+  | 'loc-cop-bogota'
+  | 'loc-clp-santiago'
   | 'hsbc-paris'
   | 'db-munich';
 
@@ -26,6 +32,8 @@ export interface Unit {
   /** Blocked part of the tokenised account placed in the unit: keeps the unit rate, not transferable. */
   blocked: boolean;
   collateralId?: string;
+  /** Earmarked amount (pre-validated payment or escrow) placed in the unit for the night. */
+  earmarkId?: string;
   /** Bought by a rule (overnight / weekend) or by Marie. */
   origin: 'rule' | 'marie';
 }
@@ -43,15 +51,61 @@ export interface Collateral {
   releasedAt?: SimTime;
 }
 
-/** A payment screened before departure, waiting for a milestone or a document. */
+/** A payment screened before departure, waiting for a milestone, a document or an oracle event. */
 export interface ConditionalPayment {
   id: string;
+  kind: 'payment' | 'large' | 'escrow';
   payee: string;
   amount: number;
   condition: string;
   since: SimTime;
-  status: 'waiting' | 'released';
+  /** awaitingRail: condition met, waiting for the external rail (T2) to open; still earmarked. */
+  status: 'waiting' | 'awaitingRail' | 'released' | 'returned';
   releasedAt?: SimTime;
+  released?: number;
+  checks?: { name: string; ok: boolean; detail: string }[];
+  escrow?: EscrowTerms;
+  events?: OracleEvent[];
+}
+
+/** Purpose-bound money held in escrow on the tokenised account. */
+export interface EscrowTerms {
+  purpose: string;
+  payees: string[];
+  expiry: SimTime;
+  returnTo: string;
+  template: string;
+  oracle: string;
+  endpoint: string;
+  /** Release schedule: share of the escrow released when an oracle reports the milestone. */
+  milestones: { key: string; label: string; share: number; done: boolean }[];
+}
+
+export interface OracleEvent {
+  t: SimTime;
+  source: string;
+  milestone: string;
+  payload: string;
+  outcome: string;
+  accepted: boolean;
+}
+
+export type LatamCountry = 'BR' | 'MX' | 'CO' | 'CL';
+export type WalletId = 'bitso-brl' | 'bitso-mxn' | 'bitso-cop' | 'bitso-clp' | 'bitso-qeur';
+
+/** Repatriation through the stablecoin corridor: local account → partner wallet → euro stablecoin → master account. */
+export interface Repatriation {
+  id: string;
+  country: LatamCountry;
+  currency: Currency;
+  local: number;
+  rate: number;
+  lockedAt: SimTime;
+  lockUntil: SimTime;
+  eur: number;
+  fee: number;
+  status: 'locked' | 'inWallet' | 'converted' | 'inTransit' | 'credited';
+  steps: { key: string; at: SimTime }[];
 }
 
 export interface PendingReceipt {
@@ -102,10 +156,13 @@ export interface State {
   sweptTonight: Record<'hsbc-paris' | 'db-munich', number>;
   sweptInTotal: number;
   returnedTotal: number;
-  /** Realised amounts outside principal: unit sale accrued, spreads, FX. Posted to the interest engine. */
   /** Earmarked for pre-screened payments waiting for a condition: committed, not yet gone. */
   earmarked: number;
   conditional: ConditionalPayment[];
+  /** Balances held with the corridor partner (local currencies and the euro stablecoin). */
+  wallets: Record<WalletId, number>;
+  repatriations: Repatriation[];
+  /** Realised amounts outside principal: unit sale accrued, spreads, FX. Posted to the interest engine. */
   realised: { unitSaleAccrued: number; unitSaleSpread: number };
   seq: number;
 }

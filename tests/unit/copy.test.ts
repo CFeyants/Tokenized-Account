@@ -13,7 +13,14 @@ function strings(node: unknown, out: string[] = []): string[] {
   return out;
 }
 
-const BANNED = [/blockchain/i, /wallet/i, /crypto/i, /smart contract/i, /\btokens?\b/i];
+/** Never in client-facing copy. */
+const BANNED = [/blockchain/i, /crypto/i, /\btokens?\b/i];
+/**
+ * Allowed only where the product owner asked for them: corridors (partner wallets, euro
+ * stablecoin) and escrow (smart contract). Everywhere else the ledger vocabulary applies.
+ */
+const SCOPED = [/wallet/i, /smart contract/i, /stablecoin/i];
+const SCOPED_SECTIONS = ['adv', 'corridors', 'escrow', 'about', 'hood'];
 
 function files(dir: string): string[] {
   return readdirSync(dir).flatMap((f) => {
@@ -23,9 +30,14 @@ function files(dir: string): string[] {
 }
 
 describe('client-facing copy', () => {
-  it('uses no crypto vocabulary (only the product name "tokenised account")', () => {
-    const all = strings(en);
-    for (const s of all) for (const re of BANNED) expect(s, s).not.toMatch(re);
+  it('uses no crypto vocabulary; wallet, stablecoin and smart contract only in corridors and escrow', () => {
+    for (const [section, node] of Object.entries(en)) {
+      for (const s of strings(node)) {
+        for (const re of BANNED) expect(s, s).not.toMatch(re);
+        if (!SCOPED_SECTIONS.includes(section))
+          for (const re of SCOPED) expect(s, `${section}: ${s}`).not.toMatch(re);
+      }
+    }
   });
 
   it('keeps the product names', () => {

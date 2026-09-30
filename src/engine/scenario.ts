@@ -533,6 +533,7 @@ export const SCENARIO: SimEvent[] = [
     });
     s.conditional.push({
       id: WARSAW_PAYMENT,
+      kind: 'payment',
       payee: 'Wisła Rail Works, Warsaw',
       amount: amt,
       condition: 'Acceptance certificate',

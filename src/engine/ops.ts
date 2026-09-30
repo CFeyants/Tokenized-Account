@@ -1,4 +1,5 @@
 import type { AccountId, Ctx, State, Unit } from './types';
+import type { Currency } from '@/data/entities';
 import { en } from '@/i18n/en';
 import type { SimTime } from './clock';
 import { UNIT_RATE, type UnitTenor } from '@/data/rates';
@@ -13,6 +14,12 @@ export function initialState(): State {
       'tok-munich': 0,
       'tok-usd-chicago': 0,
       'tok-sgd-singapore': 0,
+      'tok-jpy-tokyo': 0,
+      'tok-sar-riyadh': 0,
+      'loc-brl-saopaulo': 12 * M * 6.05,
+      'loc-mxn-monterrey': 8 * M * 20.9,
+      'loc-cop-bogota': 5 * M * 4700,
+      'loc-clp-santiago': 4 * M * 1050,
       'hsbc-paris': 60 * M,
       'db-munich': 45 * M,
     },
@@ -28,6 +35,8 @@ export function initialState(): State {
     sweptInTotal: 0,
     returnedTotal: 0,
     earmarked: 0,
+    wallets: { 'bitso-brl': 0, 'bitso-mxn': 0, 'bitso-cop': 0, 'bitso-clp': 0, 'bitso-qeur': 0 },
+    repatriations: [],
     conditional: [],
     realised: { unitSaleAccrued: 0, unitSaleSpread: 0 },
     seq: 0,
@@ -41,12 +50,18 @@ export function nextId(s: State, prefix: string): string {
   return `${prefix}-${String(s.seq).padStart(3, '0')}`;
 }
 
-const CCY: Record<AccountId, 'EUR' | 'USD' | 'SGD'> = {
+const CCY: Record<AccountId, Currency> = {
   'cur-paris': 'EUR',
   'tok-paris': 'EUR',
   'tok-munich': 'EUR',
   'tok-usd-chicago': 'USD',
   'tok-sgd-singapore': 'SGD',
+  'tok-jpy-tokyo': 'JPY',
+  'tok-sar-riyadh': 'SAR',
+  'loc-brl-saopaulo': 'BRL',
+  'loc-mxn-monterrey': 'MXN',
+  'loc-cop-bogota': 'COP',
+  'loc-clp-santiago': 'CLP',
   'hsbc-paris': 'EUR',
   'db-munich': 'EUR',
 };
@@ -80,6 +95,7 @@ export interface BuyUnitArgs {
   maturity: SimTime;
   blocked?: boolean;
   collateralId?: string;
+  earmarkId?: string;
   origin: 'rule' | 'marie';
   rate?: number;
   memo: string;
@@ -99,9 +115,20 @@ export function buyUnit(s: State, ctx: Ctx, a: BuyUnitArgs): Unit | null {
     maturity: a.maturity,
     blocked: a.blocked ?? false,
     collateralId: a.collateralId,
+    earmarkId: a.earmarkId,
     origin: a.origin,
   };
-  if (unit.blocked) {
+  if (unit.earmarkId) {
+    s.earmarked -= a.amount;
+    ctx.post({
+      account: `${account}:earmarked`,
+      currency: a.currency,
+      amount: -a.amount,
+      finality: 'final',
+      unitId: unit.id,
+      memo: a.memo,
+    });
+  } else if (unit.blocked) {
     s.blocked -= a.amount;
     ctx.post({
       account: `${account}:blocked`,
@@ -150,7 +177,17 @@ export function unwindMatured(s: State, ctx: Ctx): number {
         unitId: u.id,
         memo: en.ledger.unwind,
       });
-      if (u.blocked) {
+      if (u.earmarkId) {
+        s.earmarked += u.amount;
+        ctx.post({
+          account: 'tok-paris:earmarked',
+          currency: 'EUR',
+          amount: u.amount,
+          finality: 'final',
+          unitId: u.id,
+          memo: en.ledger.unwind,
+        });
+      } else if (u.blocked) {
         s.blocked += u.amount;
         ctx.post({
           account: 'tok-paris:blocked',
@@ -205,4 +242,28 @@ export function partialUnwind(s: State, ctx: Ctx, amount: number): number {
   }
   s.units = s.units.filter((u) => u.amount > 0.005);
   return amount - left;
+}
+
+/** Bring earmarked amounts sitting in flagged units back to the account, to the minute. */
+export function unwindEarmarkUnits(s: State, ctx: Ctx): void {
+  for (const u of s.units.filter((x) => x.earmarkId)) {
+    ctx.post({
+      account: `unit:${u.id}`,
+      currency: 'EUR',
+      amount: -u.amount,
+      finality: 'final',
+      unitId: u.id,
+      memo: en.ledger.partialUnwind,
+    });
+    ctx.post({
+      account: 'tok-paris:earmarked',
+      currency: 'EUR',
+      amount: u.amount,
+      finality: 'final',
+      unitId: u.id,
+      memo: en.ledger.partialUnwind,
+    });
+    s.earmarked += u.amount;
+  }
+  s.units = s.units.filter((x) => !x.earmarkId);
 }

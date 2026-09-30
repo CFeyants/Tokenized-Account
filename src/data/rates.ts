@@ -32,7 +32,7 @@ export const PRICING = {
 
 /** Out-of-hours FX for intragroup funding: published night limit, EUR equivalent. */
 export const NIGHT_FX_LIMIT_EUR = 25_000_000;
-export const NIGHT_FX_CURRENCIES = ['USD', 'SGD', 'BRL', 'MXN', 'PLN'] as const;
+export const NIGHT_FX_CURRENCIES = ['USD', 'SGD', 'BRL', 'MXN', 'PLN', 'JPY', 'SAR'] as const;
 
 /** Mid rates: units of foreign currency per EUR. */
 export const FX_MID: Record<string, number> = {
@@ -42,6 +42,11 @@ export const FX_MID: Record<string, number> = {
   BRL: 6.05,
   MXN: 20.9,
   PLN: 4.28,
+  JPY: 172,
+  SAR: 4.05,
+  COP: 4700,
+  CLP: 1050,
+  QEUR: 1,
 };
 
 export type UnitTenor = 'overnight' | 'weekend' | '1m' | '3m' | '6m' | '12m';

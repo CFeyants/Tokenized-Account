@@ -94,6 +94,19 @@ export function runOvernightUnit(s: State, ctx: Ctx): void {
       memo: en.ledger.buyBlockedInUnit,
     });
   }
+  if (s.earmarked > 0) {
+    blockedMsg += ` + ${fmtM(s.earmarked)} earmarked for payments`;
+    buyUnit(s, ctx, {
+      currency: 'EUR',
+      amount: s.earmarked,
+      tenor,
+      maturity,
+      blocked: true,
+      earmarkId: 'EARMARK',
+      origin: 'rule',
+      memo: en.ledger.buyBlockedInUnit,
+    });
+  }
   ctx.orchestrate({
     rule: R.overnight,
     decision: `${friday ? 'Three-day' : 'Overnight'} unit on idle ${fmtM(free)}${blockedMsg}`,

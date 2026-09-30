@@ -1,4 +1,5 @@
-export type Currency = 'EUR' | 'USD' | 'SGD' | 'BRL' | 'MXN' | 'PLN';
+export type Currency =
+  'EUR' | 'USD' | 'SGD' | 'BRL' | 'MXN' | 'PLN' | 'JPY' | 'SAR' | 'COP' | 'CLP' | 'QEUR';
 
 export interface Entity {
   id: string;
@@ -42,6 +43,28 @@ export const ENTITIES: Entity[] = [
     country: 'United States',
     currency: 'USD',
   },
+  { id: 'tokyo', name: 'Lefèvre Japan KK', city: 'Tokyo', country: 'Japan', currency: 'JPY' },
+  {
+    id: 'riyadh',
+    name: 'Lefèvre Arabia LLC',
+    city: 'Riyadh',
+    country: 'Saudi Arabia',
+    currency: 'SAR',
+  },
+  {
+    id: 'bogota',
+    name: 'Lefèvre Colombia SAS',
+    city: 'Bogotá',
+    country: 'Colombia',
+    currency: 'COP',
+  },
+  {
+    id: 'santiago',
+    name: 'Lefèvre Chile SpA',
+    city: 'Santiago',
+    country: 'Chile',
+    currency: 'CLP',
+  },
   {
     id: 'warsaw',
     name: 'Lefèvre Polska Sp. z o.o.',
@@ -71,6 +94,8 @@ export const BANKS: Bank[] = [
   { id: 'hsbc', name: 'HSBC', ours: false, cutoff: '17:30' },
   { id: 'db', name: 'Deutsche Bank', ours: false, cutoff: '17:45' },
   { id: 'san', name: 'Santander', ours: false, cutoff: '17:00' },
+  { id: 'bnptk', name: 'BNP Paribas Tokyo', ours: true, cutoff: '15:00 JST' },
+  { id: 'bnprh', name: 'BNP Paribas Riyadh', ours: true, cutoff: '15:00 AST' },
   { id: 'local', name: 'Local banks', ours: false, cutoff: 'local' },
 ];
 

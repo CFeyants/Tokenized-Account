@@ -28,7 +28,8 @@ interface AppState {
   step: () => void;
   stepBack: () => void;
   restart: () => void;
-  addAction: (a: NewUserAction) => void;
+  /** Adds an action at the current minute (or at `at`, e.g. the minute of need). Returns its id. */
+  addAction: (a: NewUserAction, at?: SimTime) => string;
   resetActions: () => void;
   setTheme: (t: 'dark' | 'light') => void;
   openHood: (tab?: HoodTab, accrualTarget?: string) => void;
@@ -99,14 +100,12 @@ export const useApp = create<AppState>((set, get) => ({
     set({ t: e ? e.t : SIM_START, playing: false });
   },
   restart: () => set({ t: SIM_START, playing: false }),
-  addAction: (a) => {
+  addAction: (a, at) => {
     actionSeq += 1;
-    const full = {
-      ...a,
-      id: `USR-${String(actionSeq).padStart(2, '0')}`,
-      t: get().t,
-    } as UserAction;
+    const id = `USR-${String(actionSeq).padStart(2, '0')}`;
+    const full = { ...a, id, t: at ?? get().t } as UserAction;
     set({ actions: [...get().actions, full] });
+    return id;
   },
   resetActions: () => set({ actions: [] }),
   setTheme: (theme) => {
