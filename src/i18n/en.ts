@@ -104,6 +104,149 @@ export const en = {
     receipt: 'Incoming payment',
   },
 
+  nav: {
+    home: 'Cockpit',
+    accounts: 'Accounts',
+    payments: 'Payments',
+    rules: 'Rules',
+    placements: 'Placements',
+    guarantees: 'Guarantees',
+    statements: 'Statements',
+    about: 'About',
+    collapse: 'Collapse menu',
+    expand: 'Expand menu',
+    persona: 'Marie Lefèvre',
+    personaRole: 'Group Treasurer, Paris',
+  },
+
+  shell: {
+    play: 'Play the week',
+    pause: 'Pause',
+    step: 'Next event',
+    stepBack: 'Previous event',
+    restart: 'Back to Monday 09:00',
+    speed: 'Speed',
+    jump: 'Jump to a moment',
+    jumpTitle: 'Jump to a moment of the week',
+    jumpDesc: 'Every headline event of the scenario. The clock moves there; every screen follows.',
+    hood: 'Under the hood',
+    theme: 'Switch theme',
+    share: 'Copy a link to this moment',
+    copied: 'Link copied',
+    timeline: 'Week timeline — drag to move the clock',
+    business: 'Business hours',
+    night: 'Night',
+    weekend: 'Weekend',
+    evening: 'After cut-off',
+    phaseTip: 'Business hours Mon–Fri 09:00–18:00. Last cut-off 18:00. Opening 07:00.',
+    userActions: (n: number) => `${n} action${n > 1 ? 's' : ''} of yours replayed on the week`,
+    reset: 'Reset to scenario',
+    endOfWeek: 'End of the scenario week',
+    banner:
+      'You are Marie, group treasurer. Press Play to live a week. Green is what the ledger adds; grey is what already works today; dashed is outside the bank.',
+    dismiss: 'Got it',
+    cet: 'CET',
+    skip: 'Skip to content',
+  },
+
+  counters: {
+    newTitle: 'Interest this week — with the new layer',
+    tradTitle: 'Interest this week — traditional set-up',
+    newShort: 'Interest — with the ledger',
+    tradShort: 'Interest — traditional',
+    diff: 'Difference this week',
+    hoursTitle: 'Night & weekend hours earning',
+    hoursIdle: 'idle (traditional)',
+    hoursOf: (h: string) => ` of ${h} off-hours`,
+    held: (m: string) => `· ${m}m held`,
+    hoursEarning: 'earning (new)',
+    sweptTitle: 'Brought from other banks',
+    sweptSub: (held: string) => `${held} held now, net of returns`,
+    jitTitle: 'Intraday credit (just-in-time)',
+    jitSub: (cost: string) => `cost ${cost}`,
+    newFormula:
+      'Current account: end-of-day balance × 0.50% / 360, once a day. Tokenised account: balance × 0.10% × minutes / 518,400. Term units: amount × unit rate × minutes / 518,400. Fund: 1.95% to the minute. Minus intraday credit (2.50% to the minute) and the 2 bps spread on units sold.',
+    tradFormula:
+      'Everything on the current account: end-of-day balance × 0.50% / 360. Classic 3-month deposit 2.20% (daily), fund 1.95%. Blocked collateral: cash gage at 0%. Nothing placed overnight or at the weekend. Breaking the deposit on Monday costs the accrued interest on EUR 20m plus 5 bps.',
+    diffTip:
+      'The gap comes from late cash earning the overnight rate, collateral that keeps earning, the weekend unit and selling a unit instead of breaking a deposit. The ledger pays nothing extra on sight balances: 0.10% is below the current account.',
+    hoursTip:
+      'Off-hours time elapsed (after 18:00, before 09:00, weekends). Traditional: cash sits at the sight rate. New: hours during which idle cash was inside an overnight or weekend unit.',
+    sweptTip:
+      'Gross amount swept by instant transfer from HSBC and Deutsche Bank after their cut-off, and what is still held after each morning’s return rule. Balances left at other banks are counted at 0%.',
+    jitTip:
+      'Minutes a group account spent below zero on the ledger, and what it cost: |balance| × 2.50% × minutes / 518,400. Only the minutes borrowed are paid.',
+    actual360: 'Actual/360 throughout.',
+  },
+
+  drawers: {
+    title: 'Group cash by drawer',
+    current: 'Current accounts',
+    tokFree: 'Tokenised — free',
+    tokBlocked: 'Tokenised — blocked',
+    units: 'Term units',
+    fund: 'Fund units',
+    other: 'At other banks',
+    pending: 'Pending cover',
+    usd: 'USD units',
+    total: 'Group cash',
+    atBank: 'at the bank',
+  },
+
+  tips: {
+    tokRate:
+      'The tokenised account is a service account, not a yield account. It pays 0.10%, never more than the current account (0.50%). Its value is what it does: time counted to the minute, rules at any hour, blocking and releasing exact amounts. Yield lives in term units.',
+    lateCash:
+      'Late cash earns. Any balance final on the tokenised account after the 18:00 cut-off is placed by rule into an overnight unit that minute (a three-day unit on Friday), and unwound before opening at 07:00.',
+    unitSold:
+      'A term unit is never broken. Before maturity it is sold — to a group entity, another client, or the bank as market maker — at par + accrued to the minute − a 2 bps spread. The buyer holds it to maturity.',
+    fundQueued:
+      'The fund deals within fund hours (09:00–15:00). An order placed later is queued for the next opening. The cash does not wait idle: it stays in the overnight unit and earns until the order settles.',
+    pendingCover:
+      'Paid through a correspondent bank: the message has arrived, but the cover is not yet on our nostro. The funds are not final, so they do not earn. The clock starts the minute the nostro is credited.',
+    notYet:
+      'Paying a supplier banked elsewhere at night needs both banks on a shared ledger (interbank tokenised deposits, 2028). Until then, use SCT Inst — it runs 24/7 and is final in seconds.',
+    final:
+      'Final means the funds cannot be recalled and sit on the paying entity’s books. Interest to the minute starts only from that minute: at once within the bank, at once for an instant transfer, at nostro credit for a correspondent payment.',
+    mirror:
+      'When a transfer crosses two Group entities (e.g. BNP Paribas SA → BNP Paribas Singapore), the client is credited at once and the two entities record a mirror intragroup balance at the same instant, remunerated on the same clock.',
+    blockedEarns:
+      'An exact amount is blocked on the tokenised account. It stays yours and keeps earning — 0.10% by day and the unit rate at night — until the minute it is released by rule.',
+    minute: 'Counted to the minute: balance × rate × minutes / (360 × 1440).',
+    daily: 'Counted by the day: end-of-day balance × rate / 360.',
+  },
+
+  home: {
+    hello: 'Good to see you, Marie.',
+    tagline: 'Treasury, counted in minutes.',
+    intro:
+      'EUR 300m of group cash across 20 subsidiaries, 120 of it at BNP Paribas. Play the week: the rules work at night, you decide by day.',
+    feed: 'What just happened',
+    feedEmpty: 'Nothing yet. Press Play.',
+    rulesTonight: 'Rules active tonight',
+    trad: 'Already there today',
+    tradSub: 'The tools you use every day, unchanged.',
+    ruleSweep: 'Sweep above EUR 20m at 18:30 (EUR 5m on Friday)',
+    ruleOvernight: 'Overnight unit on idle balance, 1.80% (three-day on Friday)',
+    ruleReturn: 'Return at 07:00 — each bank gets its day’s need',
+    ruleFx: 'Out-of-hours FX for funding: EUR 25m per night',
+    nightSweep: 'Night sweep: HSBC and Deutsche Bank after cut-off',
+    open: 'Open',
+    showEntries: 'Ledger entries',
+    hideEntries: 'Hide entries',
+    compareTitle: 'The week so far',
+  },
+
+  tradTools: {
+    payments: { title: 'Payments', sub: 'SEPA, instant, payroll, cross-border' },
+    pooling: { title: 'Cash pooling', sub: 'Zero-balancing into the Paris header' },
+    statements: { title: 'Statements', sub: 'camt.053 / camt.054, reconciliation' },
+    forecast: { title: 'Forecast', sub: '13-week cash forecast' },
+  },
+
+  actors: { rule: 'Rule', marie: 'Marie', event: 'Event' },
+  layers: { new: 'New', traditional: 'Today', notYet: 'Not yet', none: '' },
+
   checks: {
     screening: 'Pre-screening (sanctions, embargo)',
     screeningOk: 'Cleared before departure, 1.2 s',

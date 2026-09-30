@@ -1,0 +1,167 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Palette — dark is the default. Tokens are mapped to Tailwind colours below. */
+:root {
+  --bg: #fafaf8;
+  --surface: #ffffff;
+  --surface-2: #f3f4f0;
+  --text: #16201b;
+  --muted: #5b675f;
+  --line: rgba(22, 32, 27, 0.1);
+  --line-strong: rgba(22, 32, 27, 0.2);
+  --primary: #1f4d3a;
+  --primary-fg: #ffffff;
+  --new: #2c6a45;
+  --new-soft: #d8ebd9;
+  --amber: #8f6212;
+  --amber-fill: #e2b867;
+  --amber-soft: #f4e3c3;
+  --red: #b83f3f;
+  --grey: #8c968f;
+  --grey-soft: #e6e8e3;
+  --night: rgba(31, 77, 58, 0.06);
+  --shadow: 0 1px 2px rgba(16, 24, 20, 0.04), 0 8px 24px rgba(16, 24, 20, 0.06);
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0f1412;
+  --surface: #171e1b;
+  --surface-2: #1e2724;
+  --text: #e9efea;
+  --muted: #9aa79f;
+  --line: rgba(233, 239, 234, 0.08);
+  --line-strong: rgba(233, 239, 234, 0.16);
+  --primary: #3e7d4e;
+  --primary-fg: #f3f8f4;
+  --new: #9bd3a8;
+  --new-soft: rgba(155, 211, 168, 0.1);
+  --amber: #e7b75f;
+  --amber-fill: #e7b75f;
+  --amber-soft: rgba(231, 183, 95, 0.12);
+  --red: #e06c6c;
+  --grey: #6d7a73;
+  --grey-soft: rgba(154, 167, 159, 0.14);
+  --night: rgba(0, 0, 0, 0.28);
+  --shadow: none;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--text);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-new: var(--new);
+  --color-new-soft: var(--new-soft);
+  --color-amber: var(--amber);
+  --color-amber-fill: var(--amber-fill);
+  --color-amber-soft: var(--amber-soft);
+  --color-red: var(--red);
+  --color-grey: var(--grey);
+  --color-grey-soft: var(--grey-soft);
+  --font-serif: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius-card: 16px;
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+  html,
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+  body {
+    min-width: 1024px;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--new);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: var(--new-soft);
+  }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow);
+  }
+  .outside {
+    border: 1px dashed var(--line-strong);
+  }
+  .hatch {
+    background-image: repeating-linear-gradient(
+      135deg,
+      var(--new) 0 2px,
+      transparent 2px 7px
+    );
+  }
+  .hatch-amber {
+    background-image: repeating-linear-gradient(
+      135deg,
+      var(--amber-fill) 0 2px,
+      transparent 2px 7px
+    );
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--new) 45%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+.pulse-once {
+  animation: pulse-ring 900ms ease-out 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -210,7 +210,7 @@ export function releaseCollateral(s: State, c: Parameters<SimEvent['apply']>[1],
 }
 
 /** The traditional twin of the same week: current accounts, classic deposit, cash gage, fund. */
-export const TRAD_EVENTS: TradEvent[] = [
+const TRAD_LIST: TradEvent[] = [
   { id: 't2', t: at(0, '17:45'), title: en.trad.t2, apply: (s) => { s.current += 12 * M; } },
   { id: 't1', t: at(0, '11:20'), title: en.trad.t1, apply: (s) => { s.current -= 10.5 * M; } },
   { id: 't7', t: at(1, '10:30'), title: en.trad.t7, apply: (s) => { s.usdCurrent += 10 * M; } },
@@ -231,6 +231,8 @@ export const TRAD_EVENTS: TradEvent[] = [
       s.penalty += (20 * M * RATES.classicTD['3m'] * 4) / 360 + (20 * M * 5) / 10_000;
     },
   },
-].sort((a, b) => a.t - b.t);
+];
+
+export const TRAD_EVENTS: TradEvent[] = [...TRAD_LIST].sort((a, b) => a.t - b.t);
 
 export const initialTradState = () => ({ current: 120 * M, usdCurrent: 0, classicTD: 0, cashGage: 0, fund: 0, penalty: 0 });
