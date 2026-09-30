@@ -316,7 +316,7 @@ export const en = {
     pendingCover:
       'Paid through a correspondent bank: the message has arrived, but the cover is not yet on our nostro. The funds are not final, so they do not earn. The clock starts the minute the nostro is credited.',
     notYet:
-      'Paying a supplier banked elsewhere at night needs both banks on a shared ledger (interbank tokenised deposits, 2028). Until then, use SCT Inst — it runs 24/7 and is final in seconds.',
+      'Paying a supplier banked elsewhere at night needs both banks on a shared ledger. A few partner banks are on pilot corridors (see Corridors); this bank is not yet. Until it joins, use SCT Inst — it runs 24/7 and is final in seconds.',
     final:
       'Final means the funds cannot be recalled and sit on the paying entity’s books. Interest to the minute starts only from that minute: at once within the bank, at once for an instant transfer, at nostro credit for a correspondent payment.',
     mirror:
@@ -500,11 +500,11 @@ export const en = {
       unit: 'Unit',
       minCols: ['min', 'balance', 'rate', 'this minute', 'cumulative'],
     },
-    notYetLead: 'Deliberately not working in this mock-up. Each needs the interbank layer.',
+    notYetLead: 'Deliberately not working in this mock-up, beyond the pilot corridors.',
     notYetItems: [
       {
-        title: 'Interbank tokenised deposits',
-        text: 'Pay a supplier banked elsewhere at night, final on both ledgers.',
+        title: 'Interbank tokenised deposits with banks outside the pilots',
+        text: 'Pilot corridors work (see Corridors); any other bank still needs SCT Inst or T2.',
         year: '2028',
       },
       {
@@ -517,7 +517,11 @@ export const en = {
         text: 'Deliver an asset against cash to a counterparty that banks elsewhere.',
         year: '2028–2030',
       },
-      { title: 'Stablecoin corridors', text: 'Not in scope of this mock-up.', year: '—' },
+      {
+        title: 'Stablecoin corridors beyond Latin America',
+        text: 'Only BRL, MXN, COP and CLP → EUR repatriation is shown, as a pilot.',
+        year: '—',
+      },
     ],
   },
 
@@ -889,10 +893,10 @@ export const en = {
     ],
     illustrative: 'Illustrative',
     illustrativeText:
-      'All rates, amounts, names, limits and spreads are indicative. The group, its subsidiaries and its counterparties are fictitious. Four small events were added to make the week consistent; see docs/ASSUMPTIONS.md.',
+      'All rates, amounts, names, limits and spreads are indicative. The group, its subsidiaries and its counterparties are fictitious. A few events were added to make the week consistent; see docs/ASSUMPTIONS.md. The bank is anonymised as Norvane Bank; the corridor partner (Bitso) and the euro stablecoin (Qivalis) are named as placeholders to validate.',
     notBuilt: 'Not built',
     notBuiltText:
-      'The interbank ledger (tokenised deposits exchanged between banks), PvP FX with other banks, settlement with non-clients, stablecoin corridors. They appear as "Not yet" with a fallback.',
+      'Interbank tokenised deposits with banks outside the pilot corridors, PvP FX with non-participating banks, settlement with non-clients. They appear as "Not yet" with a fallback. Pilot corridors (interbank, and the Latin American stablecoin repatriation) are shown working.',
     roadmap: 'Roadmap',
     road: [
       {
@@ -905,7 +909,7 @@ export const en = {
       },
       {
         year: '2028–2030',
-        text: 'Interbank layer: tokenised deposits exchanged between banks, PvP, settlement with non-clients.',
+        text: 'Interbank layer: pilot corridors first (eurozone partners 2027; USD and SGD 2028), then wider; PvP, settlement with non-clients. Stablecoin repatriation from Latin America as a pilot.',
       },
     ],
     legend: 'Colour code',
@@ -1159,6 +1163,99 @@ export const en = {
     alm: 'The bank sees it as a deposit with known release conditions — stable while the conditions are pending.',
     tradTitle: 'Today',
     trad: 'A notary or escrow-agent account at 0%, releases on paper instructions checked by hand, a few days per release.',
+  },
+
+  corridors: {
+    nav: 'Corridors',
+    eyebrow: 'Corridors',
+    title: 'The right rail for each corridor.',
+    lead: 'On some corridors, banks already exchange tokenised deposits: payments are final on both ledgers at any hour. Elsewhere the usual rails apply. The client always chooses the account it pays from — current or tokenised — depending on whether remuneration to the minute matters to it.',
+    tabs: { rails: 'Corridors & choice of account', latam: 'Repatriation from Latin America' },
+    tableTitle: 'Corridors and rails',
+    cols: ['Corridor', 'Counterparty', 'Rails', 'Status', 'Hours'],
+    rails: {
+      interbank: 'Interbank tokenised deposit',
+      stablecoin: 'Euro stablecoin',
+      intragroup: 'Intragroup ledger',
+      traditional: 'Traditional',
+    },
+    status: {
+      pilot2027: 'Pilot 2027',
+      pilot2028: 'Pilot 2028',
+      live: 'Live',
+      traditionalOnly: 'Traditional only',
+    },
+    payTitle: 'Pay a supplier',
+    payee: 'Payee',
+    amount: 'Amount (EUR m)',
+    from: 'Pay from',
+    fromCur: 'Current account — counted by the day at 0.50%',
+    fromTok: 'Tokenised account — counted to the minute at 0.10%, units at night',
+    rail: 'Rail',
+    railInterbank: 'Interbank tokenised deposit — final on both ledgers, 24/7',
+    railTrad: (night: boolean) => (night ? 'SCT Inst (T2 closed at this hour)' : 'SCT Inst or T2'),
+    notOnLedger: 'This bank is not on the interbank ledger yet — traditional rail only.',
+    pay: 'Pay',
+    paid: 'Sent',
+    matterTitle: 'Does the minute matter for you?',
+    matterLead:
+      'The same money, waiting between the moment it arrives and the moment it leaves. Pick a pattern.',
+    patterns: [
+      { key: 'day', label: 'Arrives 08:00, leaves 19:30 the same day' },
+      { key: 'evening', label: 'Arrives 17:45, leaves 10:00 the next day' },
+      { key: 'late', label: 'Arrives 23:00, leaves 01:00' },
+      { key: 'weekend', label: 'Arrives Friday 16:00, leaves Monday 09:00' },
+      { key: 'days', label: 'Stays five business days at sight' },
+    ],
+    curResult: 'Current account (daily, 0.50%)',
+    tokResult: 'Tokenised account (to the minute, units at night)',
+    verdictTok:
+      'The tokenised account earns more here: the money is counted for the time it is really there.',
+    verdictCur:
+      'The current account earns more here: a single end-of-day snapshot pays a full day at 0.50%. Keep this flow on the current account.',
+    verdictNote:
+      'Both accounts stay available; the rule can route each flow to the account that suits it.',
+    latam: {
+      subsTitle: 'Cash in Latin American subsidiaries',
+      walletsTitle: 'Partner wallets, visible in your eBanking',
+      walletsLead:
+        'Bitso wallets of each subsidiary, connected by API: balances read in real time, conversions instructed from here.',
+      qeur: 'Qivalis euro stablecoin',
+      connected: 'Connected',
+      decideTitle: 'Decide to repatriate',
+      country: 'From',
+      share: 'Share of the local balance',
+      quoteLocked: (m: number) => `Rate locked for ${m} minutes once you confirm`,
+      rate: 'Rate (local per EUR)',
+      receive: 'EUR credited on the tokenised account',
+      fees: 'Fees (partner 30 bps + network)',
+      tradTitle: 'Traditional: local bank FX + SWIFT',
+      tradReceive: 'EUR received',
+      tradFees: 'Spread 60 bps + fees EUR 65',
+      tradValue: 'Value D+2, rate fixed at execution, local cut-offs',
+      lock: 'Lock the rate and repatriate',
+      trackerTitle: 'Repatriations',
+      none: 'No repatriation yet.',
+      steps: {
+        lock: 'Rate locked',
+        wallet: 'Local account → partner wallet',
+        convert: 'Converted into the Qivalis euro stablecoin',
+        send: 'Sent to the master account address',
+        credit: 'Redeemed at par — EUR on the tokenised account, final',
+      },
+      lockUntil: (t: string) => `lock valid until ${t}`,
+      waitingRail: 'waiting for the local rail to open',
+      earning: 'Earning to the minute from this moment — in an overnight unit if after hours',
+      master: 'Master account address',
+      complianceTitle: 'To validate before any client use',
+      compliance: [
+        'Partner due diligence and contract (Bitso), per country',
+        'Status of the euro stablecoin issuer under MiCA and redemption terms (Qivalis)',
+        'Travel rule data with each transfer; screening on both legs',
+        'Local FX and capital-flow rules in Brazil, Mexico, Colombia and Chile',
+        'Accounting and tax treatment of the transit through the stablecoin',
+      ],
+    },
   },
 
   /** Engine copy for funding, large payments, escrow and corridors. */

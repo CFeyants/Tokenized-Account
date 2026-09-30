@@ -23,6 +23,7 @@ const Statements = lazy(() =>
 const Minute = lazy(() => import('@/screens/Minute').then((m) => ({ default: m.Minute })));
 const Funding = lazy(() => import('@/screens/Funding').then((m) => ({ default: m.Funding })));
 const Escrow = lazy(() => import('@/screens/Escrow').then((m) => ({ default: m.Escrow })));
+const Corridors = lazy(() => import('@/screens/Corridors').then((m) => ({ default: m.Corridors })));
 const About = lazy(() => import('@/screens/About').then((m) => ({ default: m.About })));
 
 const page = (el: React.ReactNode) => <Suspense fallback={null}>{el}</Suspense>;
@@ -44,6 +45,7 @@ export function App() {
             <Route path="statements" element={page(<Statements />)} />
             <Route path="funding" element={page(<Funding />)} />
             <Route path="escrow" element={page(<Escrow />)} />
+            <Route path="corridors" element={page(<Corridors />)} />
             <Route path="about" element={page(<About />)} />
             <Route path="*" element={<Home />} />
           </Route>
