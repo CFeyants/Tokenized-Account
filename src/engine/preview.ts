@@ -92,3 +92,23 @@ export function previewRelease(tl: Timeline, collateralId: string, from: number,
   });
   return { kept, gage: 0, minutes: to - from };
 }
+
+/**
+ * Standing rule: every business day at 14:30 (inside fund hours) the current-account surplus above
+ * `threshold` goes into the tokenised money market fund; it is redeemed automatically when needed.
+ * Compared with leaving it on the current account. Uses the traditional twin's balances.
+ */
+export function previewMmfSweep(tl: Timeline, threshold: number) {
+  const rows = [0, 1, 2, 3, 4].map((d) => {
+    const t = at(d, '14:30');
+    const bal = snapshotAt(tl.trad, t).state.current;
+    const swept = Math.max(0, bal - threshold);
+    const days = d === 4 ? 3 : 1;
+    const fund = (swept * RATES.mmf * days) / 360;
+    const current = (swept * RATES.current * days) / 360;
+    return { label: formatDate(t), swept, days, gain: fund - current };
+  });
+  const weekGain = rows.reduce((a, r) => a + r.gain, 0);
+  const avgSwept = rows.reduce((a, r) => a + r.swept * r.days, 0) / 7;
+  return { rows, weekGain, avgSwept, perYear: avgSwept * (RATES.mmf - RATES.current) };
+}

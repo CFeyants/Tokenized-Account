@@ -11,6 +11,11 @@ const load = <K extends string>(p: () => Promise<Record<K, React.ComponentType>>
 const SmartContracts = load(() => import('@/screens/SmartContracts'), 'SmartContracts');
 const Repatriation = load(() => import('@/screens/Repatriation'), 'Repatriation');
 const Minute = load(() => import('@/screens/Minute'), 'Minute');
+const Sweep = load(() => import('@/screens/Sweep'), 'Sweep');
+const Approvals = load(() => import('@/screens/Approvals'), 'Approvals');
+const Tms = load(() => import('@/screens/Tms'), 'Tms');
+const Incidents = load(() => import('@/screens/Incidents'), 'Incidents');
+const BusinessCase = load(() => import('@/screens/BusinessCase'), 'BusinessCase');
 const PutToWork = load(() => import('@/screens/PutToWork'), 'PutToWork');
 const PreValidation = load(() => import('@/screens/PreValidation'), 'PreValidation');
 const JustInTime = load(() => import('@/screens/JustInTime'), 'JustInTime');
@@ -38,6 +43,11 @@ export function App() {
             <Route path="smart-contracts" element={page(<SmartContracts />)} />
             <Route path="repatriation" element={page(<Repatriation />)} />
             <Route path="minute" element={page(<Minute />)} />
+            <Route path="sweep" element={page(<Sweep />)} />
+            <Route path="approvals" element={page(<Approvals />)} />
+            <Route path="tms" element={page(<Tms />)} />
+            <Route path="incidents" element={page(<Incidents />)} />
+            <Route path="business-case" element={page(<BusinessCase />)} />
             <Route path="put-to-work" element={page(<PutToWork />)} />
             <Route path="pre-validation" element={page(<PreValidation />)} />
             <Route path="just-in-time" element={page(<JustInTime />)} />

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ArrowRight, ChevronDown } from 'lucide-react';
-import { JourneyHeader } from '@/components/Journey';
 import { AccountSummary } from '@/components/AccountSummary';
 import { useApp, useSim } from '@/app/store';
 import { en } from '@/i18n/en';
@@ -22,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
-import { Row } from '@/components/Page';
+import { PageHeader, Row } from '@/components/Page';
 import { MinuteRing } from '@/components/MinuteRing';
 import { cn } from '@/lib/utils';
 
@@ -223,7 +222,7 @@ export function Minute() {
 
   return (
     <div className="space-y-8">
-      <JourneyHeader id="minute" />
+      <PageHeader eyebrow={T.eyebrow} title={T.title} lead={T.lead} />
       <AccountSummary />
       <div className="card flex gap-3 px-5 py-4 text-[13.5px] leading-relaxed" role="note">
         <MinuteRing size={22} progress={0.25} />

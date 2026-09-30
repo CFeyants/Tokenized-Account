@@ -81,7 +81,7 @@ describe('large payments pre-validated', () => {
 });
 
 describe('escrow with purpose-bound money', () => {
-  it('releases shares on valid oracle events and ignores bad signatures', () => {
+  it('pays after the challenge window on valid events, ignores bad signatures', () => {
     const tl = tlWith([
       { kind: 'escrow', id: 'E1', t: at(7, '11:00'), template: 'mna' },
       {
@@ -109,12 +109,41 @@ describe('escrow with purpose-bound money', () => {
         valid: true,
       },
     ]);
-    expect(stateAt(tl, at(7, '12:30')).earmarked).toBe(26 * M);
-    const s = stateAt(tl, at(7, '14:01'));
+    // + the scenario's EUR 6m Warsaw earmark (10:30 → 16:45)
+    expect(stateAt(tl, at(7, '14:30')).earmarked).toBe(26 * M); // accepted, still in the challenge window
+    const s = stateAt(tl, at(7, '15:01'));
     const e = s.conditional.find((c) => c.id === 'E1')!;
     expect(e.released).toBeCloseTo(18 * M, 0);
     expect(s.earmarked).toBeCloseTo(8 * M, 0);
     expect(e.events!.filter((x) => !x.accepted)).toHaveLength(1);
+  });
+
+  it('guardrails: a contested event holds the payment; a paused contract refuses events', () => {
+    const tl = tlWith([
+      { kind: 'escrow', id: 'E2', t: at(7, '11:00'), template: 'mna' },
+      {
+        kind: 'oracle',
+        id: 'O4',
+        t: at(7, '12:00'),
+        target: 'E2',
+        milestone: 'completion',
+        valid: true,
+      },
+      { kind: 'contest', id: 'C1', t: at(7, '12:30'), target: 'E2', milestone: 'completion' },
+      { kind: 'contractPause', id: 'P1', t: at(7, '13:30'), target: 'E2', paused: true },
+      {
+        kind: 'oracle',
+        id: 'O5',
+        t: at(7, '14:00'),
+        target: 'E2',
+        milestone: 'warrantyEnd',
+        valid: true,
+      },
+    ]);
+    const e = stateAt(tl, at(7, '15:30')).conditional.find((c) => c.id === 'E2')!;
+    expect(e.released ?? 0).toBe(0);
+    expect(e.events!.some((x) => x.outcome.startsWith('Held'))).toBe(true);
+    expect(e.events!.some((x) => x.outcome.startsWith('Contract paused'))).toBe(true);
   });
 });
 
@@ -173,10 +202,10 @@ describe('cascade payment', () => {
       },
     ]);
     const payouts = tl.ledger.filter(
-      (l) => l.eventId === 'K2' && l.account === 'tok-paris:earmarked',
+      (l) => l.eventId === 'K2-pay' && l.account === 'tok-paris:earmarked',
     );
     expect(payouts.map((l) => -l.amount)).toEqual([6 * M, 2.5 * M, 1 * M]);
-    const c = stateAt(tl, at(7, '12:01')).conditional.find((x) => x.id === 'K1')!;
+    const c = stateAt(tl, at(7, '13:01')).conditional.find((x) => x.id === 'K1')!;
     expect(c.released).toBeCloseTo(9.5 * M, 0);
   });
 });

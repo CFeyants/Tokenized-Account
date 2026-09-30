@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { useMemo } from 'react';
-import { SIM_END, SIM_START, type SimTime } from '@/engine/clock';
+import { SIM_END, SIM_START, at, type SimTime } from '@/engine/clock';
+import type { ProfileId } from '@/engine/businessCase';
 import { buildTimeline, nextEvent, prevEvent, type Timeline } from '@/engine/timeline';
 import { actionToEvents, type NewUserAction, type UserAction } from '@/engine/userActions';
 import { computeCounters } from '@/engine/counters';
@@ -22,6 +23,11 @@ interface AppState {
   bannerDismissed: boolean;
   showCounters: boolean;
   toggleCounters: () => void;
+  /** Demo mode shows the clock controls and the week timeline. Off by default. */
+  demoMode: boolean;
+  toggleDemo: () => void;
+  profile: ProfileId;
+  setProfile: (p: ProfileId) => void;
   railExpanded: boolean;
   setT: (t: SimTime) => void;
   setPlaying: (p: boolean) => void;
@@ -57,6 +63,9 @@ const write = (key: string, v: unknown) => {
   }
 };
 
+/** The demo opens on the Monday morning cash meeting. */
+export const COCKPIT_START = at(0, '08:30');
+
 const clamp = (t: SimTime) => Math.max(0, Math.min(SIM_END, t));
 
 // One timeline per list of user actions, shared by every component.
@@ -73,7 +82,7 @@ export function timelineFor(actions: UserAction[]): Timeline {
 let actionSeq = 0;
 
 export const useApp = create<AppState>((set, get) => ({
-  t: SIM_START,
+  t: COCKPIT_START,
   playing: false,
   speed: 1,
   actions: [],
@@ -84,6 +93,17 @@ export const useApp = create<AppState>((set, get) => ({
   bannerDismissed: read('tcm.banner', false),
   railExpanded: read('tcm.rail', true),
   showCounters: read('tcm.counters', false),
+  demoMode: read('tcm.demo', false),
+  toggleDemo: () => {
+    const v = !get().demoMode;
+    write('tcm.demo', v);
+    set({ demoMode: v, playing: false });
+  },
+  profile: read<ProfileId>('tcm.profile', 'large'),
+  setProfile: (profile) => {
+    write('tcm.profile', profile);
+    set({ profile });
+  },
   toggleCounters: () => {
     const v = !get().showCounters;
     write('tcm.counters', v);
@@ -107,7 +127,7 @@ export const useApp = create<AppState>((set, get) => ({
     const e = prevEvent(tl, get().t);
     set({ t: e ? e.t : SIM_START, playing: false });
   },
-  restart: () => set({ t: SIM_START, playing: false }),
+  restart: () => set({ t: COCKPIT_START, playing: false }),
   addAction: (a, at) => {
     actionSeq += 1;
     const id = `USR-${String(actionSeq).padStart(2, '0')}`;

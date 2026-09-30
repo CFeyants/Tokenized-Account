@@ -66,6 +66,10 @@ export interface ConditionalPayment {
   checks?: { name: string; ok: boolean; detail: string }[];
   escrow?: EscrowTerms;
   events?: OracleEvent[];
+  /** Kill switch: while paused, events are refused and nothing is paid. */
+  paused?: boolean;
+  /** Guardrail: largest payment the contract may make in one release. */
+  capPerDay?: number;
 }
 
 /** Purpose-bound money held in escrow on the tokenised account. */
@@ -85,6 +89,10 @@ export interface EscrowTerms {
     done: boolean;
     /** Cascade: one event, several ordered payments. Shares are of the whole escrow. */
     payouts?: { payee: string; share: number }[];
+    /** Event accepted; payment due at the end of the challenge window. */
+    payAt?: number;
+    paid?: boolean;
+    contested?: boolean;
   }[];
 }
 

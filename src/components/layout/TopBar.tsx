@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  BarChart3,
+  Clapperboard,
   Link2,
   Moon,
   Pause,
@@ -30,6 +30,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { MinuteRing } from '@/components/MinuteRing';
 import { CounterStrip } from './CounterStrip';
 import { WeekTimeline } from './WeekTimeline';
+import { ValueBanner } from './ValueBanner';
 import { cn } from '@/lib/utils';
 
 const PHASE_LABEL: Record<DayPhase, string> = {
@@ -105,8 +106,8 @@ export function TopBar() {
   const actions = useApp((s) => s.actions);
   const theme = useApp((s) => s.theme);
   const hoodOpen = useApp((s) => s.hoodOpen);
-  const showCounters = useApp((s) => s.showCounters);
-  const toggleCounters = useApp((s) => s.toggleCounters);
+  const demo = useApp((s) => s.demoMode);
+  const toggleDemo = useApp((s) => s.toggleDemo);
   const { togglePlay, step, stepBack, restart, setSpeed, setTheme, setHoodOpen, resetActions } =
     useApp.getState();
   const [copied, setCopied] = useState(false);
@@ -154,71 +155,74 @@ export function TopBar() {
           <PhaseChip phase={phase} />
         </div>
 
-        <div className="flex items-center gap-1" role="group" aria-label="Clock controls">
-          <Tip content={en.shell.restart}>
-            <Button variant="ghost" size="icon" onClick={restart} aria-label={en.shell.restart}>
-              <RotateCcw />
-            </Button>
-          </Tip>
-          <Tip content={en.shell.stepBack}>
-            <Button variant="ghost" size="icon" onClick={stepBack} aria-label={en.shell.stepBack}>
-              <SkipBack />
-            </Button>
-          </Tip>
-          <Button
-            variant="primary"
-            onClick={togglePlay}
-            className="w-[112px]"
-            aria-label={playing ? en.shell.pause : en.shell.play}
-            data-testid="play"
-          >
-            {playing ? <Pause /> : <Play />}
-            {playing ? en.shell.pause : 'Play'}
-          </Button>
-          <Tip content={en.shell.step}>
+        <Button
+          variant={demo ? 'new' : 'secondary'}
+          size="sm"
+          onClick={toggleDemo}
+          aria-pressed={demo}
+          data-testid="demo-toggle"
+        >
+          <Clapperboard />
+          {en.shell.demoMode}
+        </Button>
+        {demo && (
+          <div className="flex items-center gap-1" role="group" aria-label="Clock controls">
+            <Tip content={en.shell.restart}>
+              <Button variant="ghost" size="icon" onClick={restart} aria-label={en.shell.restart}>
+                <RotateCcw />
+              </Button>
+            </Tip>
+            <Tip content={en.shell.stepBack}>
+              <Button variant="ghost" size="icon" onClick={stepBack} aria-label={en.shell.stepBack}>
+                <SkipBack />
+              </Button>
+            </Tip>
             <Button
-              variant="ghost"
-              size="icon"
-              onClick={step}
-              aria-label={en.shell.step}
-              data-testid="step"
+              variant="primary"
+              onClick={togglePlay}
+              className="w-[112px]"
+              aria-label={playing ? en.shell.pause : en.shell.play}
+              data-testid="play"
             >
-              <SkipForward />
+              {playing ? <Pause /> : <Play />}
+              {playing ? en.shell.pause : 'Play'}
             </Button>
-          </Tip>
-          <div
-            className="ml-1 flex rounded-full border border-line p-0.5"
-            role="radiogroup"
-            aria-label={en.shell.speed}
-          >
-            {([1, 3, 8] as const).map((s) => (
-              <button
-                key={s}
-                role="radio"
-                aria-checked={speed === s}
-                onClick={() => setSpeed(s)}
-                className={cn(
-                  'h-7 cursor-pointer rounded-full px-2.5 text-[12px] tabular',
-                  speed === s ? 'bg-surface-2 text-fg' : 'text-muted hover:text-fg',
-                )}
+            <Tip content={en.shell.step}>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={step}
+                aria-label={en.shell.step}
+                data-testid="step"
               >
-                {s}×
-              </button>
-            ))}
+                <SkipForward />
+              </Button>
+            </Tip>
+            <div
+              className="ml-1 flex rounded-full border border-line p-0.5"
+              role="radiogroup"
+              aria-label={en.shell.speed}
+            >
+              {([1, 3, 8] as const).map((s) => (
+                <button
+                  key={s}
+                  role="radio"
+                  aria-checked={speed === s}
+                  onClick={() => setSpeed(s)}
+                  className={cn(
+                    'h-7 cursor-pointer rounded-full px-2.5 text-[12px] tabular',
+                    speed === s ? 'bg-surface-2 text-fg' : 'text-muted hover:text-fg',
+                  )}
+                >
+                  {s}×
+                </button>
+              ))}
+            </div>
+            <JumpDialog />
           </div>
-          <JumpDialog />
-        </div>
+        )}
 
         <div className="ml-auto flex items-center gap-1">
-          <Button
-            variant={showCounters ? 'new' : 'ghost'}
-            size="sm"
-            onClick={toggleCounters}
-            aria-pressed={showCounters}
-          >
-            <BarChart3 />
-            {en.journeys.weekCounters}
-          </Button>
           {actions.length > 0 && (
             <Tip content={en.shell.userActions(actions.length)}>
               <Button variant="ghost" size="sm" onClick={resetActions} className="text-amber">
@@ -255,8 +259,13 @@ export function TopBar() {
         </div>
       </div>
       <div className="relative">
-        {showCounters && <CounterStrip />}
-        <WeekTimeline />
+        <ValueBanner />
+        {demo && (
+          <div className="border-t border-line pt-1">
+            <CounterStrip />
+            <WeekTimeline />
+          </div>
+        )}
       </div>
     </header>
   );

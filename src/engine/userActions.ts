@@ -80,6 +80,8 @@ export function actionToEvents(a: UserAction): SimEvent[] {
     a.kind === 'release' ||
     a.kind === 'escrow' ||
     a.kind === 'oracle' ||
+    a.kind === 'contractPause' ||
+    a.kind === 'contest' ||
     a.kind === 'corridorPay' ||
     a.kind === 'repatriate'
   )

@@ -11,6 +11,7 @@ import { en } from '@/i18n/en';
 import {
   MIN_PER_DAY,
   dayIndex,
+  hhmm,
   isBusinessHours,
   minuteOfDay,
   nextOpening,
@@ -25,6 +26,8 @@ import { fmtM } from './format';
 import type { AccountId, Ctx, LatamCountry, SimEvent, State } from './types';
 
 const A = en.adv;
+/** Challenge window between an accepted event and the payment. */
+export const CHALLENGE_MINUTES = 60;
 const R = en.rulesNames;
 
 export type JitTarget = 'tok-jpy-tokyo' | 'tok-sar-riyadh' | 'tok-sgd-singapore' | 'tok-munich';
@@ -50,6 +53,8 @@ export type AdvancedAction =
   | { kind: 'release'; id: string; t: SimTime; target: string }
   | { kind: 'escrow'; id: string; t: SimTime; template: string }
   | { kind: 'oracle'; id: string; t: SimTime; target: string; milestone: string; valid: boolean }
+  | { kind: 'contractPause'; id: string; t: SimTime; target: string; paused: boolean }
+  | { kind: 'contest'; id: string; t: SimTime; target: string; milestone: string }
   | {
       kind: 'corridorPay';
       id: string;
@@ -348,6 +353,7 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
               since: c.t,
               status: 'waiting',
               released: 0,
+              capPerDay: tpl.capPerDay,
               events: [],
               escrow: {
                 purpose: tpl.purpose,
@@ -374,7 +380,12 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
         },
       ];
     }
-    case 'oracle':
+    case 'oracle': {
+      const payAt = a.t + CHALLENGE_MINUTES;
+      const find = (s: State) => {
+        const p = s.conditional.find((x) => x.id === a.target && x.kind === 'escrow');
+        return { p, m: p?.escrow?.milestones.find((x) => x.key === a.milestone) };
+      };
       return [
         {
           ...base,
@@ -383,22 +394,28 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
           title: A.oracleTitle(a.milestone, a.valid),
           detail: a.valid ? A.oracleOk : A.oracleRejected,
           apply: (s, c) => {
-            const p = s.conditional.find((x) => x.id === a.target && x.kind === 'escrow');
+            const { p, m } = find(s);
             if (!p || !p.escrow) return;
-            const m = p.escrow.milestones.find((x) => x.key === a.milestone);
             const payload = JSON.stringify({
-              escrow: p.id,
-              milestone: a.milestone,
+              contract: p.id,
+              event: a.milestone,
               at: c.t,
               signature: a.valid ? 'ES256:valid' : 'ES256:invalid',
             });
-            if (!a.valid || !m || m.done) {
+            const why = p.paused
+              ? A.pausedReject
+              : !a.valid
+                ? A.badSignature
+                : !m || m.done
+                  ? A.duplicate
+                  : null;
+            if (why) {
               p.events!.push({
                 t: c.t,
                 source: p.escrow.oracle,
                 milestone: a.milestone,
                 payload,
-                outcome: a.valid ? A.duplicate : A.badSignature,
+                outcome: why,
                 accepted: false,
               });
               c.orchestrate({
@@ -406,32 +423,84 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
                 decision: A.oracleRejectedDecision,
                 instrument: p.id,
                 rail: '—',
-                checks: [
-                  {
-                    name: A.signatureCheck,
-                    ok: false,
-                    detail: a.valid ? A.duplicate : A.badSignature,
-                  },
-                ],
+                checks: [{ name: A.signatureCheck, ok: a.valid, detail: why }],
               });
               return;
             }
-            m.done = true;
-            const amt = p.amount * m.share;
-            if (m.payouts)
-              for (const po of m.payouts)
-                payOutEarmarked(s, c, p.amount * po.share, A.escrowPaidTo(m.label, po.payee));
-            else if (amt > 0) payOutEarmarked(s, c, amt, A.escrowPaid(m.label));
-            p.released = (p.released ?? 0) + amt;
-            if (p.escrow.milestones.every((x) => x.done)) {
-              p.status = 'released';
-              p.releasedAt = c.t;
-            }
+            m!.done = true;
+            m!.payAt = payAt;
             p.events!.push({
               t: c.t,
               source: p.escrow.oracle,
               milestone: a.milestone,
               payload,
+              outcome: A.windowOpen(hhmm(payAt)),
+              accepted: true,
+            });
+            c.orchestrate({
+              rule: A.escrowRule,
+              decision: A.windowOpen(hhmm(payAt)),
+              instrument: p.id,
+              rail: A.ledgerRail,
+              checks: [
+                { name: A.signatureCheck, ok: true, detail: 'ES256' },
+                { name: A.payeeWhitelist, ok: true, detail: p.escrow.payees[0] },
+              ],
+            });
+          },
+        },
+        {
+          ...base,
+          id: `${a.id}-pay`,
+          t: payAt,
+          actor: 'rule',
+          layer: 'new',
+          title: A.payoutTitle,
+          detail: A.payoutDetail,
+          apply: (s, c) => {
+            const { p, m } = find(s);
+            if (!p || !p.escrow || !m || !m.done || m.paid || m.payAt !== payAt) return;
+            const amt = p.amount * m.share;
+            const held = p.paused
+              ? A.heldPaused
+              : m.contested
+                ? A.heldContested
+                : p.capPerDay !== undefined && amt > p.capPerDay
+                  ? A.heldCap
+                  : null;
+            if (held) {
+              p.events!.push({
+                t: c.t,
+                source: A.escrowRule,
+                milestone: a.milestone,
+                payload: '',
+                outcome: held,
+                accepted: false,
+              });
+              c.orchestrate({
+                rule: A.escrowRule,
+                decision: held,
+                instrument: p.id,
+                rail: '—',
+                checks: [{ name: A.guardrails, ok: false, detail: held }],
+              });
+              return;
+            }
+            if (m.payouts)
+              for (const po of m.payouts)
+                payOutEarmarked(s, c, p.amount * po.share, A.escrowPaidTo(m.label, po.payee));
+            else if (amt > 0) payOutEarmarked(s, c, amt, A.escrowPaid(m.label));
+            m.paid = true;
+            p.released = (p.released ?? 0) + amt;
+            if (p.escrow.milestones.every((x) => x.paid)) {
+              p.status = 'released';
+              p.releasedAt = c.t;
+            }
+            p.events!.push({
+              t: c.t,
+              source: A.escrowRule,
+              milestone: a.milestone,
+              payload: '',
               outcome: amt > 0 ? A.paidOut(fmtM(amt, 'EUR', 2)) : A.conditionMet,
               accepted: true,
             });
@@ -440,11 +509,36 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
               decision: amt > 0 ? A.paidOut(fmtM(amt, 'EUR', 2)) : A.conditionMet,
               instrument: p.id,
               rail: A.ledgerRail,
-              checks: [
-                { name: A.signatureCheck, ok: true, detail: 'ES256' },
-                { name: A.payeeWhitelist, ok: true, detail: p.escrow.payees[0] },
-              ],
+              checks: [{ name: A.guardrails, ok: true, detail: A.guardrailsOk }],
             });
+          },
+        },
+      ];
+    }
+    case 'contractPause':
+      return [
+        {
+          ...base,
+          layer: 'new',
+          title: a.paused ? A.pauseTitle : A.resumeTitle,
+          detail: A.pauseDetail,
+          apply: (s) => {
+            const p = s.conditional.find((x) => x.id === a.target);
+            if (p) p.paused = a.paused;
+          },
+        },
+      ];
+    case 'contest':
+      return [
+        {
+          ...base,
+          layer: 'new',
+          title: A.contestTitle,
+          detail: A.contestDetail,
+          apply: (s) => {
+            const p = s.conditional.find((x) => x.id === a.target);
+            const m = p?.escrow?.milestones.find((x) => x.key === a.milestone);
+            if (m && m.done && !m.paid) m.contested = true;
           },
         },
       ];

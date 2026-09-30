@@ -215,7 +215,12 @@ export const en = {
   },
 
   nav: {
-    home: 'Home',
+    home: 'Cockpit',
+    approvals: 'Approvals',
+    tms: 'In your TMS',
+    incidents: 'Incidents',
+    businessCase: 'Business case',
+    control: 'Control & integration',
     week: 'The week, in detail',
     portal: 'Corporate eBanking',
     accounts: 'Accounts',
@@ -233,6 +238,7 @@ export const en = {
 
   shell: {
     play: 'Play the week',
+    demoMode: 'Demo mode',
     pause: 'Pause',
     step: 'Next event',
     stepBack: 'Previous event',
@@ -1296,17 +1302,13 @@ export const en = {
         steps: ['Choose the amount', 'Lock the rate', 'Follow the money to Paris'],
       },
       {
-        id: 'minute',
-        path: '/minute',
-        title: 'Earn to the minute',
-        short: 'Paid to the minute',
+        id: 'sweep',
+        path: '/sweep',
+        title: 'Sweep the surplus into the tokenised fund',
+        short: 'Sweep to fund',
         promise:
-          'Every euro counted for the minutes it is really there — not one snapshot at midnight.',
-        steps: [
-          'See your tokenised account',
-          'Compare day vs minute',
-          'See where the minute matters',
-        ],
+          'Surplus above a threshold goes into the tokenised money market fund by rule — and comes back by itself when it is needed.',
+        steps: ['Set the threshold', 'See last week, and a year', 'Make it a standing rule'],
       },
       {
         id: 'work',
@@ -1314,7 +1316,7 @@ export const en = {
         title: 'Put the balance to work',
         short: 'Collateral & buffer',
         promise:
-          'The same balance backs a guarantee and funds subsidiaries — and keeps earning while it waits.',
+          'The same balance backs a guarantee and funds subsidiaries — counted to the minute, earning while it waits.',
         steps: [
           'Block it as collateral',
           'Keep it as a funding buffer',
@@ -1415,6 +1417,326 @@ export const en = {
     trad: 'A cash gage at 0%, a separate buffer on a current account, and nothing earned overnight.',
   },
 
+  cockpit: {
+    eyebrow: 'Monday morning cash meeting',
+    title: 'Group cash position',
+    tagline: 'The bank that orchestrates, not the rail.',
+    alertsTitle: 'Needs your attention',
+    alerts: [
+      {
+        key: 'tokyo',
+        title: 'Tokyo needs JPY 1.37bn on Mon 12 Oct, 09:00 JST',
+        text: 'That is Monday 02:00 in Paris — every European desk and cut-off is closed.',
+        action: 'Schedule just in time',
+        gain: 'Removes the EUR 8m local buffer',
+        path: '/just-in-time?preset=tokyo',
+      },
+      {
+        key: 'riyadh',
+        title: 'Riyadh payroll SAR 20m on Sun 11 Oct, 10:00 AST',
+        text: 'Saudi banks open on Sunday; Paris is closed. Today it is pre-funded on Thursday.',
+        action: 'Fund on Sunday, on time',
+        gain: 'Removes the EUR 5m buffer; no late payroll',
+        path: '/just-in-time?preset=riyadh',
+      },
+      {
+        key: 'brazil',
+        title: 'Lefèvre do Brasil: BRL 36m dividend approved',
+        text: 'Board minutes signed on Friday. The cash sits idle at the local bank.',
+        action: 'Qualify and repatriate',
+        gain: 'EUR 5.9m home, rate locked',
+        path: '/repatriation',
+      },
+    ],
+    positionTitle: 'Position by entity, currency and bank',
+    positionLead:
+      'Live from the ledger and from your other banks (camt.052). Tokenised accounts are counted to the minute.',
+    cols: ['Entity', 'Bank', 'Ccy', 'Balance', 'EUR m'],
+    minuteBadge: 'to the minute',
+    thirdParty: 'Other bank',
+    total: 'Group total',
+    atBank: 'at Norvane Bank',
+    elsewhere: 'at other banks',
+    forecastTitle: 'Forecast vs actual',
+    forecastLead: 'From your TMS forecast. Actuals fill in as the days close.',
+    forecastCols: ['', 'Today (D)', 'Tomorrow (D+1)', 'D+5'],
+    forecastRows: { closing: 'Closing forecast', actual: 'Actual', gap: 'Gap' },
+    cutoffsTitle: 'Cut-offs today (Paris time)',
+    cutoffFund: 'Money market fund orders',
+    cutoffSepa: 'SEPA credit transfers',
+    open: 'open',
+    closed: 'closed',
+    closesIn: (d: string) => `closes in ${d}`,
+    opensAt: (t: string) => `opens ${t}`,
+    ratesTitle: 'Rates (indicative, Actual/360)',
+    rates: [
+      { k: 'Current account', v: 0.005, note: 'by the day, end-of-day balance' },
+      {
+        k: 'Tokenised account',
+        v: 0.001,
+        note: 'to the minute — a service account, never above the current account',
+      },
+      { k: 'Overnight unit', v: 0.018, note: 'by rule after 18:00, three-day on Friday' },
+      {
+        k: 'Term units 1–12 months',
+        v: 0.0205,
+        v2: 0.0235,
+        note: 'sold before maturity, never broken',
+      },
+      { k: 'Tokenised money market fund', v: 0.0195, note: 'net, fund hours 09:00–15:00' },
+    ],
+    useCases: 'All use cases',
+  },
+
+  tms: {
+    title: 'In your TMS',
+    lead: 'The ledger shows up in your treasury management system (e.g. Kyriba, SAP) as ordinary bank accounts. Positions arrive by camt.052 / camt.053, rules are set by API, and a tokenised movement reconciles like any other cash line.',
+    frame: 'Treasury management system · Cash position · Norvane Bank connected',
+    cols: ['Bank account', 'Entity', 'Ccy', 'Balance', 'Source'],
+    intraday: 'camt.052 intraday',
+    eod: 'camt.053 end of day',
+    other: 'camt.053 from other bank',
+    subBalances: 'sub-balances: free / blocked / in unit',
+    apiTitle: 'A rule set up from the TMS, by API',
+    apiLead:
+      'The same just-in-time rule as in the portal — created from the TMS, then approved by a second signatory before it runs.',
+    responseNote:
+      'Response 202: accepted, waiting for the second signature. Nothing runs before it.',
+    stmtTitle: 'The statement line your team reconciles',
+    stmtLead:
+      'The overnight unit unwound at 07:00 appears as an ordinary sweep — standard bank transaction code, standard references. Nothing new to map.',
+    onboardingTitle: 'What you sign and connect — once',
+    onboarding: [
+      {
+        k: 'Account agreement amendment',
+        v: 'Tokenised account, units, rules, remuneration to the minute',
+        s: 'done',
+      },
+      {
+        k: 'Mandates and signatories',
+        v: 'Maker / checker, limits per person, per rule, per night',
+        s: 'done',
+      },
+      {
+        k: 'Subsidiaries whitelisted',
+        v: 'Which entities can be funded, in which currencies, at what hours',
+        s: 'progress',
+      },
+      {
+        k: 'TMS connection',
+        v: 'camt.052 / camt.053 feeds, rules API, single sign-on',
+        s: 'progress',
+      },
+      {
+        k: 'Auditor pre-validation',
+        v: 'IAS 7: free balance as cash equivalent, blocked as restricted cash',
+        s: 'todo',
+      },
+      {
+        k: 'Corridor partner onboarding (Brazil)',
+        v: 'Know-your-business with the authorised partner, per country',
+        s: 'todo',
+      },
+    ],
+    status: { done: 'Done', progress: 'In progress', todo: 'To do' },
+  },
+
+  incidents: {
+    title: 'When something goes wrong',
+    lead: 'Three incidents the product must handle well. What stops, what the client sees, who is notified, and how it is resolved.',
+    who: 'Notified',
+    resolution: 'Resolution',
+    prevention: 'How to avoid it next time',
+    open: 'Open the use case',
+    list: [
+      {
+        key: 'lock',
+        path: '/repatriation',
+        title: 'Brazil — the locked rate expired',
+        when: 'Sat 10 Oct, 21:16',
+        steps: [
+          '21:01 Rate locked for 15 minutes, dividend qualified — board minutes still missing',
+          '21:16 Lock expired before the documents were attached. Nothing moved: the BRL are still at the local bank',
+          '21:24 Minutes attached; new quote offered, 0.2% different',
+          '21:25 New quote locked and approved; executed',
+        ],
+        notified: [
+          'Marie Lefèvre',
+          'Thomas Garnier (second signatory)',
+          'Finance, Lefèvre do Brasil',
+        ],
+        resolution:
+          'Re-quote in one click. The old quote cannot be executed; no partial conversion.',
+        prevention:
+          'Qualify the flow and attach the documents first — the lock starts only when everything is ready.',
+      },
+      {
+        key: 'limit',
+        path: '/just-in-time?preset=tokyo',
+        title: 'Tokyo — night FX limit reached',
+        when: 'Mon 12 Oct, 01:50',
+        steps: [
+          '01:50 Just-in-time for Tokyo requested: EUR 18m into JPY',
+          '01:50 Tonight’s limit EUR 25m, EUR 10m already used for Singapore: EUR 15m available',
+          '01:52 On-call dealer alerted; temporary increase of EUR 5m requested',
+          '01:56 Increase approved by the on-call dealer and risk; converted and credited at 01:57',
+        ],
+        notified: ['Marie Lefèvre', 'Markets desk — on-call dealer', 'Market risk'],
+        resolution:
+          'Either a temporary increase approved on call, or EUR 15m now and the rest from the Tokyo overdraft line until 07:00.',
+        prevention:
+          'A standing rule sizes the night limit from the forecast of the week, not on the night.',
+      },
+      {
+        key: 'sanctions',
+        path: '/pre-validation',
+        title: 'M&A closing — screening hit at release',
+        when: 'Mon 12 Oct, 16:44',
+        steps: [
+          '16:44 Completion certificate received; release requested',
+          '16:44 Beneficiary account changed since pre-validation → screening re-run → potential match. Payment held; money stays earmarked and earning',
+          '17:20 Compliance clears a false positive (homonym)',
+          '17:21 T2 closed at 17:00: payment leaves at T2 opening, Tue 07:00; sellers’ counsel informed',
+        ],
+        notified: [
+          'Marie Lefèvre',
+          'Compliance officer on duty',
+          'Relationship manager',
+          'Sellers’ counsel',
+        ],
+        resolution:
+          'Held, not rejected. Released at the first minute the rail allows once cleared.',
+        prevention:
+          'Freeze the beneficiary details at pre-validation; any change restarts the checks days before, not at closing.',
+      },
+    ],
+  },
+
+  bc: {
+    title: 'Business case',
+    lead: 'The bank’s view, for the chosen client profile. What the client gains, what it costs the bank, what the bank earns. Illustrative — to validate with ALM and Finance.',
+    profile: 'Client profile',
+    clientTitle: 'Value for the client, a year',
+    lines: {
+      buffers: 'Local buffers released × redeployment rate',
+      hours: 'Treasury hours automated',
+      failures: 'Failures avoided',
+      total: 'Total',
+    },
+    bankTitle: 'The bank’s account, a year',
+    bank: {
+      retained: 'Deposits on the ledger (tokenised + units)',
+      captured: 'of which captured from other banks',
+      remuneration: 'Remuneration paid (0.10% tokenised, 1.80% units)',
+      niiToday: 'Net interest income on these balances today',
+      niiNew: 'Net interest income with the ledger',
+      niiDelta: 'Change in net interest income',
+      subscriptions: 'Subscriptions (per active rule)',
+      nightFx: 'Night FX margin (10 bps)',
+      cannibalisation: 'Intraday credit lines no longer used',
+      net: 'Net for the bank',
+    },
+    niiNote:
+      'The overnight unit costs margin: money that sat on the current account at 0.50% now earns 1.80%. The case holds on subscriptions, night FX and deposits captured from other banks — and on keeping the client.',
+    lcrTitle: 'Liquidity (LCR)',
+    lcr: 'Deposits tied to installed rules (sweeps, collateral, standing funding) behave like operational balances; overnight units are overnight money. The treatment of each category is to validate with ALM.',
+    keepTitle: 'Why the client stays',
+    keep: 'Each installed rule keeps the deposit on our balance sheet: a sweep, a block, a standing funding rule, an escrow. The bank that orchestrates, not the rail.',
+    horizonsTitle: 'What exists when, and what it depends on',
+    hcols: ['Use case', 'Horizon', 'Depends on'],
+    illustrative: 'Illustrative — to validate with ALM and Finance',
+  },
+
+  horizon: {
+    dependsOn: 'Depends on',
+    labels: { today: 'Available today', H1: 'H1 · 2027', H2: 'H2 · 2028', H3: 'H3 · 2029+' },
+  },
+
+  sweep: {
+    threshold: 'Keep on the accounts',
+    rule: 'The rule',
+    ruleLines: [
+      'Every business day at 14:30, inside fund hours',
+      'Surplus above the threshold → tokenised money market fund, delivery versus payment',
+      'Redeemed automatically, same day, when the balance falls below the threshold or a need is forecast',
+      'Outside fund hours, the overnight unit covers the night; redemptions queue for 09:00',
+    ],
+    weekTitle: 'If this rule had run last week',
+    cols: ['Day', 'Swept at 14:30', 'Days held', 'Gain vs current account'],
+    weekGain: (v: string) => `${v} over the week`,
+    perYear: (v: string, avg: string) =>
+      `${v} a year on an average ${avg} in the fund (1.95% vs 0.50%)`,
+    setRule: 'Make it a standing rule',
+    runOnce: (a: string) => `Sweep ${a} once, now`,
+    ruleTitle: 'Standing rule — sweep to the tokenised fund',
+    ruleDetail: (a: string) =>
+      `Every business day at 14:30, surplus above ${a} into the tokenised money market fund; automatic redemption when needed.`,
+    onceTitle: 'One-off subscription — tokenised fund',
+    onceDetail:
+      'From the tokenised account, settled on the ledger at once (delivery versus payment) inside fund hours; queued otherwise.',
+    caveatTitle: 'To validate before any client use',
+    caveats: [
+      'A money market fund is not a deposit: different risk and liquidity profile, disclosed to the client',
+      'Classification as cash equivalent under IAS 7 — to confirm with the client’s auditor',
+      'Redemption at constant NAV and settlement cut-offs of the fund',
+    ],
+  },
+
+  value: {
+    title: 'Value a year for this client',
+    profile: 'Client profile',
+    profiles: { midcap: 'Mid-cap', large: 'Large industrial', multi: 'Multi-country group' },
+    buffers: 'Local buffers released',
+    buffersSub: (v: string) => `${v} a year once redeployed`,
+    buffersTip: (n: number, per: string, r: string) =>
+      `${n} subsidiaries in time zones where European desks are closed when they need cash each keep about ${per} "just in case". Funded just in time, the buffer goes; redeployed at ${r} (overnight unit — conservative; paying down debt is worth more). Illustrative.`,
+    hours: 'Treasury time saved',
+    hoursMain: (h: string, fte: string) => `${h} h · ${fte} FTE`,
+    valueSub: (v: string) => `${v} a year`,
+    hoursTip: (h: string, share: string, per: number, cost: string) =>
+      `${h} hours a year of pre-funding, manual sweeps, releases and repatriations; ${share} handled by standing rules. ${per} hours per FTE at ${cost}. Illustrative.`,
+    failures: 'Failures avoided',
+    failuresMain: (n: number) => `${n} a year`,
+    failuresTip: (n: number, share: string, cost: string) =>
+      `${n} late payrolls, delayed closings or missed cut-offs a year today; ${share} avoided when funding and releases can happen at any hour. ${cost} each (penalties, supplier terms, management time). Illustrative.`,
+    total: 'Total value, a year',
+    illustrative: 'Illustrative — assumptions on hover',
+    totalTip:
+      'Buffers released × redeployment rate + hours saved + failures avoided. Interest to the minute is not counted here: it is a mechanism, not the value.',
+  },
+
+  gov: {
+    maker: 'Initiated by',
+    checker: 'Second signature',
+    amount: 'Amount',
+    mandate: 'Mandate of the second signatory',
+    unlimited: 'Unlimited (board delegation)',
+    scheduled: 'Scheduled for',
+    step1: 'Submitted — nothing reaches the ledger yet',
+    step2: (n: string) => `Second signature by ${n}`,
+    step3: 'Executed on the ledger, written to the audit trail',
+    submit: 'Submit for second signature',
+    reject: 'Reject',
+    approveAs: (n: string) => `Approve as ${n}`,
+    waiting: (n: string) => `Waiting for ${n}`,
+    done: 'Approved and executed',
+    close: 'Close',
+    demoNote:
+      'In this demo you can give the second signature yourself. In production it goes to the second signatory’s queue and phone.',
+    queueTitle: 'Waiting for your approval',
+    queueEmpty: 'Nothing is waiting for you.',
+    from: (n: string) => `From ${n}`,
+    approve: 'Approve',
+    auditTitle: 'Audit trail',
+    rulesTitle: 'Standing rules in force',
+    rulesEmpty: 'No standing rule yet. Set one up from a use case — once.',
+    pageTitle: 'Approvals & audit',
+    pageLead:
+      'Maker / checker on every action. Initiator, second signatory, mandate, and a timestamped trail the auditors can read.',
+    submittedBy: 'Initiated by',
+    status: { pending: 'Pending', approved: 'Approved', rejected: 'Rejected' },
+  },
+
   /** Engine copy for funding, large payments, escrow and corridors. */
   adv: {
     jitTitle: (a: string, ccy: string, src: string) =>
@@ -1478,6 +1800,20 @@ export const en = {
     badSignature: 'Signature does not match the registered key',
     signatureCheck: 'Oracle signature',
     escrowPaid: (m: string) => `Escrow release — ${m}`,
+    pausedReject: 'Contract paused — event refused',
+    windowOpen: (t: string) => `Event accepted — payment at ${t}, unless contested`,
+    payoutTitle: 'Challenge window over: contract pays',
+    payoutDetail: 'No contest, contract running, within the cap — the payment leaves.',
+    heldPaused: 'Held — contract paused',
+    heldContested: 'Held — event contested, waiting for resolution',
+    heldCap: 'Held — above the contract’s cap, needs a second signature',
+    guardrails: 'Guardrails',
+    guardrailsOk: 'Running, not contested, within cap',
+    pauseTitle: 'Contract paused (kill switch)',
+    resumeTitle: 'Contract resumed',
+    pauseDetail: 'While paused, events are refused and nothing is paid.',
+    contestTitle: 'Event contested',
+    contestDetail: 'The payment is held until the dispute is resolved.',
     escrowPaidTo: (m: string, p: string) => `Cascade — ${m} → ${p}`,
     paidOut: (a: string) => `Paid ${a} to the whitelisted payee`,
     conditionMet: 'Condition met — nothing to pay at this step',

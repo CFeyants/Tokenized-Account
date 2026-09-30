@@ -1,5 +1,6 @@
-import { CircleDashed } from 'lucide-react';
+import { CircleDashed, Link2 } from 'lucide-react';
 import { en } from '@/i18n/en';
+import { HORIZONS, type Horizon } from '@/data/horizons';
 import { Chip } from '@/components/ui/chip';
 import { Tip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -11,9 +12,35 @@ export const journey = (id: JourneyId) => {
   return { ...en.journeys.list[i], n: i + 1 };
 };
 
-/** The top of every journey: its number, one-sentence promise, and three steps. */
+const HZ = en.horizon;
+
+/** When it can exist (H1 2027 / H2 2028 / H3 2029+ / today) and what it depends on. */
+export function HorizonTag({ id, className }: { id: string; className?: string }) {
+  const h = HORIZONS[id];
+  if (!h) return null;
+  const tone = h.horizon === 'today' ? 'traditional' : h.horizon === 'H3' ? 'notYet' : 'new';
+  return (
+    <Tip
+      content={
+        <>
+          {HZ.dependsOn}: {h.dependencies.join(' · ')}
+        </>
+      }
+    >
+      <span tabIndex={0} className={cn('inline-flex cursor-help', className)}>
+        <Chip tone={tone}>
+          <Link2 />
+          {HZ.labels[h.horizon as Horizon]}
+        </Chip>
+      </span>
+    </Tip>
+  );
+}
+
+/** The top of every journey: its number, one-sentence promise, horizon, and three steps. */
 export function JourneyHeader({ id, aside }: { id: JourneyId; aside?: React.ReactNode }) {
   const j = journey(id);
+  const h = HORIZONS[id];
   return (
     <div className="mb-8">
       <div className="flex items-end justify-between gap-6">
@@ -24,7 +51,15 @@ export function JourneyHeader({ id, aside }: { id: JourneyId; aside?: React.Reac
           <h1 className="text-[38px] leading-[1.1]">{j.title}</h1>
           <p className="mt-3 text-[16px] leading-relaxed text-muted">{j.promise}</p>
         </div>
-        {aside}
+        <div className="flex flex-col items-end gap-2">
+          <HorizonTag id={id} />
+          {h && (
+            <span className="max-w-[280px] text-right text-[11.5px] text-muted">
+              {h.dependencies.join(' · ')}
+            </span>
+          )}
+          {aside}
+        </div>
       </div>
       <ol className="mt-6 grid grid-cols-3 gap-3">
         {j.steps.map((s, i) => (

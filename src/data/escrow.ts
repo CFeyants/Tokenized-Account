@@ -54,6 +54,8 @@ export interface EscrowTemplate {
   payees: string[];
   returnTo: string;
   expiryDays: number;
+  /** Guardrail: largest single release allowed. */
+  capPerDay: number;
   oracle: string;
   milestones: {
     key: string;
@@ -76,6 +78,7 @@ export const TEMPLATES: EscrowTemplate[] = [
     ],
     returnTo: 'Lefèvre Industries SA — tokenised account',
     expiryDays: 120,
+    capPerDay: 10_000_000,
     oracle: 'engineer',
     milestones: [
       {
@@ -105,6 +108,7 @@ export const TEMPLATES: EscrowTemplate[] = [
     payees: ['Sellers of Aceros del Norte SA de CV (escrow agent: notary)'],
     returnTo: 'Lefèvre Industries SA — tokenised account',
     expiryDays: 90,
+    capPerDay: 20_000_000,
     oracle: 'notary',
     milestones: [
       { key: 'clearance', label: 'Competition clearance received', share: 0 },
@@ -120,6 +124,7 @@ export const TEMPLATES: EscrowTemplate[] = [
     payees: ['Rheinwerk Tunnelbau GmbH'],
     returnTo: 'Lefèvre Industries SA — tokenised account',
     expiryDays: 180,
+    capPerDay: 12_000_000,
     oracle: 'customs',
     milestones: [
       { key: 'shipped', label: 'Bill of lading issued', share: 0.4 },
