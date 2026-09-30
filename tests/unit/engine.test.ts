@@ -158,3 +158,21 @@ describe('counters', () => {
     expect(c.newParts.tokenised + c.newParts.units + c.newParts.fund).toBe(0);
   });
 });
+
+describe('rule previews', async () => {
+  const { previewSweep, previewFunding, previewLadder } = await import('@/engine/preview');
+  it('sweep preview: a lower threshold earns more', () => {
+    const a = previewSweep(tl, 20_000_000, 5_000_000);
+    const b = previewSweep(tl, 40_000_000, 5_000_000);
+    expect(a.gain).toBeGreaterThan(b.gain);
+    expect(a.rows).toHaveLength(5);
+    expect(a.rows[0].swept).toBe(101_500_000);
+  });
+  it('funding preview: to the minute is cheaper than a full day', () => {
+    const f = previewFunding(4_000_000, 555);
+    expect(f.toMinute).toBeLessThan(f.fullDay);
+  });
+  it('ladder preview earns above the current account', () => {
+    expect(previewLadder(tl, 60_000_000, ['1m', '3m', '6m', '12m']).perYear).toBeGreaterThan(0);
+  });
+});

@@ -38,6 +38,10 @@ export function IntradayChart({ data, tone = 'new', height = 240 }: { data: Intr
               <stop offset={off} stopColor="var(--red)" />
             </linearGradient>
           </defs>
+          <linearGradient id={`pos${id}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor={colour} stopOpacity={0.28} />
+            <stop offset="1" stopColor={colour} stopOpacity={0.02} />
+          </linearGradient>
           <XAxis
             dataKey="m"
             type="number"
@@ -67,9 +71,9 @@ export function IntradayChart({ data, tone = 'new', height = 240 }: { data: Intr
           <Area
             type="stepAfter"
             dataKey="total"
-            stroke={`url(#line${id})`}
+            stroke={min < 0 ? `url(#line${id})` : colour}
             strokeWidth={1.75}
-            fill={`url(#fill${id})`}
+            fill={min < 0 ? `url(#fill${id})` : `url(#pos${id})`}
             isAnimationActive={false}
           />
         </AreaChart>
