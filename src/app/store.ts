@@ -7,7 +7,8 @@ import { actionToEvents, type NewUserAction, type UserAction } from '@/engine/us
 import { computeCounters } from '@/engine/counters';
 import { snapshotAt } from '@/engine/accrual';
 
-export type HoodTab = 'ledger' | 'orchestration' | 'accrual' | 'alm' | 'intragroup' | 'notYet';
+export type HoodTab =
+  'ledger' | 'orchestration' | 'accrual' | 'alm' | 'fx' | 'intragroup' | 'notYet';
 export type Speed = 1 | 3 | 8;
 
 interface AppState {

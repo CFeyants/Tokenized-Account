@@ -62,7 +62,7 @@ export function BusinessCase() {
             className="border-t border-line"
           />
         </Card>
-        <Card>
+        <Card data-tour="bc-net">
           <CardHeader title={B.bankTitle} />
           <Row k={B.bank.retained} v={fmtM(b.retained, 'EUR', 0)} />
           <Row k={<span className="pl-4">{B.bank.captured}</span>} v={fmtM(b.captured, 'EUR', 0)} />

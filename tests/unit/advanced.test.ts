@@ -6,6 +6,7 @@ import { compareJit } from '@/engine/markets';
 import { repatriationQuote } from '@/engine/advanced';
 import { LATAM } from '@/data/corridors';
 import { FX_MID } from '@/data/rates';
+import { WINDOW_BPS } from '@/engine/fx';
 
 const M = 1_000_000;
 const tlWith = (actions: UserAction[]) => buildTimeline(actions.flatMap(actionToEvents));
@@ -23,7 +24,10 @@ describe('just-in-time funding in JPY and SAR', () => {
       },
     ]);
     const s = stateAt(tl, at(7, '01:56'));
-    expect(s.bal['tok-jpy-tokyo']).toBeCloseTo(8 * M * FX_MID.JPY * (1 - 10 / 10_000), 0);
+    expect(s.bal['tok-jpy-tokyo']).toBeCloseTo(
+      8 * M * FX_MID.JPY * (1 - WINDOW_BPS.thin / 10_000),
+      0,
+    );
     // Saturday's EUR 10m for Singapore counts in the same weekend night: 18 of 25.
     expect(s.fxNightUsed).toBe(18 * M);
     expect(s.mirrors.some((m) => m.creditorBank === 'Norvane Bank Tokyo')).toBe(true);

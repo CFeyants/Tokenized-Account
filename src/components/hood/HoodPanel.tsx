@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FxTab } from './FxTab';
 import { Check, ChevronDown, CircleDashed, X } from 'lucide-react';
 import { useApp, useSim, type HoodTab } from '@/app/store';
 import { en } from '@/i18n/en';
@@ -24,7 +25,7 @@ import { InfoTip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 const H = en.hood;
-const TABS: HoodTab[] = ['ledger', 'orchestration', 'accrual', 'alm', 'intragroup', 'notYet'];
+const TABS: HoodTab[] = ['ledger', 'orchestration', 'accrual', 'alm', 'fx', 'intragroup', 'notYet'];
 
 function LedgerTab() {
   const { t, tl } = useSim();
@@ -491,6 +492,7 @@ export function HoodPanel() {
           {tab === 'accrual' && <AccrualTab />}
           {tab === 'alm' && <AlmTab />}
           {tab === 'intragroup' && <IntragroupTab />}
+          {tab === 'fx' && <FxTab />}
           {tab === 'notYet' && <NotYetTab />}
         </div>
       </SheetContent>

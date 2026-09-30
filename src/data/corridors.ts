@@ -172,8 +172,10 @@ export const LATAM: LatamConfig[] = [
 ];
 
 export const CORRIDOR_PRICING = {
-  /** Partner conversion into the euro stablecoin. */
-  partnerBps: 30,
+  /** FX EUR/BRL quoted by our markets desk (range 25–45 bps). */
+  marketsBps: 35,
+  /** Partner as paying agent into the euro stablecoin (range 5–15 bps). */
+  partnerBps: 10,
   networkFeeEur: 2,
   /** Redemption of the euro stablecoin at par on the master account. */
   redemptionBps: 0,

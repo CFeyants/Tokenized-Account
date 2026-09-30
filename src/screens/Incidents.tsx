@@ -13,7 +13,7 @@ export function Incidents() {
     <div className="space-y-6">
       <PageHeader title={I.title} lead={I.lead} />
       {I.list.map((inc) => (
-        <Card key={inc.key} className="grid grid-cols-12 gap-6">
+        <Card key={inc.key} className="grid grid-cols-12 gap-6" data-tour={`incident-${inc.key}`}>
           <div className="col-span-12 xl:col-span-7">
             <div className="flex items-center gap-3">
               <Siren className="size-5 text-red" />

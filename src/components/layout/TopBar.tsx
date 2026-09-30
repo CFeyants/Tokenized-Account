@@ -31,6 +31,8 @@ import { MinuteRing } from '@/components/MinuteRing';
 import { CounterStrip } from './CounterStrip';
 import { WeekTimeline } from './WeekTimeline';
 import { ValueBanner } from './ValueBanner';
+import { TourValueBanner } from '@/tour/TourValueBanner';
+import { useTour } from '@/tour/useTour';
 import { cn } from '@/lib/utils';
 
 const PHASE_LABEL: Record<DayPhase, string> = {
@@ -107,6 +109,7 @@ export function TopBar() {
   const theme = useApp((s) => s.theme);
   const hoodOpen = useApp((s) => s.hoodOpen);
   const demo = useApp((s) => s.demoMode);
+  const tourActive = useTour((s) => s.active);
   const toggleDemo = useApp((s) => s.toggleDemo);
   const { togglePlay, step, stepBack, restart, setSpeed, setTheme, setHoodOpen, resetActions } =
     useApp.getState();
@@ -155,17 +158,19 @@ export function TopBar() {
           <PhaseChip phase={phase} />
         </div>
 
-        <Button
-          variant={demo ? 'new' : 'secondary'}
-          size="sm"
-          onClick={toggleDemo}
-          aria-pressed={demo}
-          data-testid="demo-toggle"
-        >
-          <Clapperboard />
-          {en.shell.demoMode}
-        </Button>
-        {demo && (
+        {!tourActive && (
+          <Button
+            variant={demo ? 'new' : 'secondary'}
+            size="sm"
+            onClick={toggleDemo}
+            aria-pressed={demo}
+            data-testid="demo-toggle"
+          >
+            <Clapperboard />
+            {en.shell.demoMode}
+          </Button>
+        )}
+        {demo && !tourActive && (
           <div className="flex items-center gap-1" role="group" aria-label="Clock controls">
             <Tip content={en.shell.restart}>
               <Button variant="ghost" size="icon" onClick={restart} aria-label={en.shell.restart}>
@@ -259,8 +264,8 @@ export function TopBar() {
         </div>
       </div>
       <div className="relative">
-        <ValueBanner />
-        {demo && (
+        {tourActive ? <TourValueBanner /> : <ValueBanner />}
+        {demo && !tourActive && (
           <div className="border-t border-line pt-1">
             <CounterStrip />
             <WeekTimeline />

@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { Outlet, useSearchParams } from 'react-router-dom';
+import { Outlet, useLocation, useSearchParams } from 'react-router-dom';
+import { TourOverlay } from '@/tour/TourOverlay';
+import { useTour } from '@/tour/useTour';
+import { JOURNEYS } from './Rail';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useApp, useSim } from '@/app/store';
 import { en } from '@/i18n/en';
-import { parseParam, toParam, formatClock } from '@/engine/clock';
+import { parseParam, toParam, formatClock, formatDateTime } from '@/engine/clock';
 import { Rail } from './Rail';
 import { TopBar } from './TopBar';
 import { useClockLoop } from './useClockLoop';
@@ -25,7 +28,7 @@ function useUrlClock() {
       if (parsed !== null) useApp.getState().setT(parsed);
       return;
     }
-    if (playing) return;
+    if (playing || useTour.getState().active) return;
     const v = toParam(t);
     if (params.get('t') !== v) {
       const next = new URLSearchParams(params);
@@ -35,18 +38,23 @@ function useUrlClock() {
   }, [t, playing, params, setParams]);
 }
 
+/** On a use case page: where we are in Marie's week, and the way back to the tour. */
 function Banner() {
-  const dismissed = useApp((s) => s.bannerDismissed);
-  const dismiss = useApp((s) => s.dismissBanner);
-  if (dismissed) return null;
+  const { pathname } = useLocation();
+  const { t } = useSim();
+  const { active, started, resume } = useTour();
+  const journey = JOURNEYS.some((j) => pathname.startsWith(j.to));
+  if (active || !journey) return null;
   return (
-    <div role="note" className="mx-auto mt-6 flex max-w-[1440px] items-center gap-4 px-8">
-      <div className="card flex w-full items-center gap-4 border-new/30 px-5 py-3.5">
+    <div role="note" className="mx-auto mt-5 flex max-w-[1440px] items-center gap-4 px-8">
+      <div className="card flex w-full items-center gap-4 px-5 py-2.5">
         <span className="size-2 shrink-0 rounded-full bg-new" />
-        <p className="flex-1 text-[14px] leading-relaxed">{en.shell.banner}</p>
-        <Button size="sm" variant="new" onClick={dismiss}>
-          {en.shell.dismiss}
-        </Button>
+        <p className="flex-1 text-[13.5px]">{en.tour.here(formatDateTime(t))}</p>
+        {started && (
+          <Button size="sm" variant="new" onClick={resume}>
+            {en.tour.back}
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -114,6 +122,7 @@ function EventToast() {
 }
 
 export function AppShell() {
+  const tourActive = useTour((s) => s.active);
   useClockLoop();
   useUrlClock();
   const theme = useApp((s) => s.theme);
@@ -155,7 +164,8 @@ export function AppShell() {
         </main>
       </div>
       <HoodPanel />
-      <EventToast />
+      {!tourActive && <EventToast />}
+      <TourOverlay />
     </div>
   );
 }

@@ -104,7 +104,7 @@ export function Repatriation() {
         ))}
       </div>
 
-      <Card>
+      <Card data-tour="brazil-pipeline">
         <CardHeader title={P.pipeTitle} eyebrow={P.pipeLead} />
         <div className="grid grid-cols-[1fr_20px_1fr_20px_1fr_20px_1fr] items-stretch gap-2">
           {boxes.map((b, i) => (

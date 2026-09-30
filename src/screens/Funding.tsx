@@ -333,7 +333,11 @@ export function JitTab() {
           </div>
         </Card>
 
-        <Card tone="new" className="col-span-12 md:col-span-6 xl:col-span-4">
+        <Card
+          tone="new"
+          className="col-span-12 md:col-span-6 xl:col-span-4"
+          data-tour="jit-compare"
+        >
           <CardHeader title={F.ledgerTitle} aside={<LayerTag layer="new" />} />
           <ul className="space-y-2.5 text-[13px] leading-relaxed">
             <li>{F.ledgerExec(formatDateTime(execAt))}</li>
@@ -449,7 +453,7 @@ export function LargeTab() {
           );
         })}
       </div>
-      <Card className="col-span-12 xl:col-span-7">
+      <Card className="col-span-12 xl:col-span-7" data-tour="prevalidation-list">
         <CardHeader title={L.list} aside={<HorizonTag id="prevalidation" />} />
         {list.length === 0 ? (
           <p className="text-[13px] text-muted">{L.none}</p>

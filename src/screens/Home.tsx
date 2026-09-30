@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { AlertTriangle, ArrowRight, Check, Timer, X } from 'lucide-react';
-import { COCKPIT_START, useSim } from '@/app/store';
+import { AlertTriangle, ArrowRight, Check, PlayCircle, Timer, X } from 'lucide-react';
+import { useTour } from '@/tour/useTour';
+import { COCKPIT_START, useApp, useSim } from '@/app/store';
 import { useGov, PEOPLE, personLabel } from '@/app/governance';
 import { en } from '@/i18n/en';
 import { bankById, entityById } from '@/data/entities';
@@ -8,6 +9,7 @@ import { FX_MID } from '@/data/rates';
 import {
   MIN_PER_DAY,
   dayIndex,
+  formatClock,
   formatDate,
   formatDateTime,
   hhmm,
@@ -72,7 +74,7 @@ function Alerts() {
 }
 
 function Position() {
-  const { t, state } = useSim();
+  const { t, tl, state } = useSim();
   const rows = accountRows(state, t).filter(
     (r) => r.balance !== 0 || r.inUnit !== 0 || r.blocked !== 0,
   );
@@ -80,8 +82,23 @@ function Position() {
     (r.balance + r.blocked + r.inUnit) / FX_MID[r.def.currency];
   const atBank = rows.filter((r) => bankById(r.def.bank).ours).reduce((a, r) => a + eur(r), 0);
   const total = groupCash(state);
+  /** Why each balance last moved: the ledger entry, today. */
+  const lastMove = (id: string) => {
+    const e = [...tl.ledger]
+      .reverse()
+      .find(
+        (l) => l.account === id && l.t <= t && l.amount !== 0 && l.t >= Math.floor(t / 1440) * 1440,
+      );
+    return e
+      ? C.lastMove(
+          `${e.amount > 0 ? '+' : '−'}${numM(Math.abs(e.amount))}m`,
+          e.memo,
+          formatClock(e.t),
+        )
+      : null;
+  };
   return (
-    <Card className="p-0">
+    <Card className="p-0" data-tour="cockpit-position">
       <div className="px-6 pt-6">
         <CardHeader eyebrow={C.positionLead} title={C.positionTitle} />
       </div>
@@ -124,6 +141,14 @@ function Position() {
                 <td className="px-6 py-2">{r.def.currency}</td>
                 <td className={cn('tabular px-6 py-2 text-right', r.balance < 0 && 'text-red')}>
                   {fmtAmount(r.balance + r.blocked + r.inUnit)}
+                  {lastMove(r.def.id) && (
+                    <div
+                      className="max-w-[340px] truncate text-[11px] font-normal text-muted"
+                      title={lastMove(r.def.id)!}
+                    >
+                      {lastMove(r.def.id)}
+                    </div>
+                  )}
                 </td>
                 <td className="tabular px-6 py-2 text-right">{numM(eur(r))}</td>
               </tr>
@@ -153,7 +178,7 @@ function Queue() {
   const approve = useGov((s) => s.approve);
   const reject = useGov((s) => s.reject);
   return (
-    <Card>
+    <Card data-tour="cockpit-approvals">
       <CardHeader
         title={G.queueTitle}
         aside={<Chip tone={approvals.length ? 'amber' : 'neutral'}>{approvals.length}</Chip>}
@@ -291,6 +316,32 @@ function Forecast() {
   );
 }
 
+function TourStart() {
+  const start = useTour((s) => s.start);
+  const toggleDemo = useApp((s) => s.toggleDemo);
+  const demo = useApp((s) => s.demoMode);
+  const TT = en.tour;
+  return (
+    <div className="card flex items-center gap-6 border-new/40 bg-new-soft p-5">
+      <Button size="lg" variant="primary" onClick={() => start('full')} data-testid="tour-start">
+        <PlayCircle /> {TT.start}
+      </Button>
+      <p className="flex-1 text-[13.5px] leading-relaxed">{TT.startSub}</p>
+      <div className="flex flex-wrap justify-end gap-2">
+        <Button size="sm" variant="secondary" onClick={() => start('cfo')}>
+          {TT.cfo}
+        </Button>
+        <Button size="sm" variant="secondary" onClick={() => start('bank')}>
+          {TT.bankTour}
+        </Button>
+        <Button size="sm" variant="ghost" onClick={() => !demo && toggleDemo()}>
+          {TT.explore}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export function Home() {
   const { t } = useSim();
   return (
@@ -304,6 +355,7 @@ export function Home() {
         </div>
         <p className="max-w-[360px] text-right font-serif text-[18px] text-new">{C.tagline}</p>
       </div>
+      <TourStart />
       <section aria-label={C.alertsTitle}>
         <h2 className="eyebrow mb-3">{C.alertsTitle}</h2>
         <Alerts />

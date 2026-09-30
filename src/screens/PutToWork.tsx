@@ -33,7 +33,7 @@ export function PutToWork() {
       <JourneyHeader id="work" />
       <AccountSummary />
       <div className="grid grid-cols-3 gap-6">
-        <Card tone="new" className="flex flex-col">
+        <Card tone="new" className="flex flex-col" data-tour="work-collateral">
           <CardHeader
             title={
               <span className="flex items-center gap-2">
@@ -91,7 +91,7 @@ export function PutToWork() {
           </Button>
         </Card>
 
-        <Card tone="new" className="flex flex-col">
+        <Card tone="new" className="flex flex-col" data-tour="work-night">
           <CardHeader
             title={
               <span className="flex items-center gap-2">

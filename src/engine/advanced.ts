@@ -4,7 +4,7 @@
  * through corridors (interbank tokenised deposits or traditional rails, from the current or the
  * tokenised account) and repatriation from Latin America through the stablecoin corridor.
  */
-import { NIGHT_FX_LIMIT_EUR, FX_MID, PRICING } from '@/data/rates';
+import { NIGHT_FX_LIMIT_EUR, FX_MID } from '@/data/rates';
 import { CORRIDOR_PRICING, LATAM, PAYEES, type LatamConfig } from '@/data/corridors';
 import { ORACLE_ENDPOINT, ORACLES, TEMPLATES } from '@/data/escrow';
 import { en } from '@/i18n/en';
@@ -22,6 +22,7 @@ import { book, buyUnit, move, nextId, partialUnwind, unwindEarmarkUnits } from '
 import { unitSaleQuote } from './pricing';
 import { screeningCheck } from './rules';
 import { WINDOWS, isOpen, nextOpen } from './markets';
+import { FRIDAY_LOCK_BPS, fxWindow } from './fx';
 import { fmtM } from './format';
 import type { AccountId, Ctx, LatamCountry, SimEvent, State } from './types';
 
@@ -119,8 +120,14 @@ function payOutEarmarked(s: State, c: C, amount: number, memo: string) {
 }
 
 /** Quote for a JIT conversion: day desk mid ± 5 bps, out of hours ± 10 bps. */
-export function jitQuote(ccy: string, source: 'EUR' | 'USD', amountEur: number, t: SimTime) {
-  const bps = isBusinessHours(t) ? 5 : PRICING.fxNightBps;
+export function jitQuote(
+  ccy: string,
+  source: 'EUR' | 'USD',
+  amountEur: number,
+  t: SimTime,
+  lockFriday = false,
+) {
+  const bps = lockFriday ? FRIDAY_LOCK_BPS : fxWindow(t).bps;
   const midPerSource = source === 'EUR' ? FX_MID[ccy] : FX_MID[ccy] / FX_MID.USD;
   const sourceAmount = source === 'EUR' ? amountEur : amountEur * FX_MID.USD;
   const rate = midPerSource * (1 - bps / 10_000);
@@ -130,11 +137,12 @@ export function jitQuote(ccy: string, source: 'EUR' | 'USD', amountEur: number, 
 export function repatriationQuote(cfg: LatamConfig, local: number) {
   const mid = FX_MID[cfg.currency];
   const gross = local / mid;
-  const fee = gross * (CORRIDOR_PRICING.partnerBps / 10_000) + CORRIDOR_PRICING.networkFeeEur;
+  const bps = CORRIDOR_PRICING.marketsBps + CORRIDOR_PRICING.partnerBps;
+  const fee = gross * (bps / 10_000) + CORRIDOR_PRICING.networkFeeEur;
   const trad = gross * (CORRIDOR_PRICING.tradBps / 10_000) + CORRIDOR_PRICING.tradFeesEur;
   return {
     mid,
-    rate: mid * (1 + CORRIDOR_PRICING.partnerBps / 10_000),
+    rate: mid * (1 + bps / 10_000),
     eur: gross - fee,
     fee,
     tradEur: gross - trad,

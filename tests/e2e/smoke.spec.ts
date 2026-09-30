@@ -125,3 +125,29 @@ test('incidents, TMS and sweep pages render', async ({ page }) => {
   await page.goto('/sweep');
   await expect(page.getByText('If this rule had run last week')).toBeVisible();
 });
+
+test('guided tour: ten steps, the presenter advances, each step on its page', async ({ page }) => {
+  await page.goto('/');
+  await page.getByTestId('tour-start').click();
+  const expected = [
+    '/',
+    '/',
+    '/repatriation',
+    '/put-to-work',
+    '/pre-validation',
+    '/put-to-work',
+    '/incidents',
+    '/just-in-time',
+    '/just-in-time',
+    '/tour-recap',
+  ];
+  for (let i = 0; i < expected.length; i++) {
+    await expect(page.getByTestId('tour-panel')).toContainText(`Step ${i + 1} of 10`);
+    await expect.poll(() => new URL(page.url()).pathname).toBe(expected[i]);
+    await expect(page.getByText('This step is on another page.')).toHaveCount(0);
+    if (i < expected.length - 1) await page.getByTestId('tour-next').click();
+  }
+  await expect(page.getByText('This week so far')).toBeVisible();
+  await page.getByTestId('tour-finish').click();
+  await expect(page.getByRole('heading', { name: 'Business case' })).toBeVisible();
+});

@@ -29,6 +29,7 @@ const Placements = load(() => import('@/screens/Placements'), 'Placements');
 const Guarantees = load(() => import('@/screens/Guarantees'), 'Guarantees');
 const Statements = load(() => import('@/screens/Statements'), 'Statements');
 const Corridors = load(() => import('@/screens/Corridors'), 'Corridors');
+const TourRecap = load(() => import('@/screens/TourRecap'), 'TourRecap');
 const About = load(() => import('@/screens/About'), 'About');
 
 const page = (el: React.ReactNode) => <Suspense fallback={null}>{el}</Suspense>;
@@ -60,6 +61,7 @@ export function App() {
             <Route path="guarantees" element={page(<Guarantees />)} />
             <Route path="statements" element={page(<Statements />)} />
             <Route path="corridors" element={page(<Corridors />)} />
+            <Route path="tour-recap" element={page(<TourRecap />)} />
             <Route path="about" element={page(<About />)} />
             <Route path="escrow" element={<Navigate to="/smart-contracts" replace />} />
             <Route path="funding" element={<Navigate to="/just-in-time" replace />} />
