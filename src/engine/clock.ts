@@ -52,14 +52,14 @@ export function isFundHours(t: SimTime): boolean {
   return m >= FUND_OPEN && m < FUND_CUTOFF;
 }
 
-export type DayPhase = 'business' | 'evening' | 'night' | 'weekend';
+export type DayPhase = 'business' | 'evening' | 'night' | 'morning' | 'weekend';
 
 export function dayPhase(t: SimTime): DayPhase {
   if (isWeekend(t)) return 'weekend';
   const m = minuteOfDay(t);
   if (m >= BUSINESS_START && m < LAST_CUTOFF) return 'business';
   if (m >= LAST_CUTOFF && m < 22 * 60) return 'evening';
-  if (m >= OPENING && m < BUSINESS_START) return 'evening';
+  if (m >= OPENING && m < BUSINESS_START) return 'morning';
   return 'night';
 }
 

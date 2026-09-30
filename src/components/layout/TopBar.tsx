@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 const PHASE_LABEL: Record<DayPhase, string> = {
   business: en.shell.business,
   evening: en.shell.evening,
+  morning: en.shell.morning,
   night: en.shell.night,
   weekend: en.shell.weekend,
 };
