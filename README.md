@@ -60,6 +60,10 @@ Good moments to start from:
 | Sun 19:00 | `/guarantees?t=2026-10-11T19:00` | Bid bond released by rule, interest to the minute |
 | Mon 10:00 | `/placements?t=2026-10-12T10:00` | Sell a term unit instead of breaking a deposit |
 | Mon 20:00 | `/payments?t=2026-10-12T20:00&tab=ledger` | Night payment to a non-client: not yet (2028) |
+| Mon 21:00 | `/minute?t=2026-10-12T21:00` | Where the minute counts: six situations, daily vs minute |
+| Sat 21:00 | `/funding?t=2026-10-10T21:00` | Yen for Tokyo at Mon 02:00 Paris, SAR for Riyadh on Sunday — desks closed |
+| Mon 11:00 | `/escrow?t=2026-10-12T11:00` | Deploy an escrow, send oracle events (valid and forged) |
+| Sat 21:00 | `/corridors?t=2026-10-10T21:00` | Interbank corridors, current vs tokenised, LatAm repatriation |
 
 ## The doctrine in 12 lines
 
@@ -74,7 +78,7 @@ Good moments to start from:
 9. The tokenised fund is an option, not the engine: settled on the ledger, within fund hours.
 10. The night sweep brings cash from other banks by instant transfer and returns only what each bank needs.
 11. Payments, payroll, tax, forecasting, statements, reconciliation, closing and netting do not change.
-12. Across banks, not yet: night payments to non-clients, PvP, settlement with non-clients need the interbank layer (2028+).
+12. Across banks: pilot corridors work with partner banks on the interbank ledger; elsewhere night payments to non-clients, PvP and settlement with non-clients wait for the interbank layer (2028+).
 
 Full text: [docs/DOCTRINE.md](docs/DOCTRINE.md). The week: [docs/SCENARIO.md](docs/SCENARIO.md).
 Choices made where the brief was silent: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md).
@@ -87,6 +91,8 @@ Choices made where the brief was silent: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.
 | ![Payments](docs/screenshots/payments.png) **Payments** — SEPA and cross-border as today; intragroup on the ledger with pre-screening. | ![Rules](docs/screenshots/rules.png) **Rules** — set once, runs every night; "if this rule had run last week…". |
 | ![Placements](docs/screenshots/placements.png) **Placements** — classic deposit, term units, fund; the yield ladder. | ![Guarantees](docs/screenshots/guarantees.png) **Guarantees** — collateral that keeps earning, released by rule. |
 | ![Statements](docs/screenshots/statements.png) **Statements** — camt.053 as today, plus sub-balances and a minute interest line. | ![Under the hood](docs/screenshots/hood.png) **Under the hood** — ledger, orchestration, accrual, ALM, intragroup, not yet. |
+| ![Why the minute](docs/screenshots/minute.png) **Why the minute** — six situations where money stays on the account and the minute matters. | ![Funding](docs/screenshots/funding.png) **Funding** — just-in-time in JPY / SAR / SGD from EUR or USD when desks are closed; large payments pre-validated. |
+| ![Escrow](docs/screenshots/escrow.png) **Escrow** — purpose-bound money on the tokenised account, programmable rule, oracle API. | ![Corridors](docs/screenshots/corridors.png) **Corridors** — interbank tokenised deposits on pilot corridors, current or tokenised account, LatAm repatriation via partner wallets and a euro stablecoin. |
 
 Light mode: ![Light](docs/screenshots/cockpit-light.png)
 
@@ -142,8 +148,9 @@ computed by replaying the scenario. Nothing is stored in the screens.
 
 ## What this is not
 
-All rates, amounts, names and limits are illustrative. The group and its counterparties are
-fictitious. The interbank ledger, PvP with other banks, settlement with non-clients and stablecoin
+All rates, amounts, names and limits are illustrative. The bank is anonymised as **Norvane Bank**;
+the group and its counterparties are fictitious. The corridor partner (Bitso) and the euro
+stablecoin (Qivalis) are named as placeholders to validate with Partnerships, Legal and Compliance. The interbank ledger, PvP with other banks, settlement with non-clients and stablecoin
 corridors are not built; they appear as "Not yet". See the **About** page in the app.
 
 Contributing: [CONTRIBUTING.md](CONTRIBUTING.md) — how to add a scenario event.

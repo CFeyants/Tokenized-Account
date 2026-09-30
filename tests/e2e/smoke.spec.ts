@@ -52,3 +52,32 @@ test('under the hood opens with its tabs', async ({ page }) => {
   await panel.getByRole('tab', { name: 'Intragroup' }).click();
   await expect(panel).toContainText('Norvane Bank Singapore');
 });
+
+test('why the minute: six cases, live ones follow the scenario', async ({ page }) => {
+  await page.goto('/minute?t=2026-10-12T21:00');
+  await expect(page.getByRole('heading', { name: 'Where the minute counts.' })).toBeVisible();
+  await expect(page.getByText('Groups across time zones')).toBeVisible();
+});
+
+test('just-in-time: yen for Tokyo scheduled at the minute of need', async ({ page }) => {
+  await page.goto('/funding?t=2026-10-10T21:00');
+  await page.getByRole('button', { name: /Schedule at the minute of need/ }).click();
+  await expect(page.getByText(/Scheduled for/)).toBeVisible();
+});
+
+test('escrow: deploy, oracle event accepted, bad signature rejected', async ({ page }) => {
+  await page.goto('/escrow?t=2026-10-12T11:00');
+  await page.getByRole('button', { name: 'Deploy on the tokenised account' }).click();
+  await page.getByRole('button', { name: /Send signed event: Completion/ }).click();
+  await page.getByRole('button', { name: /Send with a bad signature: Warranty/ }).click();
+  await expect(page.getByText('accepted')).toBeVisible();
+  await expect(page.getByText('rejected')).toBeVisible();
+});
+
+test('LatAm repatriation reaches the tokenised account', async ({ page }) => {
+  await page.goto('/corridors?t=2026-10-10T21:00');
+  await page.getByRole('tab', { name: 'Repatriation from Latin America' }).click();
+  await page.getByRole('button', { name: 'Lock the rate and repatriate' }).click();
+  for (let i = 0; i < 5; i++) await page.getByTestId('step').click();
+  await expect(page.getByText(/Earning to the minute from this moment/)).toBeVisible();
+});

@@ -43,3 +43,5 @@ marked `kind: 'auto'` or `kind: 'extra'` in `src/engine/scenario.ts` and explain
 | x2 | Thu 06:30 | extra | Munich receives EUR 4m; back to zero |
 | x3 | Sun 02:00 | extra | Singapore supplier paid (Mon 08:00 SGT) |
 | x4 | Sun 16:00 | extra | Weekend instant collections, EUR 44m, into a weekend unit |
+| x5 | Mon 12, 10:30 | extra | EUR 6m to the Warsaw contractor pre-screened and earmarked, waiting for the acceptance certificate |
+| x6 | Mon 12, 16:45 | extra | Certificate received: the payment leaves; 375 minutes earmarked, each one counted |

@@ -27,6 +27,16 @@ tests in `tests/unit/` assert the ones that can be asserted.
 
 12. **Across banks, not yet.** Paying a counterparty banked elsewhere at night, PvP FX with another bank, settling an asset with a non-client: these require the interbank layer (2028+). Show them as "not available yet — interbank ledger, 2028" with a tooltip, not as working features.
 
+## Changes decided by the product owner
+
+- **Doctrine 12, pilot corridors.** Interbank tokenised deposits are shown working on pilot
+  corridors with named partner banks (eurozone 2027, USD and SGD 2028). Every other bank stays
+  "not yet". See ASSUMPTIONS A-30.
+- **Stablecoin corridor.** Repatriation from Brazil, Mexico, Colombia and Chile through partner
+  wallets and a euro stablecoin redeemed at par onto the tokenised account (A-32).
+- **Vocabulary.** Wallet, stablecoin and smart contract are allowed in the corridor and escrow
+  modules only (A-33).
+
 ## Where each rule lives in the code
 
 | # | Implementation | Test |

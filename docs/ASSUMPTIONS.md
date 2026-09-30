@@ -76,3 +76,53 @@ building.
   download) so the project installs offline from npm alone.
 - **A-23 · Lighthouse** was measured with the desktop profile (the product targets desktop and
   tablet): Performance 94–100, Accessibility 100 on the pages checked.
+
+## Added after the first version
+
+- **A-24 · Anonymised bank.** The bank is called **Norvane Bank** (fictitious); French IBANs use a
+  fictitious bank code. Other banks named in the brief (HSBC, Deutsche Bank, Santander,
+  Commerzbank) are kept.
+- **A-25 · Where the minute counts** (new screen) compares the daily convention with counting to the
+  minute in six situations. Three are live in the scenario (collateral, cash waiting for the draw,
+  multi-time-zone flows); one was added as live events x5/x6 (a pre-screened payment waiting for a
+  certificate); two are illustrative with parameters (pure intraday float, transit). Amounts are
+  shown as they are — small at 0.10%.
+- **A-26 · End of day by time zone.** Week of 5 October: Paris on summer time (UTC+2), Singapore
+  UTC+8 (Singapore's 23:59 = 17:59 Paris), New York UTC−4 (23:59 = 05:59 Paris the next day).
+  23:59 in Paris is 05:59 the next morning in Singapore, not midday.
+- **A-27 · Just-in-time in JPY and SAR.** Tokyo and Riyadh subsidiaries hold tokenised accounts at
+  Norvane Bank Tokyo / Riyadh (group entities, mirror intragroup balances). Indicative hours in
+  Paris time: Paris FX desk Mon–Fri 08:00–18:00; same-day correspondent cut-off 16:00; T2
+  07:00–17:00; CLS 07:00–12:00; Tokyo large-value payments 02:00–08:00 (09:00–15:00 JST); SARIE
+  Sun–Thu 07:00–15:00 (08:00–16:00 AST). The ledger's FX for intragroup funding runs 24/7 within the
+  EUR 25m night limit, at mid ± 10 bps (± 5 bps in business hours). Funding from USD sells part of
+  the USD unit to the bank (never broken). Mid rates: EURJPY 172, EURSAR 4.05 (USDSAR 3.75 peg).
+- **A-28 · Large payments.** Pre-validation runs all checks in advance and earmarks the amount on
+  the tokenised account (flagged in the overnight unit at night). Release needs no new check. If
+  the beneficiary bank is off the ledger and T2 is closed, the payment leaves at T2 opening and
+  stays earmarked and earning until then.
+- **A-29 · Escrow and purpose-bound money.** The escrow is a sub-balance of the tokenised account,
+  with whitelisted payees only, released by signed oracle events (notary, regulator, trade
+  documents, calendar) received through an API. The programmable rule (smart contract) is compiled
+  from an audited template; clients set parameters, never code. Endpoint and payloads are mock-ups
+  (api.bank.example).
+- **A-30 · Interbank tokenised deposits on pilot corridors.** Some partner banks (fictitious) are on
+  the interbank ledger — eurozone 2027, USD and SGD 2028 — so payments to them are final on both
+  ledgers at any hour. Banks outside the pilots (e.g. Commerzbank, row 17) remain "not yet". This
+  relaxes doctrine 12 for pilot corridors only, as the product owner asked.
+- **A-31 · Choice of account.** Any payment can leave from the current account (daily convention,
+  0.50%) or the tokenised account (to the minute, 0.10%, units at night). The "Does the minute
+  matter?" calculator shows both honestly — for money that arrives late and leaves early the next
+  morning, the current account pays more.
+- **A-32 · LatAm repatriation.** Subsidiaries in Brazil, Mexico, Colombia (new) and Chile (new) hold
+  local balances (EUR 12m, 8m, 5m, 4m equivalent; Santander reduced to EUR 31m to keep EUR 300m in
+  total). Flow: rate locked 15 minutes → local account to the subsidiary's Bitso wallet (PIX / SPEI
+  24/7; Colombia and Chile in local banking hours) → converted into the Qivalis euro stablecoin →
+  sent to the master account address → redeemed at par onto the tokenised account, final, and into
+  an overnight unit if after hours. Pricing is indicative: partner 30 bps + EUR 2 network fee vs
+  traditional 60 bps + EUR 65, value D+2. Bitso and Qivalis are real names used as placeholders at
+  the product owner's request — to validate with Partnerships, Legal and Compliance (MiCA status,
+  travel rule, local FX rules, accounting).
+- **A-33 · Vocabulary.** "Wallet", "stablecoin" and "smart contract" are now allowed, but only in the
+  corridor and escrow modules; "blockchain", "crypto" and "token" stay banned everywhere. The copy
+  test enforces the scope.

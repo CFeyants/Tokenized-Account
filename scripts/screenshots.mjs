@@ -20,6 +20,10 @@ const shots = [
   { name: 'guarantees', path: '/guarantees?t=2026-10-11T19:00' },
   { name: 'statements', path: '/statements?t=2026-10-12T07:00' },
   { name: 'about', path: '/about' },
+  { name: 'minute', path: '/minute?t=2026-10-12T21:00' },
+  { name: 'funding', path: '/funding?t=2026-10-10T21:00' },
+  { name: 'escrow', path: '/escrow?t=2026-10-12T11:00' },
+  { name: 'corridors', path: '/corridors?t=2026-10-10T21:00' },
   { name: 'hood', path: '/?t=2026-10-10T22:00', hood: true },
 ].filter((s) => only.length === 0 || only.includes(s.name));
 
