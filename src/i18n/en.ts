@@ -340,6 +340,7 @@ export const en = {
     igLead: 'When a transfer crosses two Group entities, a mirror intragroup balance is created at the same instant and remunerated on the same clock.',
     igEmpty: 'No transfer has crossed two Group entities yet. Jump to Saturday 22:00 (Singapore funding).',
     igAccrued: 'accrued on the same clock',
+    labels: { decision: 'Decision', instrument: 'Instrument', rail: 'Rail', owes: 'owes', eurEq: 'EUR eq.', soFar: '(so far)', unit: 'Unit', minCols: ['min', 'balance', 'rate', 'this minute', 'cumulative'] },
     notYetLead: 'Deliberately not working in this mock-up. Each needs the interbank layer.',
     notYetItems: [
       { title: 'Interbank tokenised deposits', text: 'Pay a supplier banked elsewhere at night, final on both ledgers.', year: '2028' },

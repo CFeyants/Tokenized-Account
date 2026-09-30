@@ -16,14 +16,14 @@ export function DrawerBar() {
   const d = drawers(state);
   const segs: Seg[] = [
     { key: 'current', label: D.current, value: d.current, cls: 'bg-grey', swatch: 'bg-grey' },
-    { key: 'tokFree', label: D.tokFree, value: Math.max(0, d.tokFree), cls: 'bg-new', swatch: 'bg-new', tip: en.tips.tokRate },
+    { key: 'tokFree', label: D.tokFree, value: Math.max(0, d.tokFree + d.tokOtherCcyEur), cls: 'bg-new', swatch: 'bg-new', tip: en.tips.tokRate },
     { key: 'tokBlocked', label: D.tokBlocked, value: d.tokBlocked, cls: 'hatch border border-new/60', swatch: 'hatch border border-new/60', tip: en.tips.blockedEarns },
     { key: 'units', label: D.units, value: d.termUnits + d.usdUnitsEur, cls: 'bg-amber-fill', swatch: 'bg-amber-fill', tip: en.tips.lateCash },
     { key: 'fund', label: D.fund, value: d.fund, cls: 'border-2 border-amber-fill bg-amber-soft', swatch: 'border-2 border-amber-fill' },
     { key: 'other', label: D.other, value: d.otherBanks, cls: 'border border-dashed border-line-strong bg-transparent', swatch: 'border border-dashed border-muted' },
   ];
   const total = segs.reduce((a, s) => a + s.value, 0) + d.pendingEur;
-  const atBank = groupAtBank(d) + d.usdUnitsEur;
+  const atBank = groupAtBank(d) + d.usdUnitsEur + d.tokOtherCcyEur;
 
   return (
     <div>
@@ -69,7 +69,7 @@ export function DrawerBar() {
                 <span className="truncate">{s.label}</span>
               </div>
               <div className={cn('tabular mt-1 text-[18px]', s.key === 'tokFree' && d.tokFree < 0 && 'text-red')}>
-                {s.key === 'tokFree' ? numM(d.tokFree, 1) : numM(s.value, 1)}
+                {s.key === 'tokFree' ? numM(d.tokFree + d.tokOtherCcyEur, 1) : numM(s.value, 1)}
                 <span className="ml-1 text-[11px] text-muted">m</span>
               </div>
             </div>

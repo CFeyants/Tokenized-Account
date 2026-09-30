@@ -13,6 +13,8 @@ export interface Drawers {
   otherBanks: number;
   usdUnitsEur: number;
   pendingEur: number;
+  /** Tokenised accounts of foreign subsidiaries (USD, SGD), EUR equivalent — not in the §3.1 table. */
+  tokOtherCcyEur: number;
 }
 
 const isShort = (u: Unit) => u.tenor === 'overnight' || u.tenor === 'weekend';
@@ -28,6 +30,7 @@ export function drawers(s: State): Drawers {
     fund: s.fundUnits,
     otherBanks: s.bal['hsbc-paris'] + s.bal['db-munich'] + STATIC_OTHER_BANKS_EUR,
     usdUnitsEur: s.units.filter((u) => u.currency === 'USD').reduce((a, u) => a + u.amount / FX_MID.USD, 0),
+    tokOtherCcyEur: s.bal['tok-usd-chicago'] / FX_MID.USD + s.bal['tok-sgd-singapore'] / FX_MID.SGD,
     pendingEur: s.pending.filter((p) => p.status === 'pendingCover').reduce((a, p) => a + p.amount / FX_MID[p.currency], 0),
   };
 }
