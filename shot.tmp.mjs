@@ -1,0 +1,11 @@
+import { chromium } from '@playwright/test';
+const [out, path, name, full] = process.argv.slice(2);
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
+await ctx.addInitScript(() => { localStorage.setItem('tcm.banner', 'true'); localStorage.setItem('tcm.theme', '"dark"'); });
+const p = await ctx.newPage();
+p.on('pageerror', (e) => console.log('ERR', e.message));
+await p.goto('http://localhost:5173' + path, { waitUntil: 'networkidle' });
+await p.waitForTimeout(800);
+await p.screenshot({ path: `${out}/${name}.png`, fullPage: full === '1' });
+await b.close();

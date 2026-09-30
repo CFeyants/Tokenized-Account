@@ -27,6 +27,8 @@ export function initialState(): State {
     sweptTonight: { 'hsbc-paris': 0, 'db-munich': 0 },
     sweptInTotal: 0,
     returnedTotal: 0,
+    earmarked: 0,
+    conditional: [],
     realised: { unitSaleAccrued: 0, unitSaleSpread: 0 },
     seq: 0,
   };

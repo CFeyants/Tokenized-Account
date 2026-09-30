@@ -132,6 +132,16 @@ export const en = {
       title: 'Singapore supplier paid (Mon 08:00 SGT)',
       detail: 'Local payment from the BNP Paribas Singapore account, on time.',
     },
+    x5: {
+      title: 'Warsaw contractor: EUR 6m screened, waiting for the acceptance certificate',
+      detail:
+        'Pre-screened now, earmarked on the tokenised account, released by rule when the certificate arrives. Committed, not gone — it keeps earning to the minute.',
+    },
+    x6: {
+      title: 'Acceptance certificate received: EUR 6m leaves at once',
+      detail:
+        'The condition is met at 16:45; the payment departs already cleared. Earmarked for 375 minutes, each one counted.',
+    },
     x4: {
       title: 'Weekend collections, EUR 44m by instant transfer',
       detail:
@@ -185,6 +195,8 @@ export const en = {
     sgPay: 'Supplier payment, Singapore (local)',
     weekendIn: 'Weekend SCT Inst collections — final',
     blocked: 'Refused: payee at another bank, outside hours',
+    earmark: 'Earmarked for a pre-screened payment — Warsaw contractor',
+    conditionalOut: 'Condition met: payment released by SCT Inst — Warsaw contractor',
     userPay: 'Payment',
   },
 
@@ -901,6 +913,88 @@ export const en = {
     legendTrad: 'Grey — what already works today',
     legendOut: 'Dashed — outside the bank',
     legendAmber: 'Amber — term units and fund',
+  },
+
+  minute: {
+    nav: 'Why the minute',
+    eyebrow: 'Remuneration to the minute',
+    title: 'Where the minute counts.',
+    lead: 'The tokenised account pays 0.10%. Counting to the minute rarely changes a treasurer’s year — it changes what is counted. These are the six situations where money stays on the account and the minute matters, with the amounts, however small.',
+    honest:
+      'Read the amounts as they are: at 0.10% the minute is worth little per euro. Its value is being exact — no euro counted for a day it was not there, none ignored because it left before midnight — and it is what lets units, blocks and releases run to the minute.',
+    live: 'Live in the scenario',
+    illustrative: 'Illustrative',
+    jump: 'Go to this moment',
+    byDay: 'Counted by the day',
+    byMinute: 'Counted to the minute',
+    days: (n: number) => `${n} day${n === 1 ? '' : 's'} counted`,
+    daysShort: (n: number) => `${n} d`,
+    minutes: (m: string) => `${m} counted`,
+    who: 'Matters for',
+    verdict: 'Honestly',
+    eodLegend: 'End-of-day snapshot (23:59)',
+    cases: {
+      float: {
+        title: 'Pure intraday float',
+        what: 'Collections in the morning, payouts in the evening. The balance is high all day and back to zero at night.',
+        who: 'High-rotation clients — payment institutions, retailers, marketplaces. Not industrial groups like Marie’s.',
+        verdict:
+          'The daily convention sees a zero balance at 23:59 and counts nothing. To the minute, the day is paid. Small per day, real over a year for a high-rotation client.',
+        peak: 'Peak balance (EUR m)',
+        perYear: (v: string) => `${v} a year over 250 business days`,
+      },
+      collateral: {
+        title: 'Blocked collateral',
+        what: 'EUR 15m blocked for the Brazil bid bond from Wed 11:00 until the tender result on Sun 19:00.',
+        who: 'Any group posting bid bonds, margin or escrow.',
+        verdict:
+          'Most of the amount is earned inside the overnight and weekend units, not on the account. The minute matters at both ends: the block starts at 11:00 and ends at 19:00, not at a day boundary.',
+        onAccount: 'On the account by day (0.10%)',
+        inUnit: 'In units at night (1.80%)',
+        gage: 'Cash gage at 0%',
+      },
+      waiting: {
+        title: 'Cash waiting for the just-in-time draw',
+        what: 'After the 07:00 return, the group buffer stays on the tokenised account until the minute it is needed — or until the 18:30 rule places it in a unit.',
+        who: 'Groups funding subsidiaries on demand from a central buffer.',
+        verdict:
+          'At 23:59 the buffer is inside the overnight unit, so a daily convention on the account counts nothing for the day. The minute pays the hours it waited. The mirror case — borrowing — is where the minute saves more.',
+        debitTitle: 'The other direction: Munich borrowed to the minute',
+        debitMinute: (m: string, v: string) => `${m} of intraday credit: ${v}`,
+        debitDay: (v: string) => `Charged by the day at 23:59 Paris: ${v}`,
+      },
+      transit: {
+        title: 'Transit and amounts below the unit',
+        what: 'Between the unit unwinding at 07:00 and the payments leaving at 09:30; and residual amounts too small for the overnight unit.',
+        who: 'Every client with a morning payment run.',
+        verdict:
+          'Pennies per day. Without the minute, the transit counts for nothing (it is gone before midnight) and the residual counts for a full day or nothing depending on where midnight falls.',
+        amount: 'Amount in transit (EUR m)',
+        departure: 'Payments leave at',
+        residual: 'Residual < unit minimum (EUR k)',
+        transitLine: 'Transit 07:00 → departure',
+        residualLine: 'Residual overnight on the account',
+      },
+      conditional: {
+        title: 'Pre-screened payments waiting for a condition',
+        what: 'EUR 6m to the Warsaw contractor, screened at 10:30, released by rule when the acceptance certificate arrives at 16:45. The money is committed, not gone.',
+        who: 'Groups paying on milestones, documents or deliveries — construction, trade, M&A closings.',
+        verdict:
+          'On a current account the money has usually left or is blocked at 0%. Earmarked on the tokenised account it earns every minute until departure; if the document slips overnight, it sits flagged in the overnight unit.',
+        ifLate: 'If the certificate arrived tomorrow at 09:40',
+        ifLateLine: (v: string, d: string) =>
+          `${v} to the minute, flagged in the overnight unit — against ${d} for one day on a current account at 0.50%`,
+      },
+      zones: {
+        title: 'Groups across time zones',
+        what: '"End of day" is not an instant. In the week of 5 October, 23:59 in Paris is 05:59 in Singapore the next morning; the Singapore day closes at 18:00 Paris and New York’s at 06:00 Paris.',
+        who: 'Groups with treasury centres or banks in several zones.',
+        verdict:
+          'The same flow counts one day or none depending on whose midnight is used — arbitrary winners and losers. To the minute, every zone gets the same answer.',
+        cols: ['Flow', 'Paris 23:59', 'Singapore 23:59', 'New York 23:59', 'To the minute'],
+        zoneNames: { paris: 'Paris', singapore: 'Singapore', newYork: 'New York' },
+      },
+    },
   },
 
   actors: { rule: 'Rule', marie: 'Marie', event: 'Event' },

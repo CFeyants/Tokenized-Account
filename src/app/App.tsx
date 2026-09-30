@@ -20,6 +20,7 @@ const Guarantees = lazy(() =>
 const Statements = lazy(() =>
   import('@/screens/Statements').then((m) => ({ default: m.Statements })),
 );
+const Minute = lazy(() => import('@/screens/Minute').then((m) => ({ default: m.Minute })));
 const About = lazy(() => import('@/screens/About').then((m) => ({ default: m.About })));
 
 const page = (el: React.ReactNode) => <Suspense fallback={null}>{el}</Suspense>;
@@ -33,6 +34,7 @@ export function App() {
             <Route index element={<Home />} />
             <Route path="accounts" element={page(<Accounts />)} />
             <Route path="accounts/:id" element={page(<AccountPage />)} />
+            <Route path="minute" element={page(<Minute />)} />
             <Route path="payments" element={page(<Payments />)} />
             <Route path="rules" element={page(<Rules />)} />
             <Route path="placements" element={page(<Placements />)} />

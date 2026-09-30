@@ -9,6 +9,7 @@ import {
   PanelLeftOpen,
   ShieldCheck,
   SlidersHorizontal,
+  Timer,
   TrendingUp,
 } from 'lucide-react';
 import { useApp } from '@/app/store';
@@ -19,6 +20,7 @@ import { Tip } from '@/components/ui/tooltip';
 export const NAV = [
   { to: '/', label: en.nav.home, icon: Gauge, end: true },
   { to: '/accounts', label: en.nav.accounts, icon: Landmark },
+  { to: '/minute', label: en.minute.nav, icon: Timer },
   { to: '/payments', label: en.nav.payments, icon: CreditCard },
   { to: '/rules', label: en.nav.rules, icon: SlidersHorizontal },
   { to: '/placements', label: en.nav.placements, icon: TrendingUp },

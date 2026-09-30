@@ -43,6 +43,17 @@ export interface Collateral {
   releasedAt?: SimTime;
 }
 
+/** A payment screened before departure, waiting for a milestone or a document. */
+export interface ConditionalPayment {
+  id: string;
+  payee: string;
+  amount: number;
+  condition: string;
+  since: SimTime;
+  status: 'waiting' | 'released';
+  releasedAt?: SimTime;
+}
+
 export interface PendingReceipt {
   id: string;
   account: AccountId;
@@ -92,6 +103,9 @@ export interface State {
   sweptInTotal: number;
   returnedTotal: number;
   /** Realised amounts outside principal: unit sale accrued, spreads, FX. Posted to the interest engine. */
+  /** Earmarked for pre-screened payments waiting for a condition: committed, not yet gone. */
+  earmarked: number;
+  conditional: ConditionalPayment[];
   realised: { unitSaleAccrued: number; unitSaleSpread: number };
   seq: number;
 }

@@ -25,7 +25,8 @@ export function drawers(s: State): Drawers {
   return {
     current: s.bal['cur-paris'],
     tokFree: s.bal['tok-paris'] + s.bal['tok-munich'],
-    tokBlocked: s.blocked + eurUnits.filter((u) => u.blocked).reduce((a, u) => a + u.amount, 0),
+    tokBlocked:
+      s.blocked + s.earmarked + eurUnits.filter((u) => u.blocked).reduce((a, u) => a + u.amount, 0),
     termUnits: eurUnits.filter((u) => !u.blocked).reduce((a, u) => a + u.amount, 0),
     fund: s.fundUnits,
     otherBanks: s.bal['hsbc-paris'] + s.bal['db-munich'] + STATIC_OTHER_BANKS_EUR,
@@ -51,7 +52,7 @@ export function minuteWeight(s: State): number {
   for (const a of tokEur) w += Math.max(0, s.bal[a]) * RATES.tokenised;
   w += (Math.max(0, s.bal['tok-usd-chicago']) / FX_MID.USD) * RATES.tokenised;
   w += (Math.max(0, s.bal['tok-sgd-singapore']) / FX_MID.SGD) * RATES.tokenised;
-  w += s.blocked * RATES.tokenised;
+  w += (s.blocked + s.earmarked) * RATES.tokenised;
   for (const u of s.units) w += (u.amount / (u.currency === 'USD' ? FX_MID.USD : 1)) * u.rate;
   w += s.fundUnits * RATES.mmf;
   return w;
@@ -59,7 +60,7 @@ export function minuteWeight(s: State): number {
 
 export function minuteWeightParts(s: State) {
   const tok =
-    (Math.max(0, s.bal['tok-paris']) + Math.max(0, s.bal['tok-munich']) + s.blocked) *
+    (Math.max(0, s.bal['tok-paris']) + Math.max(0, s.bal['tok-munich']) + s.blocked + s.earmarked) *
       RATES.tokenised +
     (Math.max(0, s.bal['tok-usd-chicago']) / FX_MID.USD +
       Math.max(0, s.bal['tok-sgd-singapore']) / FX_MID.SGD) *
@@ -115,7 +116,7 @@ export function accountRows(s: State, t: SimTime): AccountRow[] {
     return {
       def,
       balance,
-      blocked: def.id === 'tok-paris' ? s.blocked : 0,
+      blocked: def.id === 'tok-paris' ? s.blocked + s.earmarked : 0,
       inUnit,
       pending,
       finality: pending > 0 ? 'pendingCover' : 'final',

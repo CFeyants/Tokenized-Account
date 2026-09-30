@@ -58,6 +58,7 @@ const morning = (day: number): SimEvent => ({
 });
 
 export const BRAZIL_BID_BOND = 'COL-BR-01';
+export const WARSAW_PAYMENT = 'PAY-PL-01';
 
 export const SCENARIO: SimEvent[] = [
   ev('e0', at(0, '09:00'), 'event', 'scenario', 'none', () => {}, 0),
@@ -511,6 +512,66 @@ export const SCENARIO: SimEvent[] = [
     },
     16,
   ),
+
+  ev('x5', at(7, '10:30'), 'marie', 'extra', 'new', (s, c) => {
+    const amt = 6 * M;
+    s.bal['tok-paris'] -= amt;
+    s.earmarked += amt;
+    c.post({
+      account: 'tok-paris',
+      currency: 'EUR',
+      amount: -amt,
+      finality: 'final',
+      memo: L.earmark,
+    });
+    c.post({
+      account: 'tok-paris:earmarked',
+      currency: 'EUR',
+      amount: amt,
+      finality: 'final',
+      memo: L.earmark,
+    });
+    s.conditional.push({
+      id: WARSAW_PAYMENT,
+      payee: 'Wisła Rail Works, Warsaw',
+      amount: amt,
+      condition: 'Acceptance certificate',
+      since: c.t,
+      status: 'waiting',
+    });
+    c.orchestrate({
+      rule: R.marie,
+      decision: 'Screen now, pay on the acceptance certificate',
+      instrument: 'Earmarked sub-balance, tokenised account',
+      rail: 'SCT Inst on release',
+      checks: [
+        screeningCheck,
+        { name: 'Condition', ok: false, detail: 'Waiting for the acceptance certificate' },
+      ],
+    });
+  }),
+
+  ev('x6', at(7, '16:45'), 'rule', 'extra', 'new', (s, c) => {
+    const p = s.conditional.find((x) => x.id === WARSAW_PAYMENT && x.status === 'waiting');
+    if (!p) return;
+    s.earmarked -= p.amount;
+    c.post({
+      account: 'tok-paris:earmarked',
+      currency: 'EUR',
+      amount: -p.amount,
+      finality: 'final',
+      memo: L.conditionalOut,
+    });
+    p.status = 'released';
+    p.releasedAt = c.t;
+    c.orchestrate({
+      rule: R.release,
+      decision: 'Certificate received 16:44: release the payment',
+      instrument: 'Payment to the Warsaw contractor',
+      rail: 'SCT Inst — already screened',
+      checks: [{ name: 'Condition', ok: true, detail: 'Acceptance certificate received' }],
+    });
+  }),
 
   ...nightly(7),
 
