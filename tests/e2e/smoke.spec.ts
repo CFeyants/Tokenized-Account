@@ -5,8 +5,9 @@ test.beforeEach(async ({ context }) => {
 });
 
 test('play the week: counters move and stay non-zero', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/week');
   await expect(page.getByRole('heading', { name: 'Treasury, counted in minutes.' })).toBeVisible();
+  await page.getByRole('button', { name: 'Week counters' }).click();
   await page.getByRole('radio', { name: '8×' }).click();
   await page.getByTestId('play').click();
   // Monday 09:00 → past Monday night's sweep at 8× speed takes a few seconds.
@@ -53,6 +54,19 @@ test('under the hood opens with its tabs', async ({ page }) => {
   await expect(panel).toContainText('Norvane Bank Singapore');
 });
 
+test('home offers the six journeys', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'What would you like to do?' })).toBeVisible();
+  await expect(page.locator('main a[href$="/smart-contracts"]')).toBeVisible();
+});
+
+test('smart contracts: a cascade pays three suppliers on one event', async ({ page }) => {
+  await page.goto('/smart-contracts?t=2026-10-12T11:00');
+  await page.getByRole('button', { name: /Deploy — earmark/ }).click();
+  await page.getByRole('button', { name: /Send signed event: Site acceptance/ }).click();
+  await expect(page.getByText('Elektro-Mazowsze (electrical subcontractor)').last()).toBeVisible();
+});
+
 test('why the minute: six cases, live ones follow the scenario', async ({ page }) => {
   await page.goto('/minute?t=2026-10-12T21:00');
   await expect(page.getByRole('heading', { name: 'Where the minute counts.' })).toBeVisible();
@@ -60,14 +74,15 @@ test('why the minute: six cases, live ones follow the scenario', async ({ page }
 });
 
 test('just-in-time: yen for Tokyo scheduled at the minute of need', async ({ page }) => {
-  await page.goto('/funding?t=2026-10-10T21:00');
+  await page.goto('/just-in-time?t=2026-10-10T21:00');
   await page.getByRole('button', { name: /Schedule at the minute of need/ }).click();
   await expect(page.getByText(/Scheduled for/)).toBeVisible();
 });
 
 test('escrow: deploy, oracle event accepted, bad signature rejected', async ({ page }) => {
-  await page.goto('/escrow?t=2026-10-12T11:00');
-  await page.getByRole('button', { name: 'Deploy on the tokenised account' }).click();
+  await page.goto('/smart-contracts?t=2026-10-12T11:00');
+  await page.getByRole('radio', { name: /M&A escrow/ }).click();
+  await page.getByRole('button', { name: /Deploy — earmark/ }).click();
   await page.getByRole('button', { name: /Send signed event: Completion/ }).click();
   await page.getByRole('button', { name: /Send with a bad signature: Warranty/ }).click();
   await expect(page.getByText('accepted')).toBeVisible();
@@ -75,8 +90,7 @@ test('escrow: deploy, oracle event accepted, bad signature rejected', async ({ p
 });
 
 test('LatAm repatriation reaches the tokenised account', async ({ page }) => {
-  await page.goto('/corridors?t=2026-10-10T21:00');
-  await page.getByRole('tab', { name: 'Repatriation from Latin America' }).click();
+  await page.goto('/repatriation?t=2026-10-10T21:00');
   await page.getByRole('button', { name: 'Lock the rate and repatriate' }).click();
   for (let i = 0; i < 5; i++) await page.getByTestId('step').click();
   await expect(page.getByText(/Earning to the minute from this moment/)).toBeVisible();

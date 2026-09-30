@@ -9,22 +9,18 @@ const only = process.argv.slice(3);
 mkdirSync(out, { recursive: true });
 
 const shots = [
-  { name: 'cockpit', path: '/?t=2026-10-09T18:32' },
-  { name: 'cockpit-light', path: '/?t=2026-10-05T19:15', theme: 'light' },
-  { name: 'accounts', path: '/accounts?t=2026-10-05T23:00' },
-  { name: 'tokenised-account', path: '/accounts/tok-paris?t=2026-10-07T21:30' },
-  { name: 'current-account', path: '/accounts/cur-paris?t=2026-10-07T21:30' },
-  { name: 'payments', path: '/payments?t=2026-10-10T22:00&tab=ledger' },
-  { name: 'rules', path: '/rules?t=2026-10-08T18:30' },
-  { name: 'placements', path: '/placements?t=2026-10-12T10:00' },
-  { name: 'guarantees', path: '/guarantees?t=2026-10-11T19:00' },
-  { name: 'statements', path: '/statements?t=2026-10-12T07:00' },
-  { name: 'about', path: '/about' },
+  { name: 'home', path: '/?t=2026-10-12T11:00' },
+  { name: 'smart-contracts', path: '/smart-contracts?t=2026-10-12T11:00' },
+  { name: 'repatriation', path: '/repatriation?t=2026-10-10T21:00' },
   { name: 'minute', path: '/minute?t=2026-10-12T21:00' },
-  { name: 'funding', path: '/funding?t=2026-10-10T21:00' },
-  { name: 'escrow', path: '/escrow?t=2026-10-12T11:00' },
+  { name: 'put-to-work', path: '/put-to-work?t=2026-10-07T21:30' },
+  { name: 'pre-validation', path: '/pre-validation?t=2026-10-12T11:00' },
+  { name: 'just-in-time', path: '/just-in-time?t=2026-10-10T21:00' },
+  { name: 'home-light', path: '/?t=2026-10-05T19:15', theme: 'light' },
+  { name: 'week', path: '/week?t=2026-10-09T18:32' },
+  { name: 'tokenised-account', path: '/accounts/tok-paris?t=2026-10-07T21:30' },
   { name: 'corridors', path: '/corridors?t=2026-10-10T21:00' },
-  { name: 'hood', path: '/?t=2026-10-10T22:00', hood: true },
+  { name: 'hood', path: '/week?t=2026-10-10T22:00', hood: true },
 ].filter((s) => only.length === 0 || only.includes(s.name));
 
 const browser = await chromium.launch();

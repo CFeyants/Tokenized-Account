@@ -29,9 +29,11 @@ tests in `tests/unit/` assert the ones that can be asserted.
 
 ## Changes decided by the product owner
 
-- **Doctrine 12, pilot corridors.** Interbank tokenised deposits are shown working on pilot
-  corridors with named partner banks (eurozone 2027, USD and SGD 2028). Every other bank stays
-  "not yet". See ASSUMPTIONS A-30.
+- **Doctrine 12 kept.** Interbank use cases are shown to explain, with a "Not right away" label
+  (2028+). See ASSUMPTIONS A-30.
+- **Six journeys.** The mock-up is organised around six client journeys (smart contracts, Brazil
+  repatriation, earning to the minute, collateral and buffer, pre-validation, just-in-time
+  funding); everyday banking stays one click away.
 - **Stablecoin corridor.** Repatriation from Brazil, Mexico, Colombia and Chile through partner
   wallets and a euro stablecoin redeemed at par onto the tokenised account (A-32).
 - **Vocabulary.** Wallet, stablecoin and smart contract are allowed in the corridor and escrow
@@ -39,17 +41,17 @@ tests in `tests/unit/` assert the ones that can be asserted.
 
 ## Where each rule lives in the code
 
-| # | Implementation | Test |
-|---|---|---|
-| 1 | `src/data/rates.ts` (`tokenised ≤ current`) | `engine.test.ts` › doctrine |
-| 2 | `src/engine/accrual.ts` (`integrateMinutes`, `integrateEod`) | `engine.test.ts` › accrual |
-| 3 | `src/engine/finality.ts`, event `e5`/`e7` in `scenario.ts` | `engine.test.ts` › no interest before finality |
-| 4 | `src/engine/pricing.ts` (`unitSaleQuote`), event `e16` | `engine.test.ts` › pricing |
-| 5 | `src/engine/rules.ts` (`runOvernightUnit`, `runReturn`) | `scenario.test.ts` rows 3, 4, 6, 12 |
-| 6 | event `e8`, `releaseCollateral` | `scenario.test.ts` rows 8, 12, 14 |
-| 7 | events `x1`/`x2`, `debitWeight` | `engine.test.ts` › intraday credit |
-| 8 | event `e13`, `fxNightQuote`, `NIGHT_FX_LIMIT_EUR` | `scenario.test.ts` row 13 |
-| 9 | events `e10`/`e11`, `userActions.ts` (`fund`) | `scenario.test.ts` rows 10, 11 |
-| 10 | `runNightSweep`, `runReturn` | `engine.test.ts` › night sweeps |
-| 11 | Payments (SEPA, cross-border), Statements, Rules › forecast | copy review |
-| 12 | Payments › Intragroup on the ledger; Under the hood › Not yet | Playwright smoke test |
+| #   | Implementation                                                | Test                                           |
+| --- | ------------------------------------------------------------- | ---------------------------------------------- |
+| 1   | `src/data/rates.ts` (`tokenised ≤ current`)                   | `engine.test.ts` › doctrine                    |
+| 2   | `src/engine/accrual.ts` (`integrateMinutes`, `integrateEod`)  | `engine.test.ts` › accrual                     |
+| 3   | `src/engine/finality.ts`, event `e5`/`e7` in `scenario.ts`    | `engine.test.ts` › no interest before finality |
+| 4   | `src/engine/pricing.ts` (`unitSaleQuote`), event `e16`        | `engine.test.ts` › pricing                     |
+| 5   | `src/engine/rules.ts` (`runOvernightUnit`, `runReturn`)       | `scenario.test.ts` rows 3, 4, 6, 12            |
+| 6   | event `e8`, `releaseCollateral`                               | `scenario.test.ts` rows 8, 12, 14              |
+| 7   | events `x1`/`x2`, `debitWeight`                               | `engine.test.ts` › intraday credit             |
+| 8   | event `e13`, `fxNightQuote`, `NIGHT_FX_LIMIT_EUR`             | `scenario.test.ts` row 13                      |
+| 9   | events `e10`/`e11`, `userActions.ts` (`fund`)                 | `scenario.test.ts` rows 10, 11                 |
+| 10  | `runNightSweep`, `runReturn`                                  | `engine.test.ts` › night sweeps                |
+| 11  | Payments (SEPA, cross-border), Statements, Rules › forecast   | copy review                                    |
+| 12  | Payments › Intragroup on the ledger; Under the hood › Not yet | Playwright smoke test                          |

@@ -418,7 +418,10 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
             }
             m.done = true;
             const amt = p.amount * m.share;
-            if (amt > 0) payOutEarmarked(s, c, amt, A.escrowPaid(m.label));
+            if (m.payouts)
+              for (const po of m.payouts)
+                payOutEarmarked(s, c, p.amount * po.share, A.escrowPaidTo(m.label, po.payee));
+            else if (amt > 0) payOutEarmarked(s, c, amt, A.escrowPaid(m.label));
             p.released = (p.released ?? 0) + amt;
             if (p.escrow.milestones.every((x) => x.done)) {
               p.status = 'released';

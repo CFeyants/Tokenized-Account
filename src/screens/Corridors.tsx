@@ -26,6 +26,7 @@ import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LayerTag, PageHeader, Row } from '@/components/Page';
 import { cn } from '@/lib/utils';
+import { LaterTag } from '@/components/Journey';
 
 const K = en.corridors;
 const M = 1_000_000;
@@ -150,17 +151,16 @@ function RailsTab() {
                   </div>
                 </td>
                 <td className="px-6 py-3">
-                  <Chip
-                    tone={
-                      c.status === 'traditionalOnly'
-                        ? 'outside'
-                        : c.status === 'live'
-                          ? 'neutral'
-                          : 'new'
-                    }
-                  >
-                    {K.status[c.status]}
-                  </Chip>
+                  {c.rails.includes('interbank') ? (
+                    <span className="flex flex-col items-start gap-1">
+                      <LaterTag />
+                      <span className="text-[11px] text-muted">{K.status[c.status]}</span>
+                    </span>
+                  ) : (
+                    <Chip tone={c.status === 'traditionalOnly' ? 'outside' : 'neutral'}>
+                      {K.status[c.status]}
+                    </Chip>
+                  )}
                 </td>
                 <td className="px-6 py-3 text-[12px] text-muted">{c.hours}</td>
               </tr>

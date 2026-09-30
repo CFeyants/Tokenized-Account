@@ -20,7 +20,16 @@ const BANNED = [/blockchain/i, /crypto/i, /\btokens?\b/i];
  * stablecoin) and escrow (smart contract). Everywhere else the ledger vocabulary applies.
  */
 const SCOPED = [/wallet/i, /smart contract/i, /stablecoin/i];
-const SCOPED_SECTIONS = ['adv', 'corridors', 'escrow', 'about', 'hood'];
+const SCOPED_SECTIONS = [
+  'adv',
+  'corridors',
+  'escrow',
+  'contracts',
+  'journeys',
+  'repatriation',
+  'about',
+  'hood',
+];
 
 function files(dir: string): string[] {
   return readdirSync(dir).flatMap((f) => {

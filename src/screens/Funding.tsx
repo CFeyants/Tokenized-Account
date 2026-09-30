@@ -29,6 +29,7 @@ import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LayerTag, PageHeader, Row } from '@/components/Page';
 import { cn } from '@/lib/utils';
+import { LaterTag } from '@/components/Journey';
 
 const F = en.funding;
 const M = 1_000_000;
@@ -139,7 +140,7 @@ const PRESETS: {
   },
 ];
 
-function JitTab() {
+export function JitTab() {
   const { t, state } = useSim();
   const addAction = useApp((s) => s.addAction);
   const setT = useApp((s) => s.setT);
@@ -338,7 +339,7 @@ function JitTab() {
   );
 }
 
-function LargeTab() {
+export function LargeTab() {
   const { t, state } = useSim();
   const addAction = useApp((s) => s.addAction);
   const [running, setRunning] = useState<string | null>(null);
@@ -346,7 +347,7 @@ function LargeTab() {
   const L = F.large;
   const presets = [
     { key: 'equipment' as const, onLedger: false },
-    { key: 'mna' as const, onLedger: true },
+    { key: 'mna' as const, onLedger: false },
   ];
   const checks = (cat: 'equipment' | 'mna', onLedger: boolean) => en.adv.preChecks(cat, onLedger);
 
@@ -483,6 +484,13 @@ function LargeTab() {
         )}
         <p className="mt-5 text-[12.5px] leading-relaxed">{L.releaseNote}</p>
         <p className="mt-1 text-[12.5px] leading-relaxed text-muted">{L.tradNote}</p>
+        <div className="mt-5 rounded-xl border border-dashed border-line-strong p-4">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-[13px] font-medium">{L.laterTitle}</span>
+            <LaterTag />
+          </div>
+          <p className="mt-1 text-[12.5px] text-muted">{L.laterText}</p>
+        </div>
       </Card>
     </div>
   );

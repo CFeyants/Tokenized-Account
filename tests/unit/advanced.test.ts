@@ -158,3 +158,25 @@ describe('corridors', () => {
     expect(r.steps.find((x) => x.key === 'wallet')!.at).toBe(at(7, '15:00'));
   });
 });
+
+describe('cascade payment', () => {
+  it('one site-acceptance event pays three suppliers in order, retention kept', () => {
+    const tl = tlWith([
+      { kind: 'escrow', id: 'K1', t: at(7, '11:00'), template: 'cascade' },
+      {
+        kind: 'oracle',
+        id: 'K2',
+        t: at(7, '12:00'),
+        target: 'K1',
+        milestone: 'acceptance',
+        valid: true,
+      },
+    ]);
+    const payouts = tl.ledger.filter(
+      (l) => l.eventId === 'K2' && l.account === 'tok-paris:earmarked',
+    );
+    expect(payouts.map((l) => -l.amount)).toEqual([6 * M, 2.5 * M, 1 * M]);
+    const c = stateAt(tl, at(7, '12:01')).conditional.find((x) => x.id === 'K1')!;
+    expect(c.released).toBeCloseTo(9.5 * M, 0);
+  });
+});

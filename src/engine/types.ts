@@ -78,7 +78,14 @@ export interface EscrowTerms {
   oracle: string;
   endpoint: string;
   /** Release schedule: share of the escrow released when an oracle reports the milestone. */
-  milestones: { key: string; label: string; share: number; done: boolean }[];
+  milestones: {
+    key: string;
+    label: string;
+    share: number;
+    done: boolean;
+    /** Cascade: one event, several ordered payments. Shares are of the whole escrow. */
+    payouts?: { payee: string; share: number }[];
+  }[];
 }
 
 export interface OracleEvent {

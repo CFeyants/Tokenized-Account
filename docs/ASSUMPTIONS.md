@@ -16,7 +16,7 @@ building.
   night sweep is folded into row 12 at 18:30, as the table does.
 - **A-3 · Row 15 does not balance as written.** After row 14 the bank holds 5 (current) + 70.5
   (units, incl. the released 15) = 75.5 on the relevant drawers; row 15 needs 65 + 30.5 = 95.5 on
-  those drawers *after* returning EUR 24m to HSBC and Deutsche Bank. The gap is EUR 44m. An extra
+  those drawers _after_ returning EUR 24m to HSBC and Deutsche Bank. The gap is EUR 44m. An extra
   event **x4 (Sun 16:00)** brings EUR 44m of weekend instant collections, final at once and placed
   in a weekend unit that minute — which also illustrates "late cash earns" on a Sunday.
 - **A-4 · Friday threshold.** Row 12 leaves EUR 5m on the current account, so the sweep threshold
@@ -106,7 +106,9 @@ building.
   documents, calendar) received through an API. The programmable rule (smart contract) is compiled
   from an audited template; clients set parameters, never code. Endpoint and payloads are mock-ups
   (api.bank.example).
-- **A-30 · Interbank tokenised deposits on pilot corridors.** Some partner banks (fictitious) are on
+- **A-30 · Interbank tokenised deposits (not right away).** Superseded by the product owner: every
+  interbank use case carries a "Not right away" label (2028+); the pilot corridors below are shown
+  to explain, not as available at launch. Original note: Some partner banks (fictitious) are on
   the interbank ledger — eurozone 2027, USD and SGD 2028 — so payments to them are final on both
   ledgers at any hour. Banks outside the pilots (e.g. Commerzbank, row 17) remain "not yet". This
   relaxes doctrine 12 for pilot corridors only, as the product owner asked.

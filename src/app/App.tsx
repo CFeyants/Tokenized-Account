@@ -1,30 +1,30 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { AppShell } from '@/components/layout/AppShell';
 import { Home } from '@/screens/Home';
 
-// Screens other than the cockpit load on demand; charts come only with the account pages.
-const Accounts = lazy(() => import('@/screens/Accounts').then((m) => ({ default: m.Accounts })));
-const AccountPage = lazy(() =>
-  import('@/screens/AccountPage').then((m) => ({ default: m.AccountPage })),
-);
-const Payments = lazy(() => import('@/screens/Payments').then((m) => ({ default: m.Payments })));
-const Rules = lazy(() => import('@/screens/Rules').then((m) => ({ default: m.Rules })));
-const Placements = lazy(() =>
-  import('@/screens/Placements').then((m) => ({ default: m.Placements })),
-);
-const Guarantees = lazy(() =>
-  import('@/screens/Guarantees').then((m) => ({ default: m.Guarantees })),
-);
-const Statements = lazy(() =>
-  import('@/screens/Statements').then((m) => ({ default: m.Statements })),
-);
-const Minute = lazy(() => import('@/screens/Minute').then((m) => ({ default: m.Minute })));
-const Funding = lazy(() => import('@/screens/Funding').then((m) => ({ default: m.Funding })));
-const Escrow = lazy(() => import('@/screens/Escrow').then((m) => ({ default: m.Escrow })));
-const Corridors = lazy(() => import('@/screens/Corridors').then((m) => ({ default: m.Corridors })));
-const About = lazy(() => import('@/screens/About').then((m) => ({ default: m.About })));
+const load = <K extends string>(p: () => Promise<Record<K, React.ComponentType>>, name: K) =>
+  lazy(() => p().then((m) => ({ default: m[name] })));
+
+// The six journeys.
+const SmartContracts = load(() => import('@/screens/SmartContracts'), 'SmartContracts');
+const Repatriation = load(() => import('@/screens/Repatriation'), 'Repatriation');
+const Minute = load(() => import('@/screens/Minute'), 'Minute');
+const PutToWork = load(() => import('@/screens/PutToWork'), 'PutToWork');
+const PreValidation = load(() => import('@/screens/PreValidation'), 'PreValidation');
+const JustInTime = load(() => import('@/screens/JustInTime'), 'JustInTime');
+// Everyday banking and the week in detail.
+const Week = load(() => import('@/screens/Week'), 'Week');
+const Accounts = load(() => import('@/screens/Accounts'), 'Accounts');
+const AccountPage = load(() => import('@/screens/AccountPage'), 'AccountPage');
+const Payments = load(() => import('@/screens/Payments'), 'Payments');
+const Rules = load(() => import('@/screens/Rules'), 'Rules');
+const Placements = load(() => import('@/screens/Placements'), 'Placements');
+const Guarantees = load(() => import('@/screens/Guarantees'), 'Guarantees');
+const Statements = load(() => import('@/screens/Statements'), 'Statements');
+const Corridors = load(() => import('@/screens/Corridors'), 'Corridors');
+const About = load(() => import('@/screens/About'), 'About');
 
 const page = (el: React.ReactNode) => <Suspense fallback={null}>{el}</Suspense>;
 
@@ -35,18 +35,24 @@ export function App() {
         <Routes>
           <Route element={<AppShell />}>
             <Route index element={<Home />} />
+            <Route path="smart-contracts" element={page(<SmartContracts />)} />
+            <Route path="repatriation" element={page(<Repatriation />)} />
+            <Route path="minute" element={page(<Minute />)} />
+            <Route path="put-to-work" element={page(<PutToWork />)} />
+            <Route path="pre-validation" element={page(<PreValidation />)} />
+            <Route path="just-in-time" element={page(<JustInTime />)} />
+            <Route path="week" element={page(<Week />)} />
             <Route path="accounts" element={page(<Accounts />)} />
             <Route path="accounts/:id" element={page(<AccountPage />)} />
-            <Route path="minute" element={page(<Minute />)} />
             <Route path="payments" element={page(<Payments />)} />
             <Route path="rules" element={page(<Rules />)} />
             <Route path="placements" element={page(<Placements />)} />
             <Route path="guarantees" element={page(<Guarantees />)} />
             <Route path="statements" element={page(<Statements />)} />
-            <Route path="funding" element={page(<Funding />)} />
-            <Route path="escrow" element={page(<Escrow />)} />
             <Route path="corridors" element={page(<Corridors />)} />
             <Route path="about" element={page(<About />)} />
+            <Route path="escrow" element={<Navigate to="/smart-contracts" replace />} />
+            <Route path="funding" element={<Navigate to="/just-in-time" replace />} />
             <Route path="*" element={<Home />} />
           </Route>
         </Routes>

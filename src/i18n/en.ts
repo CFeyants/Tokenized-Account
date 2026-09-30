@@ -215,7 +215,9 @@ export const en = {
   },
 
   nav: {
-    home: 'Cockpit',
+    home: 'Home',
+    week: 'The week, in detail',
+    portal: 'Corporate eBanking',
     accounts: 'Accounts',
     payments: 'Payments',
     rules: 'Rules',
@@ -316,7 +318,7 @@ export const en = {
     pendingCover:
       'Paid through a correspondent bank: the message has arrived, but the cover is not yet on our nostro. The funds are not final, so they do not earn. The clock starts the minute the nostro is credited.',
     notYet:
-      'Paying a supplier banked elsewhere at night needs both banks on a shared ledger. A few partner banks are on pilot corridors (see Corridors); this bank is not yet. Until it joins, use SCT Inst — it runs 24/7 and is final in seconds.',
+      'Paying a supplier banked elsewhere at night needs both banks on a shared ledger. That is not right away (2028+). Until then, use SCT Inst — it runs 24/7 and is final in seconds.',
     final:
       'Final means the funds cannot be recalled and sit on the paying entity’s books. Interest to the minute starts only from that minute: at once within the bank, at once for an instant transfer, at nostro credit for a correspondent payment.',
     mirror:
@@ -504,7 +506,7 @@ export const en = {
     notYetItems: [
       {
         title: 'Interbank tokenised deposits with banks outside the pilots',
-        text: 'Pilot corridors work (see Corridors); any other bank still needs SCT Inst or T2.',
+        text: 'Not right away (2028+): pilot corridors are shown to explain only; today SCT Inst or T2.',
         year: '2028',
       },
       {
@@ -896,7 +898,7 @@ export const en = {
       'All rates, amounts, names, limits and spreads are indicative. The group, its subsidiaries and its counterparties are fictitious. A few events were added to make the week consistent; see docs/ASSUMPTIONS.md. The bank is anonymised as Norvane Bank; the corridor partner (Bitso) and the euro stablecoin (Qivalis) are named as placeholders to validate.',
     notBuilt: 'Not built',
     notBuiltText:
-      'Interbank tokenised deposits with banks outside the pilot corridors, PvP FX with non-participating banks, settlement with non-clients. They appear as "Not yet" with a fallback. Pilot corridors (interbank, and the Latin American stablecoin repatriation) are shown working.',
+      'Interbank tokenised deposits with banks outside the pilot corridors, PvP FX with non-participating banks, settlement with non-clients. They appear as "Not yet" with a fallback. Interbank use cases are labelled Not right away. The Latin American stablecoin repatriation is shown working, as a pilot.',
     roadmap: 'Roadmap',
     road: [
       {
@@ -1076,7 +1078,7 @@ export const en = {
       mna: {
         title: 'M&A completion — Aceros del Norte',
         payee: 'Sellers of Aceros del Norte (notary escrow)',
-        bank: 'Banca Adriatica (on the ledger)',
+        bank: 'Banca Adriatica',
         condition: 'Completion certificate signed',
         amount: 30,
       },
@@ -1098,6 +1100,9 @@ export const en = {
         'At release: no new checks, no call-back — they were done in advance. Seconds, not hours.',
       tradNote:
         'Traditional: approvals, call-back and screening run on the day; a screening hit or a missed T2 cut-off can push a closing to the next day.',
+      laterTitle: 'When the beneficiary bank is on the interbank ledger',
+      laterText:
+        'Release at any hour, final on both banks’ ledgers at once — no wait for T2. Needs the beneficiary’s bank on a shared ledger.',
       offLedgerNote:
         'Beneficiary bank off the ledger: the payment leaves through T2 as soon as it opens; the money stays earmarked and earning until then.',
     },
@@ -1169,7 +1174,7 @@ export const en = {
     nav: 'Corridors',
     eyebrow: 'Corridors',
     title: 'The right rail for each corridor.',
-    lead: 'On some corridors, banks already exchange tokenised deposits: payments are final on both ledgers at any hour. Elsewhere the usual rails apply. The client always chooses the account it pays from — current or tokenised — depending on whether remuneration to the minute matters to it.',
+    lead: 'Which rail for which corridor. Interbank tokenised deposits — payments final on both banks’ ledgers at any hour — are shown as Not right away: they need partner banks on a shared ledger (2028+). The client always chooses the account it pays from — current or tokenised — depending on whether remuneration to the minute matters to it.',
     tabs: { rails: 'Corridors & choice of account', latam: 'Repatriation from Latin America' },
     tableTitle: 'Corridors and rails',
     cols: ['Corridor', 'Counterparty', 'Rails', 'Status', 'Hours'],
@@ -1258,6 +1263,158 @@ export const en = {
     },
   },
 
+  journeys: {
+    section: 'What you can do',
+    more: 'Everyday banking',
+    moreHint: 'Accounts, payments, placements, statements — as today',
+    homeTitle: 'What would you like to do?',
+    homeLead:
+      'Six things the tokenised account lets you do. Pick one — each takes a couple of minutes.',
+    start: 'Start',
+    step: 'Step',
+    later: 'Not right away',
+    laterTip:
+      'Needs other banks on a shared ledger (interbank tokenised deposits). Planned for 2028 and later — shown here to explain, not available at launch.',
+    weekCounters: 'Week counters',
+    list: [
+      {
+        id: 'contracts',
+        path: '/smart-contracts',
+        title: 'Automate payments around an event',
+        short: 'Smart contracts',
+        promise:
+          'Purpose-bound money and cascade payments, released the minute an event is confirmed.',
+        steps: ['Pick a template', 'Connect the event source', 'Deploy — and let the event pay'],
+      },
+      {
+        id: 'brazil',
+        path: '/repatriation',
+        title: 'Bring cash home from Brazil',
+        short: 'Brazil repatriation',
+        promise:
+          'BRL → euro stablecoin → EUR on your tokenised account, rate locked, in minutes, even at the weekend.',
+        steps: ['Choose the amount', 'Lock the rate', 'Follow the money to Paris'],
+      },
+      {
+        id: 'minute',
+        path: '/minute',
+        title: 'Earn to the minute',
+        short: 'Paid to the minute',
+        promise:
+          'Every euro counted for the minutes it is really there — not one snapshot at midnight.',
+        steps: [
+          'See your tokenised account',
+          'Compare day vs minute',
+          'See where the minute matters',
+        ],
+      },
+      {
+        id: 'work',
+        path: '/put-to-work',
+        title: 'Put the balance to work',
+        short: 'Collateral & buffer',
+        promise:
+          'The same balance backs a guarantee and funds subsidiaries — and keeps earning while it waits.',
+        steps: [
+          'Block it as collateral',
+          'Keep it as a funding buffer',
+          'It earns all night in a unit',
+        ],
+      },
+      {
+        id: 'prevalidation',
+        path: '/pre-validation',
+        title: 'Pre-validate a large transfer',
+        short: 'Pre-validation',
+        promise: 'Every check done days ahead. On the day, the payment leaves in seconds.',
+        steps: ['Pick the transaction', 'Run the checks now', 'Release when the condition is met'],
+      },
+      {
+        id: 'jit',
+        path: '/just-in-time',
+        title: 'Fund a subsidiary just in time',
+        short: 'Just-in-time funding',
+        promise:
+          'Euro or dollar into yen, riyal or Singapore dollar at the minute of need — when every desk is closed.',
+        steps: [
+          'Pick the subsidiary and the moment',
+          'Compare with pre-funding',
+          'Schedule it for that minute',
+        ],
+      },
+    ],
+  },
+
+  contracts: {
+    kinds: {
+      cascade: 'Cascade payment',
+      mna: 'Purpose-bound escrow',
+      equipment: 'Milestone payments',
+    },
+    flowTitle: 'When this happens, the money moves — on its own',
+    when: 'When',
+    gate: 'A condition to meet — nothing paid yet',
+    where: 'Where the money sits',
+    whereText: 'On your tokenised account, earmarked. It earns to the minute until it is paid.',
+    only: 'Where it can go',
+    onlyText: 'Only to the listed payees. Any other destination is refused.',
+    ifNot: 'If the event never comes',
+    ifNotText: (d: string) => `The rest returns to you on ${d}.`,
+    forIt: 'For your IT team: the event API and the rule',
+    deploy: (a: string) => `Deploy — earmark ${a} on the tokenised account`,
+    liveTitle: 'Your contracts',
+    simulate: 'Simulate the event',
+    whatHappened: 'What happened',
+    waiting: 'Waiting for the first event. Press "Simulate the event".',
+  },
+
+  repatriation: {
+    also: 'Country:',
+    pipeTitle: 'Where your money is, right now',
+    pipeLead: 'Four places, one flow. The highlighted box is where the money is at this minute.',
+    box: {
+      bank: (city: string) => `Local bank, ${city}`,
+      wallet: (ccy: string) => `Bitso wallet · ${ccy}`,
+      inTransit: 'In transit to the master account',
+      tok: 'Tokenised account, Paris',
+      tokSub: 'Final, earning to the minute',
+    },
+    vsTrad: (trad: string, diff: string) =>
+      `Traditional FX + SWIFT: ${trad} in two days, rate fixed at execution — ${diff} less.`,
+    hint: 'Then press Next event (⏭) a few times to follow it.',
+  },
+
+  accountSummary: {
+    earned: 'Earned this week on the tokenised account',
+    rates: (tok: string, cur: string, unit: string) =>
+      `${tok} on the account (≤ ${cur} current account) · ${unit} in the overnight unit`,
+    free: 'Free',
+    blocked: 'Blocked or earmarked',
+    blockedSub: 'Collateral, pre-validated payments, contracts — still earning',
+    inUnit: 'In units',
+    inUnitSub: 'Overnight by rule, and term units',
+    open: 'Account details',
+  },
+
+  work: {
+    collateralTitle: 'Back a guarantee — and keep earning',
+    collateralLead:
+      'The Brazil bid bond: EUR 15m blocked from Wednesday 11:00, released by rule on the tender result.',
+    blockNow: 'Block EUR 4m for a margin call now',
+    blocked: 'Blocked — keeps earning until released',
+    bufferTitle: 'Keep a funding buffer — and keep earning',
+    bufferLead:
+      'After the 07:00 return, the group buffer waits on the tokenised account until a subsidiary needs it.',
+    bufferNow: 'Buffer on the account now',
+    fund: 'Fund a subsidiary from it',
+    nightTitle: 'At night, all of it goes into a unit',
+    nightLead:
+      'After 18:00, free, blocked and earmarked amounts are placed in an overnight unit at 1.80% — flagged when blocked, so nothing can move them.',
+    nightNow: 'In overnight or weekend units now',
+    tradTitle: 'Today',
+    trad: 'A cash gage at 0%, a separate buffer on a current account, and nothing earned overnight.',
+  },
+
   /** Engine copy for funding, large payments, escrow and corridors. */
   adv: {
     jitTitle: (a: string, ccy: string, src: string) =>
@@ -1321,6 +1478,7 @@ export const en = {
     badSignature: 'Signature does not match the registered key',
     signatureCheck: 'Oracle signature',
     escrowPaid: (m: string) => `Escrow release — ${m}`,
+    escrowPaidTo: (m: string, p: string) => `Cascade — ${m} → ${p}`,
     paidOut: (a: string) => `Paid ${a} to the whitelisted payee`,
     conditionMet: 'Condition met — nothing to pay at this step',
     corridorTitle: (a: string, p: string, rail: 'interbank' | 'traditional') =>

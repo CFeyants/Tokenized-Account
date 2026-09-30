@@ -1,17 +1,26 @@
 # Treasury, counted in minutes
 
-A clickable mock-up of a corporate eBanking portal for a group treasurer. You sit in Marie
-Lefèvre's chair (Group Treasurer, Paris) and live one simulated week. You see what the bank's
-tools already do well, what the new layer on our ledger adds, and what it does not change.
+A clickable mock-up of a corporate eBanking portal for a group treasurer, built around **six
+things the tokenised account lets you do**. You sit in Marie Lefèvre's chair (Group Treasurer,
+Paris) at **Norvane Bank** (a fictitious bank), on a simulated week.
 
-The new layer is the **tokenised account** (time counted to the minute, both ways), **term units**
-bought from it, the **night sweep** from other banks, **just-in-time funding** at any hour,
-**collateral that keeps earning**, **out-of-hours FX** for intragroup funding and the **tokenised
-fund** settled on the same ledger.
+1. **Automate payments around an event** — smart contracts: purpose-bound money in escrow and
+   cascade payments down a supply chain, released the minute an oracle confirms the event.
+2. **Bring cash home from Brazil** — BRL → partner wallet → euro stablecoin → EUR on the
+   tokenised account, rate locked, in minutes, even at the weekend.
+3. **Earn to the minute** — every euro counted for the minutes it is really there; six situations
+   where that matters, amounts shown honestly.
+4. **Put the balance to work** — the same balance backs a guarantee and funds subsidiaries, and
+   keeps earning while it waits (in an overnight unit at night).
+5. **Pre-validate a large transfer** — every check done days ahead; on the day it leaves in seconds.
+6. **Fund a subsidiary just in time** — euro or dollar into yen, riyal or Singapore dollar at the
+   minute of need, when every desk and cut-off is closed.
 
-Everything runs in the browser: mock data, a simulated clock, no backend, no login.
+Interbank use cases (a supplier's bank on a shared ledger) are shown with a **Not right away**
+label. Everyday banking (accounts, payments, placements, statements, rules) stays one click away,
+unchanged. Everything runs in the browser: mock data, a simulated clock, no backend, no login.
 
-![Cockpit](docs/screenshots/cockpit.png)
+![Home](docs/screenshots/home.png)
 
 ## Run it (under 3 minutes)
 
@@ -28,42 +37,27 @@ Open <http://localhost:5173>. That's it.
 
 Or open the published version on GitHub Pages (see [Deploy](#deploy)).
 
-## Play the week
+## Use it
 
-1. Press **Play** (or the space bar). One simulated hour lasts about 1.5 seconds; switch to 3× or 8×
-   to go faster.
-2. Press **Next event** (⏭) to step through the story, or the calendar icon to **jump** to any of
-   the 17 moments of the week.
-3. **Drag the timeline** under the counters to move the clock anywhere. Shaded parts are nights and
-   the weekend.
-4. Watch the **counters** at the top: interest with the ledger vs the traditional set-up, hours
-   spent earning, cash brought from other banks, intraday credit. Hover any of them for the formula.
-5. Open **Under the hood** (top right) for what happens inside the bank: ledger entries to the
-   second, rule decisions, minute-by-minute accruals, the ALM view, intragroup mirror balances.
-6. **Act yourself**: buy or sell a unit (Placements), fund Singapore at night (Payments › Intragroup
-   on the ledger), subscribe to the fund, approve a batch. Your actions replay on the week;
-   **Reset to scenario** removes them.
-7. **Share a moment**: the URL carries the clock, e.g. `/?t=2026-10-09T18:30`. The link icon copies
-   it.
+- **Home** offers the six journeys. Each one opens with its promise and three steps.
+- The **clock** at the top drives everything: press **Play** (or the space bar), **Next event** (⏭)
+  to step, or drag the week timeline. Night and weekend are shaded.
+- **Act yourself**: deploy a contract and simulate the event, lock a rate and repatriate, pre-validate
+  a payment, schedule a funding at the minute of need. Your actions replay on the week;
+  **Reset to scenario** removes them.
+- **Week counters** (top bar) shows interest with and without the ledger for the whole week.
+- **Under the hood** shows ledger entries to the second, rule decisions, minute accruals, the ALM
+  view and intragroup mirror balances.
+- The URL carries the clock (`?t=2026-10-10T21:00`): copy it to share a moment.
 
-Colour code everywhere: **green** is what the ledger adds, **grey** is what already works today,
-**dashed** is outside the bank, **amber** is term units and fund.
-
-Good moments to start from:
-
-| Moment | Link | What to look at |
-|---|---|---|
-| Mon 18:30 | `/?t=2026-10-05T18:30` | Surplus swept, overnight unit bought — late cash earns |
-| Mon 22:00 | `/accounts?t=2026-10-05T22:00` | USD receipt "pending cover", not earning |
-| Wed 21:30 | `/accounts/tok-paris?t=2026-10-07T21:30` | Blocked collateral inside the overnight unit |
-| Sat 22:00 | `/payments?t=2026-10-10T22:00&tab=ledger` | Out-of-hours FX to fund Singapore |
-| Sun 19:00 | `/guarantees?t=2026-10-11T19:00` | Bid bond released by rule, interest to the minute |
-| Mon 10:00 | `/placements?t=2026-10-12T10:00` | Sell a term unit instead of breaking a deposit |
-| Mon 20:00 | `/payments?t=2026-10-12T20:00&tab=ledger` | Night payment to a non-client: not yet (2028) |
-| Mon 21:00 | `/minute?t=2026-10-12T21:00` | Where the minute counts: six situations, daily vs minute |
-| Sat 21:00 | `/funding?t=2026-10-10T21:00` | Yen for Tokyo at Mon 02:00 Paris, SAR for Riyadh on Sunday — desks closed |
-| Mon 11:00 | `/escrow?t=2026-10-12T11:00` | Deploy an escrow, send oracle events (valid and forged) |
-| Sat 21:00 | `/corridors?t=2026-10-10T21:00` | Interbank corridors, current vs tokenised, LatAm repatriation |
+| Journey                 | Start here                            | What to do                                               |
+| ----------------------- | ------------------------------------- | -------------------------------------------------------- |
+| Smart contracts         | `/smart-contracts?t=2026-10-12T11:00` | Deploy the cascade, press "Simulate the event"           |
+| Brazil repatriation     | `/repatriation?t=2026-10-10T21:00`    | Lock the rate on Saturday night, then ⏭ a few times      |
+| Earn to the minute      | `/minute?t=2026-10-12T21:00`          | Open each case: by the day vs to the minute              |
+| Put the balance to work | `/put-to-work?t=2026-10-07T21:30`     | Collateral and buffer, earning in a unit at night        |
+| Pre-validation          | `/pre-validation?t=2026-10-12T11:00`  | Pre-validate the M&A closing, then release it            |
+| Just in time            | `/just-in-time?t=2026-10-10T21:00`    | Tokyo at Mon 02:00 Paris: schedule at the minute of need |
 
 ## The doctrine in 12 lines
 
@@ -78,23 +72,21 @@ Good moments to start from:
 9. The tokenised fund is an option, not the engine: settled on the ledger, within fund hours.
 10. The night sweep brings cash from other banks by instant transfer and returns only what each bank needs.
 11. Payments, payroll, tax, forecasting, statements, reconciliation, closing and netting do not change.
-12. Across banks: pilot corridors work with partner banks on the interbank ledger; elsewhere night payments to non-clients, PvP and settlement with non-clients wait for the interbank layer (2028+).
+12. Across banks, not right away: payments to other banks at night, PvP and settlement with non-clients need the interbank layer (2028+) — shown with a "Not right away" label.
 
 Full text: [docs/DOCTRINE.md](docs/DOCTRINE.md). The week: [docs/SCENARIO.md](docs/SCENARIO.md).
 Choices made where the brief was silent: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.md).
 
 ## Screens
 
-| | |
-|---|---|
-| ![Accounts](docs/screenshots/accounts.png) **Accounts** — every account across banks, finality state, night behaviour; "same euro, two accounts". | ![Tokenised account](docs/screenshots/tokenised-account.png) **Tokenised account** — free / blocked / in unit, minute chart, live accrual. |
-| ![Payments](docs/screenshots/payments.png) **Payments** — SEPA and cross-border as today; intragroup on the ledger with pre-screening. | ![Rules](docs/screenshots/rules.png) **Rules** — set once, runs every night; "if this rule had run last week…". |
-| ![Placements](docs/screenshots/placements.png) **Placements** — classic deposit, term units, fund; the yield ladder. | ![Guarantees](docs/screenshots/guarantees.png) **Guarantees** — collateral that keeps earning, released by rule. |
-| ![Statements](docs/screenshots/statements.png) **Statements** — camt.053 as today, plus sub-balances and a minute interest line. | ![Under the hood](docs/screenshots/hood.png) **Under the hood** — ledger, orchestration, accrual, ALM, intragroup, not yet. |
-| ![Why the minute](docs/screenshots/minute.png) **Why the minute** — six situations where money stays on the account and the minute matters. | ![Funding](docs/screenshots/funding.png) **Funding** — just-in-time in JPY / SAR / SGD from EUR or USD when desks are closed; large payments pre-validated. |
-| ![Escrow](docs/screenshots/escrow.png) **Escrow** — purpose-bound money on the tokenised account, programmable rule, oracle API. | ![Corridors](docs/screenshots/corridors.png) **Corridors** — interbank tokenised deposits on pilot corridors, current or tokenised account, LatAm repatriation via partner wallets and a euro stablecoin. |
+|                                                                                                                                  |                                                                                                                      |
+| -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| ![Smart contracts](docs/screenshots/smart-contracts.png) **1 · Smart contracts** — event → payments, cascade, oracle API for IT. | ![Brazil](docs/screenshots/repatriation.png) **2 · Brazil repatriation** — where the money is, minute by minute.     |
+| ![Minute](docs/screenshots/minute.png) **3 · Earn to the minute** — the account, then six situations.                            | ![Work](docs/screenshots/put-to-work.png) **4 · Put the balance to work** — collateral, buffer, the night in a unit. |
+| ![Pre-validation](docs/screenshots/pre-validation.png) **5 · Pre-validation** — checks done ahead, release in seconds.           | ![Just in time](docs/screenshots/just-in-time.png) **6 · Just in time** — who is open, ledger vs pre-funding.        |
+| ![Week](docs/screenshots/week.png) **The week, in detail** — the original cockpit, in Everyday banking.                          | ![Under the hood](docs/screenshots/hood.png) **Under the hood** — ledger, orchestration, accrual, ALM.               |
 
-Light mode: ![Light](docs/screenshots/cockpit-light.png)
+Light mode: ![Light](docs/screenshots/home-light.png)
 
 ## How it is built
 
@@ -129,13 +121,13 @@ computed by replaying the scenario. Nothing is stored in the screens.
 
 ## Commands
 
-| | |
-|---|---|
-| `npm run dev` | Development server |
-| `npm run build` | Type-check and build to `dist/` |
-| `npm test` | Engine unit tests (the §3.1 state table, doctrine, accrual, pricing) |
-| `npm run lint` | ESLint |
-| `npm run e2e` | Playwright smoke tests (first time: `npx playwright install chromium`) |
+|                                |                                                                           |
+| ------------------------------ | ------------------------------------------------------------------------- |
+| `npm run dev`                  | Development server                                                        |
+| `npm run build`                | Type-check and build to `dist/`                                           |
+| `npm test`                     | Engine unit tests (the §3.1 state table, doctrine, accrual, pricing)      |
+| `npm run lint`                 | ESLint                                                                    |
+| `npm run e2e`                  | Playwright smoke tests (first time: `npx playwright install chromium`)    |
 | `node scripts/screenshots.mjs` | Refresh README screenshots (needs `npx vite preview --port 4173` running) |
 
 ## Deploy

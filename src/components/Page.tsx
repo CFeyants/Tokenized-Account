@@ -102,7 +102,7 @@ export function Row({
       className={cn('flex items-baseline justify-between gap-4 py-1.5 text-[13.5px]', className)}
     >
       <span className="text-muted">{k}</span>
-      <span className="tabular text-right">{v}</span>
+      <span className="tabular shrink-0 whitespace-nowrap text-right">{v}</span>
     </div>
   );
 }

@@ -31,6 +31,13 @@ export const ORACLES: Oracle[] = [
     auth: 'OAuth 2.0 client credentials + signature',
   },
   {
+    id: 'engineer',
+    name: 'Site acceptance',
+    provider: "Engineer's acceptance certificate (e-signature platform)",
+    milestones: ['acceptance'],
+    auth: 'mTLS + ES256 signature',
+  },
+  {
     id: 'calendar',
     name: 'Date reached',
     provider: 'Bank calendar (internal)',
@@ -48,10 +55,47 @@ export interface EscrowTemplate {
   returnTo: string;
   expiryDays: number;
   oracle: string;
-  milestones: { key: string; label: string; share: number }[];
+  milestones: {
+    key: string;
+    label: string;
+    share: number;
+    payouts?: { payee: string; share: number }[];
+  }[];
 }
 
 export const TEMPLATES: EscrowTemplate[] = [
+  {
+    id: 'cascade',
+    name: 'Cascade payment — rail depot, Warsaw',
+    purpose: 'Contract price paid down the supply chain the minute the site is accepted',
+    amount: 10_000_000,
+    payees: [
+      'Wisła Rail Works (main contractor)',
+      'Elektro-Mazowsze (electrical subcontractor)',
+      'Budowa Nord (civil works subcontractor)',
+    ],
+    returnTo: 'Lefèvre Industries SA — tokenised account',
+    expiryDays: 120,
+    oracle: 'engineer',
+    milestones: [
+      {
+        key: 'acceptance',
+        label: 'Site acceptance certificate',
+        share: 0.95,
+        payouts: [
+          { payee: 'Wisła Rail Works (main contractor)', share: 0.6 },
+          { payee: 'Elektro-Mazowsze (electrical subcontractor)', share: 0.25 },
+          { payee: 'Budowa Nord (civil works subcontractor)', share: 0.1 },
+        ],
+      },
+      {
+        key: 'warrantyEnd',
+        label: 'Retention released at warranty end',
+        share: 0.05,
+        payouts: [{ payee: 'Wisła Rail Works (main contractor)', share: 0.05 }],
+      },
+    ],
+  },
   {
     id: 'mna',
     name: 'M&A escrow — Aceros del Norte (Monterrey)',
@@ -85,4 +129,4 @@ export const TEMPLATES: EscrowTemplate[] = [
 ];
 
 export const ORACLE_ENDPOINT = (escrowId: string) =>
-  `https://api.bank.example/escrow/v1/${escrowId}/oracle-events`;
+  `https://api.bank.example/contracts/v1/${escrowId}/events`;

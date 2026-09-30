@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  BarChart3,
   Link2,
   Moon,
   Pause,
@@ -104,6 +105,8 @@ export function TopBar() {
   const actions = useApp((s) => s.actions);
   const theme = useApp((s) => s.theme);
   const hoodOpen = useApp((s) => s.hoodOpen);
+  const showCounters = useApp((s) => s.showCounters);
+  const toggleCounters = useApp((s) => s.toggleCounters);
   const { togglePlay, step, stepBack, restart, setSpeed, setTheme, setHoodOpen, resetActions } =
     useApp.getState();
   const [copied, setCopied] = useState(false);
@@ -207,6 +210,15 @@ export function TopBar() {
         </div>
 
         <div className="ml-auto flex items-center gap-1">
+          <Button
+            variant={showCounters ? 'new' : 'ghost'}
+            size="sm"
+            onClick={toggleCounters}
+            aria-pressed={showCounters}
+          >
+            <BarChart3 />
+            {en.journeys.weekCounters}
+          </Button>
           {actions.length > 0 && (
             <Tip content={en.shell.userActions(actions.length)}>
               <Button variant="ghost" size="sm" onClick={resetActions} className="text-amber">
@@ -243,7 +255,7 @@ export function TopBar() {
         </div>
       </div>
       <div className="relative">
-        <CounterStrip />
+        {showCounters && <CounterStrip />}
         <WeekTimeline />
       </div>
     </header>

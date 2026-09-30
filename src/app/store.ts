@@ -20,6 +20,8 @@ interface AppState {
   /** Account or unit selected for the accrual tab. */
   accrualTarget: string;
   bannerDismissed: boolean;
+  showCounters: boolean;
+  toggleCounters: () => void;
   railExpanded: boolean;
   setT: (t: SimTime) => void;
   setPlaying: (p: boolean) => void;
@@ -81,6 +83,12 @@ export const useApp = create<AppState>((set, get) => ({
   accrualTarget: 'tok-paris',
   bannerDismissed: read('tcm.banner', false),
   railExpanded: read('tcm.rail', true),
+  showCounters: read('tcm.counters', false),
+  toggleCounters: () => {
+    const v = !get().showCounters;
+    write('tcm.counters', v);
+    set({ showCounters: v });
+  },
   setT: (t) => set({ t: clamp(t) }),
   setPlaying: (p) => set({ playing: p && get().t < SIM_END }),
   togglePlay: () => {

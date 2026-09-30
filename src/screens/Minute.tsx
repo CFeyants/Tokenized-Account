@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
+import { JourneyHeader } from '@/components/Journey';
+import { AccountSummary } from '@/components/AccountSummary';
 import { useApp, useSim } from '@/app/store';
 import { en } from '@/i18n/en';
 import { MIN_PER_DAY, at, formatClock, formatDate, hhmm, type SimTime } from '@/engine/clock';
@@ -20,7 +22,7 @@ import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
-import { PageHeader, Row } from '@/components/Page';
+import { Row } from '@/components/Page';
 import { MinuteRing } from '@/components/MinuteRing';
 import { cn } from '@/lib/utils';
 
@@ -131,6 +133,8 @@ function CaseCard({
   jumpTo,
   children,
   className,
+  day,
+  minute,
 }: {
   n: number;
   title: string;
@@ -141,40 +145,62 @@ function CaseCard({
   jumpTo?: SimTime;
   children: React.ReactNode;
   className?: string;
+  day: number;
+  minute: number;
 }) {
   const setT = useApp((s) => s.setT);
   const setPlaying = useApp((s) => s.setPlaying);
+  const [open, setOpen] = useState(false);
   return (
-    <Card tone={live ? 'new' : 'default'} className={cn('flex flex-col', className)}>
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-baseline gap-3">
-          <span className="tabular font-serif text-[28px] leading-none text-muted">{n}</span>
-          <h2 className="text-[20px] leading-tight">{title}</h2>
-        </div>
-        <Chip tone={live ? 'new' : 'outside'}>{live ? T.live : T.illustrative}</Chip>
-      </div>
-      <p className="mt-3 text-[13.5px] leading-relaxed">{what}</p>
-      <p className="mt-1.5 text-[12.5px] text-muted">
-        <span className="text-fg">{T.who}: </span>
-        {who}
-      </p>
-      <div className="flex-1">{children}</div>
-      <p className="mt-5 border-t border-line pt-4 text-[12.5px] leading-relaxed text-muted">
-        <span className="font-medium text-fg">{T.verdict}. </span>
-        {verdict}
-      </p>
-      {jumpTo !== undefined && (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="-ml-3 mt-2 self-start"
-          onClick={() => {
-            setPlaying(false);
-            setT(jumpTo);
-          }}
-        >
-          {T.jump} · {formatClock(jumpTo)} <ArrowRight />
-        </Button>
+    <Card tone={live ? 'new' : 'default'} className={cn('flex flex-col py-5', className)}>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className="grid cursor-pointer grid-cols-[36px_1fr_150px_150px_110px_20px] items-center gap-4 text-left"
+      >
+        <span className="tabular font-serif text-[26px] leading-none text-muted">{n}</span>
+        <span>
+          <span className="block text-[17px] font-medium leading-tight">{title}</span>
+          <span className="mt-0.5 block text-[12.5px] text-muted">{who}</span>
+        </span>
+        <span className="text-right">
+          <span className="block text-[11px] text-muted">{T.byDay}</span>
+          <span className="tabular text-[15px] text-muted">{fmtEur(day)}</span>
+        </span>
+        <span className="text-right">
+          <span className="block text-[11px] text-new">{T.byMinute}</span>
+          <span className="tabular text-[15px] text-new">{fmtEur(minute)}</span>
+        </span>
+        <Chip tone={live ? 'new' : 'outside'} className="justify-self-end">
+          {live ? T.live : T.illustrative}
+        </Chip>
+        <ChevronDown
+          className={cn('size-4 text-muted transition-transform', open && 'rotate-180')}
+        />
+      </button>
+      {open && (
+        <>
+          <p className="mt-3 text-[13.5px] leading-relaxed">{what}</p>
+          <div className="flex-1">{children}</div>
+          <p className="mt-5 border-t border-line pt-4 text-[12.5px] leading-relaxed text-muted">
+            <span className="font-medium text-fg">{T.verdict}. </span>
+            {verdict}
+          </p>
+          {jumpTo !== undefined && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="-ml-3 mt-2 self-start"
+              onClick={() => {
+                setPlaying(false);
+                setT(jumpTo);
+              }}
+            >
+              {T.jump} · {formatClock(jumpTo)} <ArrowRight />
+            </Button>
+          )}
+        </>
       )}
     </Card>
   );
@@ -197,14 +223,16 @@ export function Minute() {
 
   return (
     <div className="space-y-8">
-      <PageHeader eyebrow={T.eyebrow} title={T.title} lead={T.lead} />
+      <JourneyHeader id="minute" />
+      <AccountSummary />
       <div className="card flex gap-3 px-5 py-4 text-[13.5px] leading-relaxed" role="note">
         <MinuteRing size={22} progress={0.25} />
         {T.honest}
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        <CaseCard n={1} {...C.float} live={false}>
+      <h2 className="text-[24px]">{T.title}</h2>
+      <div className="space-y-3">
+        <CaseCard n={1} {...C.float} live={false} day={0} minute={f.minuteInterest}>
           <div className="mt-4">
             <div className="mb-2 flex justify-between text-[12.5px]">
               <span className="text-muted">{C.float.peak}</span>
@@ -226,7 +254,14 @@ export function Minute() {
           </p>
         </CaseCard>
 
-        <CaseCard n={2} {...C.collateral} live jumpTo={at(6, '19:00')}>
+        <CaseCard
+          n={2}
+          {...C.collateral}
+          live
+          jumpTo={at(6, '19:00')}
+          day={0}
+          minute={col.minuteInterest}
+        >
           <DayStrip range={col.range} windows={col.windows} />
           <Compare
             days={col.daysCounted}
@@ -241,7 +276,14 @@ export function Minute() {
           </div>
         </CaseCard>
 
-        <CaseCard n={3} {...C.waiting} live jumpTo={at(2, '10:59')}>
+        <CaseCard
+          n={3}
+          {...C.waiting}
+          live
+          jumpTo={at(2, '10:59')}
+          day={w.dailyInterest}
+          minute={w.minuteInterest}
+        >
           <DayStrip
             range={[at(2, '00:00'), at(3, '00:00')]}
             windows={[
@@ -269,7 +311,13 @@ export function Minute() {
           </div>
         </CaseCard>
 
-        <CaseCard n={4} {...C.transit} live={false}>
+        <CaseCard
+          n={4}
+          {...C.transit}
+          live={false}
+          day={tr.dailyInterest}
+          minute={tr.minuteInterest}
+        >
           <div className="mt-4 grid grid-cols-3 gap-4">
             <div>
               <div className="mb-2 flex justify-between text-[12px]">
@@ -327,7 +375,14 @@ export function Minute() {
           </div>
         </CaseCard>
 
-        <CaseCard n={5} {...C.conditional} live jumpTo={at(7, '16:44')}>
+        <CaseCard
+          n={5}
+          {...C.conditional}
+          live
+          jumpTo={at(7, '16:44')}
+          day={0}
+          minute={cd.minuteInterest}
+        >
           <DayStrip range={cd.range} windows={cd.windows} />
           <Compare days={0} daily={0} minutes={cd.minutes} minute={cd.minuteInterest} />
           <label className="mt-4 flex cursor-pointer items-center justify-between gap-4 text-[12.5px]">
@@ -341,7 +396,14 @@ export function Minute() {
           )}
         </CaseCard>
 
-        <CaseCard n={6} {...C.zones} live jumpTo={at(5, '22:00')} className="col-span-2">
+        <CaseCard
+          n={6}
+          {...C.zones}
+          live
+          jumpTo={at(5, '22:00')}
+          day={zones[0].byZone.paris.interest}
+          minute={zones[0].minuteInterest}
+        >
           <DayStrip
             range={[at(5, '12:00'), at(6, '12:00')]}
             windows={[{ from: at(5, '22:00'), to: at(6, '02:00'), amount: 10 * M }]}
