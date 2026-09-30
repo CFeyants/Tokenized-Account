@@ -1,26 +1,41 @@
 # Treasury, counted in minutes
 
-A clickable mock-up of a corporate eBanking portal for a group treasurer, built around **six
-things the tokenised account lets you do**. You sit in Marie Lefèvre's chair (Group Treasurer,
-Paris) at **Norvane Bank** (a fictitious bank), on a simulated week.
+A clickable mock-up of a corporate eBanking portal for a group treasurer — Marie Lefèvre, Group
+Treasurer, Paris — at **Norvane Bank** (a fictitious bank). **The bank that orchestrates, not the
+rail.**
 
-1. **Automate payments around an event** — smart contracts: purpose-bound money in escrow and
-   cascade payments down a supply chain, released the minute an oracle confirms the event.
-2. **Bring cash home from Brazil** — BRL → partner wallet → euro stablecoin → EUR on the
-   tokenised account, rate locked, in minutes, even at the weekend.
-3. **Earn to the minute** — every euro counted for the minutes it is really there; six situations
-   where that matters, amounts shown honestly.
-4. **Put the balance to work** — the same balance backs a guarantee and funds subsidiaries, and
-   keeps earning while it waits (in an overnight unit at night).
-5. **Pre-validate a large transfer** — every check done days ahead; on the day it leaves in seconds.
-6. **Fund a subsidiary just in time** — euro or dollar into yen, riyal or Singapore dollar at the
-   minute of need, when every desk and cut-off is closed.
+It opens on the **Monday 08:30 cash meeting**: the group position by entity, currency and bank
+(including two other banks), forecast vs actual, today's cut-offs, two requests waiting for Marie's
+signature and three alerts. A **value banner** at the top shows, for the chosen client profile, what
+the ledger is worth a year: **local buffers released, treasury time saved, failures avoided** —
+never zero, assumptions on hover. Nothing to press first.
 
-Interbank use cases (a supplier's bank on a shared ledger) are shown with a **Not right away**
-label. Everyday banking (accounts, payments, placements, statements, rules) stays one click away,
-unchanged. Everything runs in the browser: mock data, a simulated clock, no backend, no login.
+Each alert leads into a use case, in context:
 
-![Home](docs/screenshots/home.png)
+1. **Automate payments around an event** — smart contracts: purpose-bound escrow and cascade
+   payments, with guardrails (cap, challenge window, kill switch, oracle liability, accounting note).
+2. **Bring cash home from Brazil** — qualify the flow (dividend, loan repayment, royalties, documents,
+   IOF and FX registration to validate), lock the rate, BRL → partner wallet → euro stablecoin →
+   EUR on the tokenised account; the gap with FX + SWIFT broken down.
+3. **Sweep the surplus into the tokenised fund** — by standing rule, redeemed automatically.
+4. **Put the balance to work** — collateral (what the beneficiary receives, what it does to
+   published cash and net debt) and a funding buffer, counted to the minute.
+5. **Pre-validate a large transfer** — orchestration available today; only "beneficiary on the
+   ledger" is new, and labelled not right away.
+6. **Fund a subsidiary just in time** — local buffers in Tokyo, Riyadh and Singapore go; one-off or
+   standing rule.
+
+Around them: **maker / checker** on every action (initiator, second signatory within mandate, audit
+trail), **In your TMS** (the same position by camt.052/053, a rule set by API, the statement line
+your team reconciles, what to sign and connect), **Incidents** (expired rate lock, night FX limit,
+screening hit at release), and a **Business case** for the bank (client value, NII cost of the units,
+revenues, cannibalisation, horizon and dependency of each use case). Each use case carries its
+horizon — available today, H1 2027, H2 2028, H3 2029+ — and what it depends on.
+
+Everything runs in the browser: mock data, a simulated week, no backend, no login. Amounts are
+illustrative.
+
+![Cockpit](docs/screenshots/home.png)
 
 ## Run it (under 3 minutes)
 
@@ -35,29 +50,27 @@ npm run dev
 
 Open <http://localhost:5173>. That's it.
 
-Or open the published version on GitHub Pages (see [Deploy](#deploy)).
-
 ## Use it
 
-- **Home** offers the six journeys. Each one opens with its promise and three steps.
-- The **clock** at the top drives everything: press **Play** (or the space bar), **Next event** (⏭)
-  to step, or drag the week timeline. Night and weekend are shaded.
-- **Act yourself**: deploy a contract and simulate the event, lock a rate and repatriate, pre-validate
-  a payment, schedule a funding at the minute of need. Your actions replay on the week;
-  **Reset to scenario** removes them.
-- **Week counters** (top bar) shows interest with and without the ledger for the whole week.
-- **Under the hood** shows ledger entries to the second, rule decisions, minute accruals, the ALM
-  view and intragroup mirror balances.
+- The **cockpit** is already filled in on Monday 08:30. Follow an alert, or approve a request.
+- The **value banner** changes with the client profile (mid-cap, large industrial, multi-country
+  group). Hover each figure for its assumptions.
+- **Every action asks for a second signature** (maker / checker). In the demo you can give it
+  yourself; the audit trail is on the Approvals page.
+- **Demo mode** (top bar) shows the clock controls: Play, Next event (⏭), the week timeline and the
+  week's interest counters. Use it to follow a repatriation or a contract to the end.
+- **Under the hood** shows ledger entries to the second, rule decisions, accruals, the ALM view and
+  intragroup mirror balances — and links to the Business case.
 - The URL carries the clock (`?t=2026-10-10T21:00`): copy it to share a moment.
 
-| Journey                 | Start here                            | What to do                                               |
-| ----------------------- | ------------------------------------- | -------------------------------------------------------- |
-| Smart contracts         | `/smart-contracts?t=2026-10-12T11:00` | Deploy the cascade, press "Simulate the event"           |
-| Brazil repatriation     | `/repatriation?t=2026-10-10T21:00`    | Lock the rate on Saturday night, then ⏭ a few times      |
-| Earn to the minute      | `/minute?t=2026-10-12T21:00`          | Open each case: by the day vs to the minute              |
-| Put the balance to work | `/put-to-work?t=2026-10-07T21:30`     | Collateral and buffer, earning in a unit at night        |
-| Pre-validation          | `/pre-validation?t=2026-10-12T11:00`  | Pre-validate the M&A closing, then release it            |
-| Just in time            | `/just-in-time?t=2026-10-10T21:00`    | Tokyo at Mon 02:00 Paris: schedule at the minute of need |
+| Use case                | Start here                            | What to do                                                      |
+| ----------------------- | ------------------------------------- | --------------------------------------------------------------- |
+| Smart contracts         | `/smart-contracts?t=2026-10-12T11:00` | Deploy the cascade, simulate the event, Demo mode → ⏭           |
+| Brazil repatriation     | `/repatriation?t=2026-10-10T21:00`    | Qualify the dividend, lock the rate, Demo mode → ⏭ a few times  |
+| Sweep to fund           | `/sweep`                              | Set the threshold, make it a standing rule                      |
+| Put the balance to work | `/put-to-work?t=2026-10-07T21:30`     | Collateral, beneficiary, published figures                      |
+| Pre-validation          | `/pre-validation?t=2026-10-12T11:00`  | Pre-validate the M&A closing, then release it                   |
+| Just in time            | `/just-in-time?preset=tokyo`          | Tokyo at Mon 02:00 Paris: schedule it, or set a standing rule   |
 
 ## The doctrine in 12 lines
 
@@ -79,12 +92,13 @@ Choices made where the brief was silent: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.
 
 ## Screens
 
-|                                                                                                                                  |                                                                                                                      |
-| -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| ![Smart contracts](docs/screenshots/smart-contracts.png) **1 · Smart contracts** — event → payments, cascade, oracle API for IT. | ![Brazil](docs/screenshots/repatriation.png) **2 · Brazil repatriation** — where the money is, minute by minute.     |
-| ![Minute](docs/screenshots/minute.png) **3 · Earn to the minute** — the account, then six situations.                            | ![Work](docs/screenshots/put-to-work.png) **4 · Put the balance to work** — collateral, buffer, the night in a unit. |
-| ![Pre-validation](docs/screenshots/pre-validation.png) **5 · Pre-validation** — checks done ahead, release in seconds.           | ![Just in time](docs/screenshots/just-in-time.png) **6 · Just in time** — who is open, ledger vs pre-funding.        |
-| ![Week](docs/screenshots/week.png) **The week, in detail** — the original cockpit, in Everyday banking.                          | ![Under the hood](docs/screenshots/hood.png) **Under the hood** — ledger, orchestration, accrual, ALM.               |
+| | |
+|---|---|
+| ![Smart contracts](docs/screenshots/smart-contracts.png) **Smart contracts** — event → payments, guardrails, API for IT. | ![Brazil](docs/screenshots/repatriation.png) **Brazil repatriation** — qualify, lock, follow the money. |
+| ![Collateral](docs/screenshots/put-to-work.png) **Put the balance to work** — collateral, beneficiary, published figures. | ![Just in time](docs/screenshots/just-in-time.png) **Just in time** — buffers released, who is open, standing rule. |
+| ![Pre-validation](docs/screenshots/pre-validation.png) **Pre-validation** — orchestration available today. | ![Sweep](docs/screenshots/sweep.png) **Sweep to the tokenised fund** — by standing rule. |
+| ![TMS](docs/screenshots/tms.png) **In your TMS** — position, rule by API, statement line, onboarding. | ![Business case](docs/screenshots/business-case.png) **Business case** — client value, bank account, horizons. |
+| ![Incidents](docs/screenshots/incidents.png) **Incidents** — what stops, who is notified, how it is resolved. | ![Approvals](docs/screenshots/approvals.png) **Approvals & audit** — maker / checker, standing rules, trail. |
 
 Light mode: ![Light](docs/screenshots/home-light.png)
 
@@ -133,6 +147,7 @@ computed by replaying the scenario. Nothing is stored in the screens.
 ## Deploy
 
 `.github/workflows/ci.yml` runs lint, tests, build and the Playwright tests on every push.
+A `vercel.json` rewrites every path to `index.html`, so deep links also work on Vercel.
 `.github/workflows/deploy.yml` publishes `main` to GitHub Pages. In the repository settings, set
 **Pages › Source** to **GitHub Actions** once. The site is then served at
 `https://<owner>.github.io/<repository>/`; deep links work (a copy of `index.html` is served as

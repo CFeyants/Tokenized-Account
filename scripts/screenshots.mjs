@@ -9,17 +9,18 @@ const only = process.argv.slice(3);
 mkdirSync(out, { recursive: true });
 
 const shots = [
-  { name: 'home', path: '/?t=2026-10-12T11:00' },
+  { name: 'home', path: '/' },
+  { name: 'home-light', path: '/', theme: 'light' },
   { name: 'smart-contracts', path: '/smart-contracts?t=2026-10-12T11:00' },
   { name: 'repatriation', path: '/repatriation?t=2026-10-10T21:00' },
-  { name: 'minute', path: '/minute?t=2026-10-12T21:00' },
+  { name: 'sweep', path: '/sweep' },
   { name: 'put-to-work', path: '/put-to-work?t=2026-10-07T21:30' },
   { name: 'pre-validation', path: '/pre-validation?t=2026-10-12T11:00' },
-  { name: 'just-in-time', path: '/just-in-time?t=2026-10-10T21:00' },
-  { name: 'home-light', path: '/?t=2026-10-05T19:15', theme: 'light' },
-  { name: 'week', path: '/week?t=2026-10-09T18:32' },
-  { name: 'tokenised-account', path: '/accounts/tok-paris?t=2026-10-07T21:30' },
-  { name: 'corridors', path: '/corridors?t=2026-10-10T21:00' },
+  { name: 'just-in-time', path: '/just-in-time?preset=tokyo&t=2026-10-10T21:00' },
+  { name: 'tms', path: '/tms' },
+  { name: 'business-case', path: '/business-case' },
+  { name: 'incidents', path: '/incidents' },
+  { name: 'approvals', path: '/approvals' },
   { name: 'hood', path: '/week?t=2026-10-10T22:00', hood: true },
 ].filter((s) => only.length === 0 || only.includes(s.name));
 

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { AlertTriangle, ArrowRight, Check, Timer, X } from 'lucide-react';
-import { useSim } from '@/app/store';
+import { COCKPIT_START, useSim } from '@/app/store';
 import { useGov, PEOPLE, personLabel } from '@/app/governance';
 import { en } from '@/i18n/en';
 import { bankById, entityById } from '@/data/entities';
@@ -148,9 +148,8 @@ function Position() {
 }
 
 function Queue() {
-  const approvals = useGov((s) =>
-    s.approvals.filter((a) => a.status === 'pending' && a.checker === 'marie'),
-  );
+  const all = useGov((s) => s.approvals);
+  const approvals = all.filter((a) => a.status === 'pending' && a.checker === 'marie');
   const approve = useGov((s) => s.approve);
   const reject = useGov((s) => s.reject);
   return (
@@ -299,7 +298,7 @@ export function Home() {
       <div className="flex items-end justify-between gap-6">
         <div>
           <div className="eyebrow mb-2">
-            {C.eyebrow} · {formatDateTime(t)}
+            {t <= COCKPIT_START + 60 ? C.eyebrow : C.eyebrowLater} · {formatDateTime(t)}
           </div>
           <h1 className="text-[40px] leading-[1.05] tracking-tight">{C.title}</h1>
         </div>

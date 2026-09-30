@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Check, ChevronDown, CircleDashed, X } from 'lucide-react';
 import { useApp, useSim, type HoodTab } from '@/app/store';
 import { en } from '@/i18n/en';
@@ -447,6 +448,13 @@ export function HoodPanel() {
           <div>
             <h2 className="text-[22px]">{H.title}</h2>
             <p className="mt-0.5 text-[12.5px] text-muted">{H.lead}</p>
+            <Link
+              to="/business-case"
+              onClick={() => setOpen(false)}
+              className="mt-1.5 inline-flex items-center gap-1 text-[12.5px] text-new hover:underline"
+            >
+              {H.bankView} →
+            </Link>
           </div>
           <button
             type="button"

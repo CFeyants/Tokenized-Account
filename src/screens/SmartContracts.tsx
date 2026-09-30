@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { ArrowRight, Check, Send, ShieldAlert, X, Zap } from 'lucide-react';
+import { ArrowRight, Check, Flag, OctagonX, Play, Send, ShieldAlert, X, Zap } from 'lucide-react';
+import { ApprovalButton } from '@/components/ApprovalButton';
 import { useApp, useSim } from '@/app/store';
 import { en } from '@/i18n/en';
 import { ORACLE_ENDPOINT, ORACLES, TEMPLATES } from '@/data/escrow';
 import { ACCOUNTS } from '@/data/accounts';
-import { MIN_PER_DAY, formatDateTime, isoStamp } from '@/engine/clock';
+import { MIN_PER_DAY, formatDateTime, hhmm, isoStamp } from '@/engine/clock';
 import { ledgerOpportunity } from '@/engine/markets';
 import { fmtEur, fmtM } from '@/engine/format';
 import { Card, CardHeader } from '@/components/ui/card';
@@ -90,7 +91,6 @@ function Flow({ tplId }: { tplId: string }) {
 
 function Build() {
   const { t, state } = useSim();
-  const addAction = useApp((s) => s.addAction);
   const [tplId, setTpl] = useState(TEMPLATES[0].id);
   const tpl = TEMPLATES.find((x) => x.id === tplId)!;
   const deployed = state.conditional.some(
@@ -181,12 +181,41 @@ function Build() {
             </div>
           </div>
         </details>
-        <Button
+        <div className="mt-5 rounded-xl border border-line p-4">
+          <div className="text-[13px] font-medium">{S.guardTitle}</div>
+          <ul className="mt-2 grid grid-cols-2 gap-x-6 gap-y-2 text-[12.5px]">
+            <li>
+              <span className="text-muted">{S.guard.cap}: </span>
+              {fmtM(tpl.capPerDay, 'EUR', 0)}
+            </li>
+            <li>
+              <span className="text-muted">{S.guard.window}: </span>
+              {S.guard.windowV}
+            </li>
+            <li>
+              <span className="text-muted">{S.guard.kill}: </span>
+              {S.guard.killV}
+            </li>
+            <li>
+              <span className="text-muted">{S.guard.oracle}: </span>
+              {S.guard.oracleV}
+            </li>
+            <li className="col-span-2">
+              <span className="text-muted">{S.guard.accounting}: </span>
+              {S.guard.accountingV}
+            </li>
+          </ul>
+        </div>
+        <ApprovalButton
           className="mt-5 w-full"
           size="lg"
-          variant="primary"
           disabled={deployed}
-          onClick={() => addAction({ kind: 'escrow', template: tplId })}
+          request={{
+            title: S.deployTitle(tpl.name),
+            detail: tpl.purpose,
+            amountEur: tpl.amount,
+            action: { kind: 'escrow', template: tplId },
+          }}
         >
           {deployed ? (
             <>
@@ -197,7 +226,7 @@ function Build() {
               <Zap /> {S.deploy(fmtM(tpl.amount, 'EUR', 0))}
             </>
           )}
-        </Button>
+        </ApprovalButton>
       </Card>
     </div>
   );
@@ -215,18 +244,30 @@ function Live() {
         const tpl = TEMPLATES.find((x) => x.id === c.escrow!.template)!;
         const released = c.released ?? 0;
         let interest = ledgerOpportunity(c.amount, c.since, t);
-        for (const ev of c.events ?? []) {
-          const m = c.escrow!.milestones.find((x) => x.key === ev.milestone);
-          if (ev.accepted && m) interest -= ledgerOpportunity(c.amount * m.share, ev.t, t);
-        }
+        for (const m of c.escrow!.milestones)
+          if (m.paid && m.payAt !== undefined)
+            interest -= ledgerOpportunity(c.amount * m.share, m.payAt, t);
         return (
           <Card key={c.id} className="grid grid-cols-12 gap-6">
             <div className="col-span-12 xl:col-span-5">
               <div className="flex items-start justify-between gap-3">
                 <div className="text-[16px] font-medium">{tpl.name}</div>
-                <Chip tone={c.status === 'released' ? 'neutral' : 'new'}>
-                  {c.status === 'released' ? E.releasedLabel : E.active}
-                </Chip>
+                <span className="flex items-center gap-2">
+                  <Chip tone={c.paused ? 'red' : c.status === 'released' ? 'neutral' : 'new'}>
+                    {c.paused ? S.pausedChip : c.status === 'released' ? E.releasedLabel : E.active}
+                  </Chip>
+                  {c.status !== 'released' && (
+                    <Button
+                      size="sm"
+                      variant={c.paused ? 'new' : 'danger'}
+                      onClick={() =>
+                        addAction({ kind: 'contractPause', target: c.id, paused: !c.paused })
+                      }
+                    >
+                      {c.paused ? <Play /> : <OctagonX />} {c.paused ? S.resume : S.pause}
+                    </Button>
+                  )}
+                </span>
               </div>
               <Row k={E.held} v={fmtM(c.amount - released, 'EUR', 2)} className="mt-2" />
               <Row k={E.releasedLabel} v={fmtM(released, 'EUR', 2)} />
@@ -245,12 +286,39 @@ function Live() {
                     <span
                       className={cn(
                         'flex size-5 shrink-0 items-center justify-center rounded-full border',
-                        m.done ? 'border-new bg-new text-bg' : 'border-line-strong',
+                        m.paid
+                          ? 'border-new bg-new text-bg'
+                          : m.done
+                            ? 'border-amber'
+                            : 'border-line-strong',
                       )}
                     >
-                      {m.done && <Check className="size-3" />}
+                      {m.paid && <Check className="size-3" />}
                     </span>
-                    <span className="flex-1">{m.label}</span>
+                    <span className="flex-1">
+                      {m.label}
+                      {m.done && !m.paid && (
+                        <span
+                          className={cn(
+                            'block text-[11.5px]',
+                            m.contested ? 'text-red' : 'text-amber',
+                          )}
+                        >
+                          {m.contested ? S.contested : S.inWindow(hhmm(m.payAt ?? t))}
+                        </span>
+                      )}
+                    </span>
+                    {m.done && !m.paid && !m.contested && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() =>
+                          addAction({ kind: 'contest', target: c.id, milestone: m.key })
+                        }
+                      >
+                        <Flag /> {S.contest}
+                      </Button>
+                    )}
                     {!m.done && (
                       <>
                         <Button
@@ -299,7 +367,7 @@ function Live() {
                   {[...(c.events ?? [])].reverse().map((ev, i) => {
                     const m = c.escrow!.milestones.find((x) => x.key === ev.milestone);
                     const pays =
-                      ev.accepted && m
+                      ev.accepted && m && ev.source === en.adv.escrowRule
                         ? (m.payouts ??
                           (m.share > 0 ? [{ payee: tpl.payees[0], share: m.share }] : []))
                         : [];
@@ -323,7 +391,7 @@ function Live() {
                             {ev.accepted ? E.accepted : E.rejected}
                           </span>
                         </div>
-                        {!ev.accepted && <div className="mt-1 text-muted">{ev.outcome}</div>}
+                        <div className="mt-1 text-muted">{ev.outcome}</div>
                         {pays.length > 0 && (
                           <ol className="mt-2 space-y-1">
                             {pays.map((p, j) => (

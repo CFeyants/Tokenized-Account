@@ -1,7 +1,8 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, Lock, Moon, Zap } from 'lucide-react';
-import { useApp, useSim } from '@/app/store';
+import { ArrowRight, Landmark, Lock, Moon, Timer, Zap } from 'lucide-react';
+import { ApprovalButton } from '@/components/ApprovalButton';
+import { RateGrid } from '@/components/RateGrid';
+import { useSim } from '@/app/store';
 import { en } from '@/i18n/en';
 import { at } from '@/engine/clock';
 import { collateralInterest } from '@/engine/counters';
@@ -21,8 +22,6 @@ const M = 1_000_000;
 
 export function PutToWork() {
   const { t, tl, state } = useSim();
-  const addAction = useApp((s) => s.addAction);
-  const [blocked, setBlocked] = useState(false);
   const col = state.collateral.find((c) => c.id === BRAZIL_BID_BOND);
   const since = at(2, '11:00');
   const end = Math.max(since, Math.min(t, col?.releasedAt ?? t));
@@ -51,23 +50,18 @@ export function PutToWork() {
             <Row k={G.total} v={<span className="text-new">{fmtEur(ci.total)}</span>} />
             <Row k={G.released} v={col?.releasedAt ? '✓' : G.pending} />
           </div>
-          <Button
+          <ApprovalButton
             className="mt-auto w-full"
             variant="secondary"
-            disabled={blocked}
-            onClick={() => {
-              addAction({ kind: 'block', amount: 4 * M, label: 'Margin call — energy hedge' });
-              setBlocked(true);
+            request={{
+              title: W.blockTitle,
+              detail: W.blockDetail,
+              amountEur: 4 * M,
+              action: { kind: 'block', amount: 4 * M, label: W.marginLabel },
             }}
           >
-            {blocked ? (
-              <>
-                <Check /> {W.blocked}
-              </>
-            ) : (
-              W.blockNow
-            )}
-          </Button>
+            {W.blockNow}
+          </ApprovalButton>
         </Card>
 
         <Card tone="new" className="flex flex-col">
@@ -119,6 +113,65 @@ export function PutToWork() {
           </p>
         </Card>
       </div>
+
+      <div className="grid grid-cols-3 gap-6">
+        <Card>
+          <CardHeader
+            title={
+              <span className="flex items-center gap-2">
+                <Landmark className="size-5 text-muted" />
+                {W.beneficiaryTitle}
+              </span>
+            }
+          />
+          <p className="text-[13px] leading-relaxed">{W.beneficiary}</p>
+          <p className="mt-3 text-[12px] text-muted">{W.beneficiaryNote}</p>
+        </Card>
+        <Card>
+          <CardHeader title={W.publishedTitle} />
+          <table className="w-full text-[12.5px]">
+            <thead>
+              <tr className="text-left text-muted">
+                {W.publishedCols.map((c, j) => (
+                  <th
+                    key={c}
+                    className={j ? 'pb-1.5 pl-4 text-right font-normal' : 'pb-1.5 font-normal'}
+                  >
+                    {c}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="tabular">
+              {W.publishedRows.map((row) => (
+                <tr key={row[0]} className="border-t border-line">
+                  <td className="py-1.5">{row[0]}</td>
+                  <td className="py-1.5 text-right">{row[1]}</td>
+                  <td className="py-1.5 text-right">{row[2]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="mt-3 text-[12px] text-muted">{W.publishedNote}</p>
+        </Card>
+        <Card tone="new">
+          <CardHeader
+            title={
+              <span className="flex items-center gap-2">
+                <Timer className="size-5 text-new" />
+                {W.minuteTitle}
+              </span>
+            }
+          />
+          <p className="text-[13px] leading-relaxed">{W.minute}</p>
+          <Button asChild variant="ghost" size="sm" className="-ml-3 mt-3">
+            <Link to="/minute">
+              {W.minuteLink} <ArrowRight />
+            </Link>
+          </Button>
+        </Card>
+      </div>
+      <RateGrid />
     </div>
   );
 }

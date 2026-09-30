@@ -128,3 +128,43 @@ building.
 - **A-33 · Vocabulary.** "Wallet", "stablecoin" and "smart contract" are now allowed, but only in the
   corridor and escrow modules; "blockchain", "crypto" and "token" stay banned everywhere. The copy
   test enforces the scope.
+
+## After the three-voice review (treasurer, top management, product)
+
+- **A-34 · Cockpit first.** The demo opens on Monday 5 October, 08:30 (cash meeting), already filled
+  in. The six use cases are entered through alerts; Play moved to a secondary "Demo mode".
+- **A-35 · Value banner.** Annual value for three illustrative client profiles (mid-cap, large
+  industrial, multi-country group): local buffers released × 1.80% redeployment, 60% of manual
+  treasury hours automated (1,600 h per FTE, EUR 95k), 70% of failures avoided (cost per failure
+  by profile). Interest to the minute is deliberately not a headline metric.
+- **A-36 · Maker / checker.** Every action goes through a second signatory within mandate (Marie
+  and Thomas Garnier EUR 50m, above that the CFO). In the demo the second signature can be given on
+  the spot; the audit trail is kept for the session. Two requests are seeded (Tokyo standing rule
+  from Kenji Sato, Munich funding from Lukas Weber). Governance state is not replayed on the week:
+  a page reload clears it.
+- **A-37 · Horizons.** Available today (pre-validation as orchestration), H1 2027 (tokenised account
+  on one entity, collateral, TMS connector), H2 2028 (group entities, JIT in other currencies,
+  tokenised fund, smart contracts, Brazil corridor with an authorised partner), H3 2029+ (beneficiary
+  on an interbank network — Pontes, TCH). Dependencies shown on each use case.
+- **A-38 · Brazil.** The rate can be locked only once the flow is qualified (dividend, loan
+  repayment, royalties) and the documents ticked. IOF, FX registration and the central bank's
+  treatment of the stablecoin leg are listed as items to validate — no regulatory statement is made.
+  The gap with FX + SWIFT is broken down: spread (30 vs 60 bps), fees (EUR 2 vs 65), value days
+  (D+2 at 1.80%).
+- **A-39 · Smart-contract guardrails.** Largest single release per contract (cap), 60-minute
+  challenge window between an accepted event and the payment, kill switch, contest; oracle
+  liability and accounting (restricted cash) stated as to validate.
+- **A-40 · Collateral.** The beneficiary receives a demand guarantee issued by the bank, backed by
+  the blocked cash under a cash collateral agreement. Published figures show blocked cash as
+  restricted cash; its treatment in net debt depends on the client's definition — to confirm with
+  the auditor.
+- **A-41 · Business case (bank view).** Deposits on the ledger, remuneration paid (0.10% / 1.80%),
+  net interest income today vs with the ledger (FTP 1.50% sight, 1.95% overnight — the overnight unit
+  costs margin), subscriptions EUR 150 per active rule per month, night FX margin 10 bps,
+  cannibalisation of intraday credit line fees. LCR treatment qualitative, to validate with ALM.
+- **A-42 · Incidents** are scripted examples (expired rate lock, night FX limit, screening hit at
+  release), not simulated live.
+- **A-43 · One engine for interest.** "Interest this week — with the ledger" is the same figure in the
+  week counters and on the account summary; the split between tokenised account/units and the
+  current account is shown underneath.
+- **A-44 · Vercel.** `vercel.json` rewrites every path to `index.html` so deep links work.

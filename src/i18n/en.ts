@@ -448,6 +448,7 @@ export const en = {
   hood: {
     title: 'Under the hood',
     lead: 'What happens inside the bank, for colleagues from IT, ALM and compliance.',
+    bankView: 'Bank view — business case, cost and revenue',
     tabs: {
       ledger: 'Ledger',
       orchestration: 'Orchestration',
@@ -1005,6 +1006,7 @@ export const en = {
           'The same flow counts one day or none depending on whose midnight is used — arbitrary winners and losers. To the minute, every zone gets the same answer.',
         cols: ['Flow', 'Paris 23:59', 'Singapore 23:59', 'New York 23:59', 'To the minute'],
         zoneNames: { paris: 'Paris', singapore: 'Singapore', newYork: 'New York' },
+        note: 'Read the first row carefully: by the day, Paris pays more (EUR 27.78) for four hours of money, because its midnight happens to fall inside the four hours — Singapore and New York pay nothing for the same flow. To the minute, everyone pays for four hours (EUR 4.63). Fairer, not always higher.',
       },
     },
   },
@@ -1072,6 +1074,44 @@ export const en = {
     scheduled: (t: string) => `Scheduled for ${t}`,
     limitLeft: (v: string) => `Night FX limit left tonight: ${v}`,
     balances: 'Subsidiary accounts on the ledger',
+    buffers: {
+      title: 'Local buffers you no longer need',
+      lead: 'Today each subsidiary in a far time zone keeps cash "just in case" the Paris desk is closed when it needs it. Funded at the minute of need, the buffer goes. Illustrative.',
+      rows: [
+        {
+          city: 'Tokyo',
+          today: 8,
+          risk: 'Supplier paid Monday 09:00 JST without pre-funding on Friday',
+        },
+        {
+          city: 'Riyadh',
+          today: 5,
+          risk: 'Payroll on Sunday, on time — no Thursday pre-funding, no late salaries',
+        },
+        {
+          city: 'Singapore',
+          today: 6,
+          risk: 'Monday 08:00 SGT supplier run covered from Sunday night',
+        },
+      ],
+      total: 'Released for the group',
+      perYear: (v: string) => `${v} a year redeployed at 1.80% — more if it pays down debt`,
+    },
+    approvalSchedule: (bank: string, at: string) => `Just-in-time funding — ${bank}, at ${at}`,
+    approvalNow: (bank: string) => `Just-in-time funding — ${bank}, now`,
+    approvalDetail: (ccy: string, src: string) =>
+      `${src} → ${ccy} on the ledger, within the night FX limit.`,
+    ruleTitle: (bank: string) => `Standing just-in-time rule — ${bank}`,
+    ruleDetail: (ccy: string, src: string) =>
+      `Every time the forecast shows a need, fund it in ${ccy} from the ${src} balance at T−5 minutes, any hour. Set once.`,
+    ruleParams: (ccy: string, src: string, cap: string) => [
+      `Source: ${src} balance on the ledger`,
+      `Target currency: ${ccy}`,
+      'Trigger: forecast need, T−5 min',
+      'Hours: any',
+      `Cap per night: ${cap}`,
+    ],
+    setRule: 'Set it once — standing rule',
     large: {
       presetsTitle: 'Transactions to prepare',
       equipment: {
@@ -1106,6 +1146,11 @@ export const en = {
         'At release: no new checks, no call-back — they were done in advance. Seconds, not hours.',
       tradNote:
         'Traditional: approvals, call-back and screening run on the day; a screening hit or a missed T2 cut-off can push a closing to the next day.',
+      bankLabel: 'Beneficiary bank',
+      checksToday: 'Checked days ahead — orchestration on existing rails, available today',
+      approvalTitle: (n: string) => `Pre-validate — ${n}`,
+      approvalDetail: (c: string) =>
+        `All checks now; the amount is earmarked on the tokenised account and released in seconds when: ${c}.`,
       laterTitle: 'When the beneficiary bank is on the interbank ledger',
       laterText:
         'Release at any hour, final on both banks’ ledgers at once — no wait for T2. Needs the beneficiary’s bank on a shared ledger.',
@@ -1236,7 +1281,7 @@ export const en = {
       decideTitle: 'Decide to repatriate',
       country: 'From',
       share: 'Share of the local balance',
-      quoteLocked: (m: number) => `Rate locked for ${m} minutes once you confirm`,
+      quoteLocked: (m: number) => `Rate locked for ${m} minutes once you confirm.`,
       rate: 'Rate (local per EUR)',
       receive: 'EUR credited on the tokenised account',
       fees: 'Fees (partner 30 bps + network)',
@@ -1298,8 +1343,8 @@ export const en = {
         title: 'Bring cash home from Brazil',
         short: 'Brazil repatriation',
         promise:
-          'BRL → euro stablecoin → EUR on your tokenised account, rate locked, in minutes, even at the weekend.',
-        steps: ['Choose the amount', 'Lock the rate', 'Follow the money to Paris'],
+          'BRL → euro stablecoin → EUR on your tokenised account, rate locked, in minutes. Executed at any hour; the compliance file is prepared ahead.',
+        steps: ['Qualify the flow', 'Lock the rate', 'Follow the money to Paris'],
       },
       {
         id: 'sweep',
@@ -1365,6 +1410,26 @@ export const en = {
     forIt: 'For your IT team: the event API and the rule',
     deploy: (a: string) => `Deploy — earmark ${a} on the tokenised account`,
     liveTitle: 'Your contracts',
+    deployTitle: (n: string) => `Deploy contract — ${n}`,
+    guardTitle: 'Guardrails',
+    guard: {
+      cap: 'Largest single release',
+      window: 'Challenge window',
+      windowV: '60 minutes between the event and the payment',
+      kill: 'Kill switch',
+      killV: 'pause at any time; nothing is paid while paused',
+      oracle: 'If the certificate is false',
+      oracleV: 'the oracle provider is liable under its contract — to validate with Legal',
+      accounting: 'Accounting',
+      accountingV:
+        'the escrow is restricted cash, outside published cash and equivalents while it is held — to confirm with your auditor',
+    },
+    pause: 'Pause',
+    resume: 'Resume',
+    pausedChip: 'Paused',
+    contest: 'Contest',
+    contested: 'Contested — payment held',
+    inWindow: (t: string) => `Accepted — pays at ${t} unless contested`,
     simulate: 'Simulate the event',
     whatHappened: 'What happened',
     waiting: 'Waiting for the first event. Press "Simulate the event".',
@@ -1383,11 +1448,59 @@ export const en = {
     },
     vsTrad: (trad: string, diff: string) =>
       `Traditional FX + SWIFT: ${trad} in two days, rate fixed at execution — ${diff} less.`,
-    hint: 'Then press Next event (⏭) a few times to follow it.',
+    hint: 'Then turn on Demo mode and press Next event (⏭) to follow it.',
+    qualify: {
+      title: 'Qualify the flow — before any rate is locked',
+      lead: 'Why the money leaves Brazil, with the documents that prove it. Prepared ahead; the conversion itself can then run at any hour.',
+      flows: {
+        dividend: {
+          label: 'Dividend',
+          docs: [
+            'Shareholders’ or board minutes approving the dividend',
+            'Financial statements supporting distributable profits',
+            'Withholding tax computation, if any',
+          ],
+        },
+        loan: {
+          label: 'Intercompany loan repayment',
+          docs: [
+            'Intercompany loan agreement',
+            'Repayment schedule and interest computation',
+            'Registration of the loan, where required',
+          ],
+        },
+        royalties: {
+          label: 'Royalties',
+          docs: ['Licence agreement', 'Invoices for the period', 'Withholding tax computation'],
+        },
+      },
+      common: [
+        'Foreign-exchange registration and reporting in Brazil — to validate with local counsel',
+        'IOF on this operation — rate depends on the operation, to validate with local tax',
+        'Central bank treatment of the stablecoin leg as a foreign-exchange operation — to validate',
+      ],
+      ready: 'Qualified — the rate can be locked.',
+      pending: 'Tick every item to unlock the rate.',
+    },
+    gap: {
+      title: 'Why the corridor gives you more than FX + SWIFT',
+      spread: 'FX spread: 30 bps instead of 60 bps',
+      fees: 'Fees: EUR 2 network instead of EUR 65 SWIFT and correspondents',
+      days: 'Value days: EUR on the account today instead of D+2 (at 1.80%)',
+      total: 'Difference',
+    },
+    weekend:
+      'The conversion can run at the weekend; the qualification and the documents are prepared before.',
+    partner: 'Authorised partner (CASP) — outside the bank',
+    approvalTitle: (kind: string, amt: string) => `Repatriate ${amt} from Brazil — ${kind}`,
+    approvalDetail: (eur: string) =>
+      `Rate locked for 15 minutes once approved; ${eur} expected on the tokenised account.`,
   },
 
   accountSummary: {
-    earned: 'Earned this week on the tokenised account',
+    earned: 'Interest this week — with the ledger',
+    split: (v: string) =>
+      `of which ${v} on the tokenised account and its units; the rest on the current account`,
     rates: (tok: string, cur: string, unit: string) =>
       `${tok} on the account (≤ ${cur} current account) · ${unit} in the overnight unit`,
     free: 'Free',
@@ -1403,6 +1516,28 @@ export const en = {
     collateralLead:
       'The Brazil bid bond: EUR 15m blocked from Wednesday 11:00, released by rule on the tender result.',
     blockNow: 'Block EUR 4m for a margin call now',
+    blockTitle: 'Block EUR 4m as collateral — margin call, energy hedge',
+    blockDetail:
+      'Exact amount blocked on the tokenised account; keeps earning until released on the margin return.',
+    marginLabel: 'Margin call — energy hedge',
+    beneficiaryTitle: 'What the tender authority receives',
+    beneficiary:
+      'A bid bond — a demand guarantee issued by Norvane Bank for EUR 15m in favour of the tender authority. It is backed by the cash blocked on your tokenised account under a cash collateral agreement. The authority deals with the bank’s guarantee, not with your account.',
+    beneficiaryNote:
+      'Released by rule on the tender result; the guarantee expires the same minute.',
+    publishedTitle: 'In your published figures',
+    publishedCols: ['EUR m', 'Before', 'Blocked'],
+    publishedRows: [
+      ['Cash and cash equivalents', '120.0', '105.0'],
+      ['Restricted cash (collateral)', '0.0', '15.0'],
+      ['Net debt, if restricted cash is excluded', '—', '+15.0'],
+    ],
+    publishedNote:
+      'Blocked cash is usually presented as restricted cash; whether it counts in net debt depends on your definition and covenants — to confirm with your auditor. Illustrative.',
+    minuteTitle: 'Counted to the minute',
+    minute:
+      'Every euro on the tokenised account is counted for the minutes it is there — blocked, waiting or earmarked — at 0.10%, and in the overnight unit at night. It is the mechanism that makes blocks, buffers and releases exact; it is not the value on its own.',
+    minuteLink: 'See where the minute matters',
     blocked: 'Blocked — keeps earning until released',
     bufferTitle: 'Keep a funding buffer — and keep earning',
     bufferLead:
@@ -1419,6 +1554,7 @@ export const en = {
 
   cockpit: {
     eyebrow: 'Monday morning cash meeting',
+    eyebrowLater: 'Cash position',
     title: 'Group cash position',
     tagline: 'The bank that orchestrates, not the rail.',
     alertsTitle: 'Needs your attention',
@@ -1687,7 +1823,7 @@ export const en = {
     profile: 'Client profile',
     profiles: { midcap: 'Mid-cap', large: 'Large industrial', multi: 'Multi-country group' },
     buffers: 'Local buffers released',
-    buffersSub: (v: string) => `${v} a year once redeployed`,
+    buffersSub: (v: string) => `${v} a year`,
     buffersTip: (n: number, per: string, r: string) =>
       `${n} subsidiaries in time zones where European desks are closed when they need cash each keep about ${per} "just in case". Funded just in time, the buffer goes; redeployed at ${r} (overnight unit — conservative; paying down debt is worth more). Illustrative.`,
     hours: 'Treasury time saved',
@@ -1700,7 +1836,7 @@ export const en = {
     failuresTip: (n: number, share: string, cost: string) =>
       `${n} late payrolls, delayed closings or missed cut-offs a year today; ${share} avoided when funding and releases can happen at any hour. ${cost} each (penalties, supplier terms, management time). Illustrative.`,
     total: 'Total value, a year',
-    illustrative: 'Illustrative — assumptions on hover',
+    illustrative: 'Illustrative',
     totalTip:
       'Buffers released × redeployment rate + hours saved + failures avoided. Interest to the minute is not counted here: it is a mechanism, not the value.',
   },

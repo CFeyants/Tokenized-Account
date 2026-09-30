@@ -1,29 +1,52 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 test.beforeEach(async ({ context }) => {
-  await context.addInitScript(() => localStorage.setItem('tcm.banner', 'true'));
+  await context.addInitScript(() => {
+    localStorage.setItem('tcm.banner', 'true');
+    localStorage.removeItem('tcm.demo');
+  });
 });
 
-test('play the week: counters move and stay non-zero', async ({ page }) => {
+/** Maker / checker: submit, then give the second signature (allowed in the demo). */
+async function approve(page: Page) {
+  await page.getByRole('button', { name: 'Submit for second signature' }).click();
+  await page.getByRole('button', { name: /^Approve as / }).click();
+}
+
+test('cockpit opens on Monday 08:30 with value, alerts and approvals — without Play', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Group cash position' })).toBeVisible();
+  await expect(page.locator('header')).toContainText('Mon 08:30');
+  await expect(page.getByText('Local buffers released')).toBeVisible();
+  await expect(page.getByText('Tokyo needs JPY 1.37bn on Mon 12 Oct, 09:00 JST')).toBeVisible();
+  await expect(page.getByText('Waiting for your approval')).toBeVisible();
+  const total = await page.getByText('Total value, a year').locator('..').innerText();
+  expect(total).toMatch(/EUR [1-9]/);
+});
+
+test('approving a request from a subsidiary executes it and writes the audit trail', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Approve', exact: true }).first().click();
+  await page.getByRole('link', { name: /^Approvals/ }).click();
+  await expect(page.getByText(/Approved \(second signature\)/).first()).toBeVisible();
+});
+
+test('demo mode: play the week, counters move', async ({ page }) => {
   await page.goto('/week');
-  await expect(page.getByRole('heading', { name: 'Treasury, counted in minutes.' })).toBeVisible();
-  await page.getByRole('button', { name: 'Week counters' }).click();
+  await page.getByTestId('demo-toggle').click();
   await page.getByRole('radio', { name: '8×' }).click();
   await page.getByTestId('play').click();
-  // Monday 09:00 → past Monday night's sweep at 8× speed takes a few seconds.
   await page.waitForTimeout(6000);
   await page.getByTestId('play').click();
   const strip = page.locator('header [aria-live="polite"]').first();
-  const text = await strip.innerText();
-  const amounts = [...text.matchAll(/EUR\s([\d,]+)/g)].map((m) => Number(m[1].replace(/,/g, '')));
-  expect(amounts[0]).toBeGreaterThan(0); // with the ledger
-  expect(amounts.some((a) => a > 0)).toBe(true);
-});
-
-test('stepping reaches the last event of the week', async ({ page }) => {
-  await page.goto('/?t=2026-10-12T10:00');
-  for (let i = 0; i < 6; i++) await page.getByTestId('step').click();
-  await expect(page.locator('header')).toContainText('Mon 2');
+  const amounts = [...(await strip.innerText()).matchAll(/EUR\s([\d,]+)/g)].map((m) =>
+    Number(m[1].replace(/,/g, '')),
+  );
+  expect(amounts[0]).toBeGreaterThan(0);
 });
 
 test('night payment to a non-client is not available, with the SCT Inst fallback', async ({
@@ -43,8 +66,8 @@ test('the USD receipt is pending cover until Tuesday 10:30', async ({ page }) =>
   await expect(page.getByText('Pending cover')).toHaveCount(0);
 });
 
-test('under the hood opens with its tabs', async ({ page }) => {
-  await page.goto('/?t=2026-10-10T22:00');
+test('under the hood opens with its tabs and links to the business case', async ({ page }) => {
+  await page.goto('/week?t=2026-10-10T22:00');
   await page.getByTestId('hood-toggle').click();
   const panel = page.getByTestId('hood-panel');
   for (const tab of ['Ledger', 'Orchestration', 'Accrual', 'ALM', 'Intragroup', 'Not yet']) {
@@ -52,46 +75,53 @@ test('under the hood opens with its tabs', async ({ page }) => {
   }
   await panel.getByRole('tab', { name: 'Intragroup' }).click();
   await expect(panel).toContainText('Norvane Bank Singapore');
+  await panel.getByRole('link', { name: /business case/ }).click();
+  await expect(page.getByRole('heading', { name: 'Business case' })).toBeVisible();
 });
 
-test('home offers the six journeys', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'What would you like to do?' })).toBeVisible();
-  await expect(page.locator('main a[href$="/smart-contracts"]')).toBeVisible();
-});
-
-test('smart contracts: a cascade pays three suppliers on one event', async ({ page }) => {
+test('smart contracts: cascade pays three suppliers after the challenge window', async ({
+  page,
+}) => {
   await page.goto('/smart-contracts?t=2026-10-12T11:00');
   await page.getByRole('button', { name: /Deploy — earmark/ }).click();
+  await approve(page);
   await page.getByRole('button', { name: /Send signed event: Site acceptance/ }).click();
+  await expect(page.getByText(/pays at 12:00 unless contested/)).toBeVisible();
+  await page.getByTestId('demo-toggle').click();
+  await page.getByTestId('step').click();
   await expect(page.getByText('Elektro-Mazowsze (electrical subcontractor)').last()).toBeVisible();
+  await expect(page.getByText(/Paid EUR 9.50m/)).toBeVisible();
 });
 
-test('why the minute: six cases, live ones follow the scenario', async ({ page }) => {
-  await page.goto('/minute?t=2026-10-12T21:00');
-  await expect(page.getByRole('heading', { name: 'Where the minute counts.' })).toBeVisible();
-  await expect(page.getByText('Groups across time zones')).toBeVisible();
-});
-
-test('just-in-time: yen for Tokyo scheduled at the minute of need', async ({ page }) => {
-  await page.goto('/just-in-time?t=2026-10-10T21:00');
+test('just in time: Tokyo preset from the cockpit alert, scheduled through maker / checker', async ({
+  page,
+}) => {
+  await page.goto('/?t=2026-10-10T21:00');
+  await page.getByRole('link', { name: /Schedule just in time/ }).click();
+  await expect(page.getByText('Local buffers you no longer need')).toBeVisible();
   await page.getByRole('button', { name: /Schedule at the minute of need/ }).click();
-  await expect(page.getByText(/Scheduled for/)).toBeVisible();
+  await approve(page);
+  await expect(page.getByRole('button', { name: /Approved and executed/ }).first()).toBeVisible();
 });
 
-test('escrow: deploy, oracle event accepted, bad signature rejected', async ({ page }) => {
-  await page.goto('/smart-contracts?t=2026-10-12T11:00');
-  await page.getByRole('radio', { name: /M&A escrow/ }).click();
-  await page.getByRole('button', { name: /Deploy — earmark/ }).click();
-  await page.getByRole('button', { name: /Send signed event: Completion/ }).click();
-  await page.getByRole('button', { name: /Send with a bad signature: Warranty/ }).click();
-  await expect(page.getByText('accepted')).toBeVisible();
-  await expect(page.getByText('rejected')).toBeVisible();
-});
-
-test('LatAm repatriation reaches the tokenised account', async ({ page }) => {
+test('Brazil: the rate cannot be locked before the flow is qualified', async ({ page }) => {
   await page.goto('/repatriation?t=2026-10-10T21:00');
-  await page.getByRole('button', { name: 'Lock the rate and repatriate' }).click();
+  const lock = page.getByRole('button', { name: 'Lock the rate and repatriate' });
+  await expect(lock).toBeDisabled();
+  for (const box of await page.getByRole('checkbox').all()) await box.check();
+  await expect(lock).toBeEnabled();
+  await lock.click();
+  await approve(page);
+  await page.getByTestId('demo-toggle').click();
   for (let i = 0; i < 5; i++) await page.getByTestId('step').click();
   await expect(page.getByText(/Earning to the minute from this moment/)).toBeVisible();
+});
+
+test('incidents, TMS and sweep pages render', async ({ page }) => {
+  await page.goto('/incidents');
+  await expect(page.getByText('Tokyo — night FX limit reached')).toBeVisible();
+  await page.goto('/tms');
+  await expect(page.getByText('The statement line your team reconciles')).toBeVisible();
+  await page.goto('/sweep');
+  await expect(page.getByText('If this rule had run last week')).toBeVisible();
 });

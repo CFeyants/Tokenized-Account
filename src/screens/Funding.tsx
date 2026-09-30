@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Check, ShieldCheck, Zap, CalendarClock } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { ApprovalButton } from '@/components/ApprovalButton';
+import { Check, ShieldCheck, Zap, CalendarClock, Repeat } from 'lucide-react';
 import { useApp, useSim } from '@/app/store';
 import { en } from '@/i18n/en';
-import { FX_MID, NIGHT_FX_LIMIT_EUR } from '@/data/rates';
+import { FX_MID, NIGHT_FX_LIMIT_EUR, RATES } from '@/data/rates';
 import {
   MIN_PER_DAY,
   SIM_END,
@@ -29,7 +31,7 @@ import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LayerTag, PageHeader, Row } from '@/components/Page';
 import { cn } from '@/lib/utils';
-import { LaterTag } from '@/components/Journey';
+import { HorizonTag, LaterTag } from '@/components/Journey';
 
 const F = en.funding;
 const M = 1_000_000;
@@ -142,21 +144,23 @@ const PRESETS: {
 
 export function JitTab() {
   const { t, state } = useSim();
-  const addAction = useApp((s) => s.addAction);
-  const setT = useApp((s) => s.setT);
-  const [p, setP] = useState(0);
-  const [to, setTo] = useState<JitTarget>(PRESETS[0].to);
-  const [need, setNeed] = useState<SimTime>(PRESETS[0].need);
-  const [amount, setAmount] = useState(PRESETS[0].amount);
-  const [source, setSource] = useState<'EUR' | 'USD'>(PRESETS[0].source);
-  const [done, setDone] = useState<string | null>(null);
+  const [params] = useSearchParams();
+  const wanted = params.get('preset') ?? '';
+  const first = Math.max(
+    0,
+    PRESETS.findIndex((x) => x.key.toLowerCase() === `preset${wanted}`),
+  );
+  const [p, setP] = useState(first);
+  const [to, setTo] = useState<JitTarget>(PRESETS[first].to);
+  const [need, setNeed] = useState<SimTime>(PRESETS[first].need);
+  const [amount, setAmount] = useState(PRESETS[first].amount);
+  const [source, setSource] = useState<'EUR' | 'USD'>(PRESETS[first].source);
+  const [, setDone] = useState<string | null>(null);
   const tgt = JIT_TARGET[to];
   const ccy = tgt.ccy as JitCcy;
   const execAt = Math.max(t, need - 5);
   const q = jitQuote(tgt.ccy, source, amount * M, execAt);
   const cmp = compareJit(ccy, amount * M, need, t);
-  const kept =
-    cmp.tradTradeAt === null ? 0 : ledgerOpportunity(amount * M, cmp.tradTradeAt, execAt);
   const limitLeft = Math.max(0, NIGHT_FX_LIMIT_EUR - state.fxNightUsed);
 
   const pick = (i: number) => {
@@ -188,6 +192,39 @@ export function JitTab() {
           </button>
         ))}
       </div>
+
+      <Card tone="new">
+        <CardHeader title={F.buffers.title} eyebrow={F.buffers.lead} />
+        <div className="grid grid-cols-4 gap-4">
+          {F.buffers.rows.map((b) => (
+            <div key={b.city} className="rounded-xl bg-surface-2 px-4 py-3">
+              <div className="text-[12.5px] text-muted">{b.city}</div>
+              <div className="mt-1 flex items-baseline gap-2">
+                <span className="tabular text-[17px] text-muted line-through">
+                  {fmtM(b.today * M, 'EUR', 0)}
+                </span>
+                <span className="tabular text-[20px] text-new">{fmtM(0, 'EUR', 0)}</span>
+              </div>
+              <div className="mt-1 text-[11.5px] text-muted">{b.risk}</div>
+            </div>
+          ))}
+          <div className="rounded-xl bg-new-soft px-4 py-3">
+            <div className="text-[12.5px] text-new">{F.buffers.total}</div>
+            <div className="tabular mt-1 font-serif text-[26px] text-new">
+              {fmtM(F.buffers.rows.reduce((a, b) => a + b.today, 0) * M, 'EUR', 0)}
+            </div>
+            <div className="text-[11.5px] text-muted">
+              {F.buffers.perYear(
+                fmtEur(
+                  F.buffers.rows.reduce((a, b) => a + b.today, 0) * M * RATES.overnightUnit,
+                  'EUR',
+                  0,
+                ),
+              )}
+            </div>
+          </div>
+        </div>
+      </Card>
 
       <Card>
         <CardHeader title={F.hoursTitle} />
@@ -255,34 +292,45 @@ export function JitTab() {
           <Row k={F.need} v={formatDateTime(need)} className="mt-3" />
           <p className="mt-1 text-[11.5px] text-muted">{F.limitLeft(fmtM(limitLeft, 'EUR', 0))}</p>
           <div className="mt-5 grid grid-cols-1 gap-2">
-            <Button
-              variant="secondary"
-              onClick={() => {
-                addAction({ kind: 'jit', to, source, amountEur: amount * M });
-                setDone(F.done);
-              }}
-            >
-              <Zap /> {F.execNow}
-            </Button>
-            <Button
-              variant="primary"
+            <ApprovalButton
               disabled={need - 5 <= t}
-              onClick={() => {
-                addAction({ kind: 'jit', to, source, amountEur: amount * M }, need - 5);
-                setDone(F.scheduled(formatDateTime(need - 5)));
+              request={{
+                title: F.approvalSchedule(JIT_TARGET[to].bank, formatDateTime(need - 5)),
+                detail: F.approvalDetail(tgt.ccy, source),
+                amountEur: amount * M,
+                action: { kind: 'jit', to, source, amountEur: amount * M },
+                at: need - 5,
               }}
             >
               <CalendarClock /> {F.schedule}
-            </Button>
+            </ApprovalButton>
+            <ApprovalButton
+              variant="secondary"
+              request={{
+                title: F.approvalNow(JIT_TARGET[to].bank),
+                detail: F.approvalDetail(tgt.ccy, source),
+                amountEur: amount * M,
+                action: { kind: 'jit', to, source, amountEur: amount * M },
+              }}
+            >
+              <Zap /> {F.execNow}
+            </ApprovalButton>
+            <ApprovalButton
+              variant="new"
+              request={{
+                title: F.ruleTitle(JIT_TARGET[to].bank),
+                detail: F.ruleDetail(tgt.ccy, source),
+                amountEur: amount * M,
+                rule: {
+                  kind: 'jit',
+                  name: F.ruleTitle(JIT_TARGET[to].bank),
+                  params: F.ruleParams(tgt.ccy, source, fmtM(amount * M, 'EUR', 0)),
+                },
+              }}
+            >
+              <Repeat /> {F.setRule}
+            </ApprovalButton>
           </div>
-          {done && (
-            <p className="mt-3 flex items-center gap-2 text-[12.5px] text-new">
-              <Check className="size-3.5" /> {done}
-              <button type="button" className="cursor-pointer underline" onClick={() => setT(need)}>
-                {formatDateTime(need)}
-              </button>
-            </p>
-          )}
         </Card>
 
         <Card tone="new" className="col-span-12 md:col-span-6 xl:col-span-4">
@@ -291,7 +339,6 @@ export function JitTab() {
             <li>{F.ledgerExec(formatDateTime(execAt))}</li>
             <li className="text-muted">{F.rate(q.rate.toFixed(ccy === 'JPY' ? 2 : 4), q.bps)}</li>
             <li>{F.credited(`${tgt.ccy} ${fmtAmount(q.foreign)}`)}</li>
-            <li className="text-new">{F.keepsEarning(fmtEur(kept))}</li>
             <li className="text-muted">{F.subEarns}</li>
           </ul>
           <div className="mt-4 text-[12px] text-muted">{F.closedAtNeed}</div>
@@ -342,40 +389,12 @@ export function JitTab() {
 export function LargeTab() {
   const { t, state } = useSim();
   const addAction = useApp((s) => s.addAction);
-  const [running, setRunning] = useState<string | null>(null);
-  const [shown, setShown] = useState(0);
   const L = F.large;
   const presets = [
     { key: 'equipment' as const, onLedger: false },
     { key: 'mna' as const, onLedger: false },
   ];
   const checks = (cat: 'equipment' | 'mna', onLedger: boolean) => en.adv.preChecks(cat, onLedger);
-
-  const run = (key: 'equipment' | 'mna', onLedger: boolean) => {
-    setRunning(key);
-    setShown(0);
-    const n = checks(key, onLedger).length;
-    let i = 0;
-    const tick = () => {
-      i += 1;
-      setShown(i);
-      if (i < n) setTimeout(tick, 160);
-      else {
-        const x = L[key];
-        addAction({
-          kind: 'prevalidate',
-          category: key,
-          payee: x.payee,
-          amount: x.amount * M,
-          condition: x.condition,
-          onLedger,
-        });
-        setTimeout(() => setRunning(null), 400);
-      }
-    };
-    setTimeout(tick, 160);
-  };
-
   const list = state.conditional.filter((c) => c.kind === 'large');
 
   return (
@@ -383,42 +402,55 @@ export function LargeTab() {
       <div className="col-span-12 space-y-6 xl:col-span-5">
         {presets.map(({ key, onLedger }) => {
           const x = L[key];
+          const done = list.some((c) => c.payee === x.payee);
           return (
-            <Card key={key} tone={onLedger ? 'new' : 'default'}>
-              <CardHeader eyebrow={L.presetsTitle} title={x.title} />
+            <Card key={key}>
+              <CardHeader
+                eyebrow={L.presetsTitle}
+                title={x.title}
+                aside={<HorizonTag id="prevalidation" />}
+              />
               <Row k={en.payments.payee} v={x.payee} />
               <Row k={en.guarantees.releaseOn} v={x.condition} />
-              <Row k="Bank" v={x.bank} />
+              <Row k={L.bankLabel} v={x.bank} />
               <Row k={en.guarantees.amount} v={fmtM(x.amount * M, 'EUR', 0)} />
-              {running === key && (
-                <ul className="mt-3 space-y-1.5">
-                  {checks(key, onLedger)
-                    .slice(0, shown)
-                    .map(([name, detail]) => (
-                      <li key={name} className="flex items-start gap-2 text-[12.5px]">
-                        <Check className="mt-0.5 size-3.5 shrink-0 text-new" />
-                        <span>
-                          <span className="text-fg">{name}</span>{' '}
-                          <span className="text-muted">— {detail}</span>
-                        </span>
-                      </li>
-                    ))}
-                </ul>
-              )}
-              <Button
+              <div className="mt-3 text-[12px] text-muted">{L.checksToday}</div>
+              <ul className="mt-1.5 space-y-1">
+                {checks(key, onLedger).map(([name, detail]) => (
+                  <li key={name} className="flex items-start gap-2 text-[12px]">
+                    <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-muted" />
+                    <span>
+                      <span className="text-fg">{name}</span>{' '}
+                      <span className="text-muted">— {detail}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <ApprovalButton
                 className="mt-4 w-full"
-                variant="primary"
-                disabled={running !== null}
-                onClick={() => run(key, onLedger)}
+                disabled={done}
+                request={{
+                  title: L.approvalTitle(x.title),
+                  detail: L.approvalDetail(x.condition),
+                  amountEur: x.amount * M,
+                  action: {
+                    kind: 'prevalidate',
+                    category: key,
+                    payee: x.payee,
+                    amount: x.amount * M,
+                    condition: x.condition,
+                    onLedger,
+                  },
+                }}
               >
-                <ShieldCheck /> {running === key ? L.checking : L.prevalidate}
-              </Button>
+                <ShieldCheck /> {L.prevalidate}
+              </ApprovalButton>
             </Card>
           );
         })}
       </div>
       <Card className="col-span-12 xl:col-span-7">
-        <CardHeader title={L.list} aside={<LayerTag layer="new" />} />
+        <CardHeader title={L.list} aside={<HorizonTag id="prevalidation" />} />
         {list.length === 0 ? (
           <p className="text-[13px] text-muted">{L.none}</p>
         ) : (
@@ -487,7 +519,10 @@ export function LargeTab() {
         <div className="mt-5 rounded-xl border border-dashed border-line-strong p-4">
           <div className="flex items-center justify-between gap-3">
             <span className="text-[13px] font-medium">{L.laterTitle}</span>
-            <LaterTag />
+            <span className="flex gap-1.5">
+              <HorizonTag id="prevalidationLedger" />
+              <LaterTag />
+            </span>
           </div>
           <p className="mt-1 text-[12.5px] text-muted">{L.laterText}</p>
         </div>

@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { useSim } from '@/app/store';
+import { useCounters, useSim } from '@/app/store';
 import { en } from '@/i18n/en';
 import { RATES } from '@/data/rates';
-import { integrateMinutes } from '@/engine/accrual';
 import { fmtEur, fmtM, fmtPct } from '@/engine/format';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,18 +14,14 @@ const A = en.accountSummary;
 
 /** The tokenised account at this minute: where the money is and what it has earned this week. */
 export function AccountSummary() {
-  const { t, tl, state } = useSim();
+  const { t, state } = useSim();
   const inUnits = state.units.filter((u) => u.currency === 'EUR');
   const unitTotal = inUnits.filter((u) => !u.blocked).reduce((a, u) => a + u.amount, 0);
   const flagged = inUnits.filter((u) => u.blocked).reduce((a, u) => a + u.amount, 0);
-  const earned = integrateMinutes(
-    tl.snaps,
-    0,
-    t,
-    (s) =>
-      (Math.max(0, s.bal['tok-paris']) + s.blocked + s.earmarked) * RATES.tokenised +
-      s.units.filter((u) => u.currency === 'EUR').reduce((a, u) => a + u.amount * u.rate, 0),
-  );
+  // One engine: the same figure as "Interest — with the ledger" in the week counters.
+  const c = useCounters();
+  const earned = c.newTotal;
+  const onLedger = c.newParts.tokenised + c.newParts.units;
   return (
     <Card tone="new" className="grid grid-cols-12 items-center gap-6">
       <div className="col-span-12 flex items-center gap-5 xl:col-span-4">
@@ -43,7 +38,8 @@ export function AccountSummary() {
           >
             <Animated value={earned} format={(v) => fmtEur(v)} />
           </div>
-          <div className="mt-1 text-[12px] text-muted">
+          <div className="mt-1 text-[12px] text-muted">{A.split(fmtEur(onLedger, 'EUR', 0))}</div>
+          <div className="text-[12px] text-muted">
             {A.rates(fmtPct(RATES.tokenised), fmtPct(RATES.current), fmtPct(RATES.overnightUnit))}
           </div>
         </div>

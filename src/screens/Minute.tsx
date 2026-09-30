@@ -439,6 +439,7 @@ export function Minute() {
               ))}
             </tbody>
           </table>
+          <p className="mt-3 text-[12.5px] leading-relaxed text-muted">{C.zones.note}</p>
         </CaseCard>
       </div>
     </div>
