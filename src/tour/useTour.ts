@@ -26,7 +26,12 @@ export const useTour = create<TourState>((set, get) => ({
   start: (kind) => {
     // A clean week: the scenario, the tour's own actions, the seeded requests.
     useGov.getState().reset();
-    useApp.setState({ actions: [...TOUR_ACTIONS], playing: false, demoMode: false });
+    useApp.setState({
+      actions: [...TOUR_ACTIONS],
+      playing: false,
+      demoMode: false,
+      frameworks: { dividend: true },
+    });
     set({ active: true, kind, index: 0, started: true });
   },
   go: (index) =>

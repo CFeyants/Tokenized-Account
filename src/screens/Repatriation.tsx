@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { ArrowRight, Check, Landmark, Lock, Wallet } from 'lucide-react';
-import { useSim } from '@/app/store';
+import { useApp, useSim } from '@/app/store';
+import { Link } from 'react-router-dom';
+import { brazilValue, type Frequency } from '@/engine/brazilValue';
 import { en } from '@/i18n/en';
 import { CORRIDOR_PRICING, LATAM, MASTER_ADDRESS, WALLET_ADDRESS } from '@/data/corridors';
 import { entityById } from '@/data/entities';
-import { FX_MID, RATES } from '@/data/rates';
+import { FX_MID } from '@/data/rates';
 import { ApprovalButton } from '@/components/ApprovalButton';
 
 type FlowKind = 'dividend' | 'loan' | 'royalties';
@@ -35,13 +37,13 @@ export function Repatriation() {
   const local = Math.max(0, (balance * share) / 100);
   const q = repatriationQuote(cfg, local);
   const needed = [...P.qualify.flows[flow].docs, ...P.qualify.common];
-  const qualified = needed.every((d) => docs[d]);
-  const gross = local / FX_MID[cfg.currency];
-  const gap = {
-    spread: (gross * (CORRIDOR_PRICING.tradBps - CORRIDOR_PRICING.partnerBps)) / 10_000,
-    fees: CORRIDOR_PRICING.tradFeesEur - CORRIDOR_PRICING.networkFeeEur,
-    days: (gross * RATES.overnightUnit * CORRIDOR_PRICING.tradValueDays) / 360,
-  };
+  const ticked = needed.every((d) => docs[d]);
+  const frameworks = useApp((s) => s.frameworks);
+  const qualifyFramework = useApp((s) => s.qualifyFramework);
+  const [frequency, setFrequency] = useState<Frequency>('monthly');
+  const [loanFramework, setLoanFramework] = useState(false);
+  const value = brazilValue(q.eur, frequency);
+  const iofAlert = frequency === 'weekly' && !loanFramework;
   const digits = cfg.currency === 'COP' || cfg.currency === 'CLP' ? 0 : 4;
   const mine = state.repatriations.filter((r) => r.country === country);
   const last = mine[mine.length - 1];
@@ -158,24 +160,84 @@ export function Repatriation() {
               </Button>
             ))}
           </div>
-          <ul className="mt-4 space-y-1.5">
-            {[...P.qualify.flows[flow].docs, ...P.qualify.common].map((d) => (
-              <li key={d}>
-                <label className="flex cursor-pointer items-start gap-2 text-[12.5px]">
-                  <input
-                    type="checkbox"
-                    className="mt-0.5 accent-[var(--new)]"
-                    checked={!!docs[d]}
-                    onChange={(e) => setDocs({ ...docs, [d]: e.target.checked })}
-                  />
-                  <span>{d}</span>
-                </label>
-              </li>
+          {frameworks[flow] ? (
+            <details className="mt-4 rounded-xl bg-new-soft px-4 py-3 text-[12.5px]">
+              <summary className="cursor-pointer font-medium text-new">{P.qualify.done}</summary>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-muted">
+                {needed.map((d) => (
+                  <li key={d}>{d}</li>
+                ))}
+              </ul>
+            </details>
+          ) : (
+            <>
+              <ul className="mt-4 space-y-1.5">
+                {needed.map((d) => (
+                  <li key={d}>
+                    <label className="flex cursor-pointer items-start gap-2 text-[12.5px]">
+                      <input
+                        type="checkbox"
+                        className="mt-0.5 accent-[var(--new)]"
+                        checked={!!docs[d]}
+                        onChange={(e) => setDocs({ ...docs, [d]: e.target.checked })}
+                      />
+                      <span>{d}</span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+              <Button
+                size="sm"
+                variant="new"
+                className="mt-3"
+                disabled={!ticked}
+                onClick={() => qualifyFramework(flow)}
+              >
+                {P.qualify.qualifyOnce}
+              </Button>
+            </>
+          )}
+          <Link to="/pre-validation" className="mt-3 block text-[12px] text-new hover:underline">
+            {P.qualify.corridor} →
+          </Link>
+
+          <div
+            className="mt-5 flex items-center gap-2 text-[12.5px]"
+            role="radiogroup"
+            aria-label={P.freq.title}
+          >
+            <span className="text-muted">{P.freq.title}</span>
+            {(['monthly', 'weekly'] as Frequency[]).map((f) => (
+              <Button
+                key={f}
+                size="sm"
+                role="radio"
+                aria-checked={frequency === f}
+                variant={frequency === f ? 'new' : 'secondary'}
+                onClick={() => setFrequency(f)}
+              >
+                {P.freq[f]}
+              </Button>
             ))}
-          </ul>
-          <p className={cn('mt-2 text-[12px]', qualified ? 'text-new' : 'text-muted')}>
-            {qualified ? P.qualify.ready : P.qualify.pending}
-          </p>
+          </div>
+          <label className="mt-2 flex cursor-pointer items-center gap-2 text-[12.5px]">
+            <input
+              type="checkbox"
+              className="accent-[var(--new)]"
+              checked={loanFramework}
+              onChange={(e) => setLoanFramework(e.target.checked)}
+            />
+            {P.freq.loanFramework}
+          </label>
+          {iofAlert && (
+            <div
+              role="alert"
+              className="mt-2 rounded-xl border border-red/40 bg-red/10 px-3 py-2 text-[12.5px] text-red"
+            >
+              {P.freq.iofAlert(fmtEur(value.iofShortLoanYear, 'EUR', 0))}
+            </div>
+          )}
+          <p className="mt-1 text-[11.5px] text-muted">{P.freq.iofRates}</p>
 
           <div className="mb-2 mt-5 flex justify-between text-[12.5px]">
             <span className="text-muted">{L.share}</span>
@@ -193,23 +255,59 @@ export function Repatriation() {
           />
           <div className="mt-5 rounded-xl bg-surface-2 px-4 py-2">
             <Row k={L.rate} v={q.rate.toFixed(digits)} />
-            <Row k={L.fees} v={fmtEur(q.fee)} />
+            <Row k={P.fees} v={fmtEur(q.fee)} />
             <Row k={L.receive} v={<span className="text-[16px] text-new">{fmtEur(q.eur)}</span>} />
           </div>
-          <div className="mt-3 rounded-xl border border-line px-4 py-2 text-[12.5px]">
-            <div className="py-1 font-medium">{P.gap.title}</div>
-            <Row k={P.gap.spread} v={fmtEur(gap.spread, 'EUR', 0)} />
-            <Row k={P.gap.fees} v={fmtEur(gap.fees, 'EUR', 0)} />
-            <Row k={P.gap.days} v={fmtEur(gap.days, 'EUR', 0)} />
-            <Row
-              k={<span className="text-fg">{P.gap.total}</span>}
-              v={
-                <span className="text-new">
-                  {fmtEur(gap.spread + gap.fees + gap.days, 'EUR', 0)}
-                </span>
-              }
-              className="border-t border-line"
-            />
+
+          <div className="mt-4 rounded-xl border border-line px-4 py-3 text-[12.5px]">
+            <div className="font-medium">
+              {P.value.title(fmtM(value.volume, 'EUR', 0), value.ops)}
+            </div>
+            <table className="mt-2 w-full">
+              <tbody>
+                {[
+                  [
+                    'spread',
+                    `${fmtEur(value.spread[0], 'EUR', 0)} – ${fmtEur(value.spread[1], 'EUR', 0)}`,
+                    'gain',
+                  ],
+                  [
+                    'days',
+                    `${fmtEur(value.valueDaysOp, 'EUR', 0)} · ${fmtEur(value.valueDaysFridayOp, 'EUR', 0)}`,
+                    'gain',
+                  ],
+                  ['exposure', `≈ ${fmtEur(value.exposure1Sigma, 'EUR', 0)}`, 'risk'],
+                  [
+                    'frequency',
+                    `${fmtM(value.avgExposure.monthly)} → ${fmtM(value.avgExposure.weekly)}`,
+                    'risk',
+                  ],
+                  ['carry', `≈ ${fmtEur(value.carryPerDay, 'EUR', 0)}`, 'cost'],
+                  ['iof', fmtEur(value.iofShortLoanYear, 'EUR', 0), 'guard'],
+                ].map(([k, v, nature]) => (
+                  <tr key={k} className="border-t border-line align-top first:border-0">
+                    <td className="py-1.5 pr-2">{P.value.rows[k as keyof typeof P.value.rows]}</td>
+                    <td className="tabular whitespace-nowrap py-1.5 pr-2 text-right">{v}</td>
+                    <td className="py-1.5 text-right">
+                      <Chip
+                        tone={
+                          nature === 'gain'
+                            ? 'new'
+                            : nature === 'risk'
+                              ? 'amber'
+                              : nature === 'cost'
+                                ? 'red'
+                                : 'outside'
+                        }
+                      >
+                        {P.value.nature[nature as keyof typeof P.value.nature]}
+                      </Chip>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="mt-3 rounded-lg bg-surface-2 px-3 py-2 font-medium">{P.value.message}</p>
           </div>
           <p className="mt-3 flex items-start gap-1.5 text-[12px] text-muted">
             <Lock className="mt-0.5 size-3.5 shrink-0" />
@@ -218,7 +316,7 @@ export function Repatriation() {
           <ApprovalButton
             className="mt-4 w-full"
             size="lg"
-            disabled={local <= 0 || !qualified}
+            disabled={local <= 0 || !frameworks[flow]}
             request={{
               title: P.approvalTitle(
                 P.qualify.flows[flow].label,

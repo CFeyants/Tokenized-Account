@@ -59,11 +59,7 @@ export function ValueBanner() {
         label={V.buffers}
         main={fmtM(v.buffers, 'EUR', 0)}
         sub={V.buffersSub(fmtEur(v.buffersInterest, 'EUR', 0))}
-        tip={V.buffersTip(
-          p.farSubsidiaries,
-          fmtM(p.bufferPerSub, 'EUR', 0),
-          fmtPct(A.redeployRate),
-        )}
+        tip={V.buffersTip(p.farSubsidiaries, fmtM(p.buffers, 'EUR', 0), fmtPct(A.redeployRate))}
       />
       <Col
         label={V.hours}

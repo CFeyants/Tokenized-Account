@@ -21,6 +21,11 @@ const BANNED = [/blockchain/i, /crypto/i, /\btokens?\b/i];
  */
 const SCOPED = [/wallet/i, /smart contract/i, /stablecoin/i];
 const SCOPED_SECTIONS = [
+  'tour',
+  'incidents',
+  'bc',
+  'funding',
+  'sweep',
   'adv',
   'corridors',
   'escrow',

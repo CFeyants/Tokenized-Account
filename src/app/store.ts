@@ -28,6 +28,9 @@ interface AppState {
   demoMode: boolean;
   toggleDemo: () => void;
   profile: ProfileId;
+  /** Repatriation frameworks qualified once (dividend, loan repayment, royalties). */
+  frameworks: Record<string, boolean>;
+  qualifyFramework: (flow: string) => void;
   setProfile: (p: ProfileId) => void;
   railExpanded: boolean;
   setT: (t: SimTime) => void;
@@ -101,6 +104,8 @@ export const useApp = create<AppState>((set, get) => ({
     set({ demoMode: v, playing: false });
   },
   profile: read<ProfileId>('tcm.profile', 'large'),
+  frameworks: {},
+  qualifyFramework: (flow) => set({ frameworks: { ...get().frameworks, [flow]: true } }),
   setProfile: (profile) => {
     write('tcm.profile', profile);
     set({ profile });

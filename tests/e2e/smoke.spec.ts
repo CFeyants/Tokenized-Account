@@ -108,7 +108,8 @@ test('Brazil: the rate cannot be locked before the flow is qualified', async ({ 
   await page.goto('/repatriation?t=2026-10-10T21:00');
   const lock = page.getByRole('button', { name: 'Lock the rate and repatriate' });
   await expect(lock).toBeDisabled();
-  for (const box of await page.getByRole('checkbox').all()) await box.check();
+  for (const box of await page.locator('ul input[type=checkbox]').all()) await box.check();
+  await page.getByRole('button', { name: 'Qualify this framework, once' }).click();
   await expect(lock).toBeEnabled();
   await lock.click();
   await approve(page);

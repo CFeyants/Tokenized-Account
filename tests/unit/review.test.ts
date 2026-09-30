@@ -17,14 +17,24 @@ describe('business case', () => {
 
   it('value comes from buffers, hours and failures — not from interest to the minute', () => {
     const v = clientValue(PROFILES.large);
-    expect(v.buffers).toBe(40e6);
+    expect(v.buffers).toBe(19e6);
     expect(v.total).toBeCloseTo(v.buffersInterest + v.hoursValue + v.failuresValue, 6);
   });
 
-  it('the bank view shows the margin the overnight unit costs', () => {
+  it('the bank view: units cost margin, defended deposits are the main line, night FX shown apart', () => {
     const b = bankView(PROFILES.large);
-    expect(b.niiDelta).toBeLessThan(0);
-    expect(b.net).toBeCloseTo(b.niiDelta + b.subscriptions + b.nightFx - b.cannibalisation, 6);
+    const line = (k: string) => b.lines.find((l) => l.key === k)!.value;
+    expect(line('unitCost')).toBeLessThan(0);
+    expect(line('defended')).toBeGreaterThan(line('fees'));
+    expect(b.net).toBeCloseTo(b.netWithout + b.nightFx, 6);
+    expect(b.captured).toBeGreaterThan(0);
+    expect(b.lcr.hqlaSaved).toBeGreaterThan(0);
+  });
+
+  it('the multi-country net no longer rests on night FX', () => {
+    const b = bankView(PROFILES.multi);
+    expect(b.nightFx).toBeLessThan(Math.abs(b.netWithout) + b.netWithout + 1e9);
+    expect(b.nightFx / Math.max(1, Math.abs(b.net))).toBeLessThan(1);
   });
 });
 
