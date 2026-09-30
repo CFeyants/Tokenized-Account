@@ -57,6 +57,7 @@ function EventToast() {
   const { t, tl } = useSim();
   const [shown, setShown] = useState<string | null>(null);
   const lastId = useRef<string | null>(null);
+  const mountedAt = useRef(performance.now());
   const passed = tl.events.filter((e) => e.t <= t && e.kind !== 'auto');
   const latest = passed[passed.length - 1];
 
@@ -64,7 +65,7 @@ function EventToast() {
     if (!latest || latest.id === lastId.current) return;
     const firstRender = lastId.current === null;
     lastId.current = latest.id;
-    if (firstRender || t - latest.t > 90) return; // do not pop old events when jumping far
+    if (firstRender || t - latest.t > 90 || performance.now() - mountedAt.current < 1500) return; // do not pop old events when jumping far
     setShown(latest.id);
     const h = setTimeout(() => setShown((s) => (s === latest.id ? null : s)), 5200);
     return () => clearTimeout(h);
