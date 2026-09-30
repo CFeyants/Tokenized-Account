@@ -25,14 +25,20 @@ const shots = [
 
 const browser = await chromium.launch();
 for (const s of shots) {
-  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
+  const ctx = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    deviceScaleFactor: 1,
+  });
   await ctx.addInitScript((theme) => {
     localStorage.setItem('tcm.banner', 'true');
     localStorage.setItem('tcm.theme', JSON.stringify(theme));
   }, s.theme ?? 'dark');
   const page = await ctx.newPage();
   page.on('pageerror', (e) => console.error(`[${s.name}] page error:`, e.message));
-  page.on('console', (m) => m.type() === 'error' && console.error(`[${s.name}] console:`, m.text()));
+  page.on(
+    'console',
+    (m) => m.type() === 'error' && console.error(`[${s.name}] console:`, m.text()),
+  );
   await page.goto(base + s.path, { waitUntil: 'networkidle' });
   if (s.hood) await page.getByTestId('hood-toggle').click();
   await page.waitForTimeout(700);

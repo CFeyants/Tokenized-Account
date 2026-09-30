@@ -74,7 +74,12 @@ export function minutesWhere<S>(
  * Daily convention: for every calendar day completed by t, the end-of-day balance (as it stands
  * at 23:59) × rate / 360. `weight` returns Σ balance × rate. Days before `firstDay` are ignored.
  */
-export function integrateEod<S>(snaps: Snapshot<S>[], t: SimTime, weight: (s: S) => number, firstDay = 0): number {
+export function integrateEod<S>(
+  snaps: Snapshot<S>[],
+  t: SimTime,
+  weight: (s: S) => number,
+  firstDay = 0,
+): number {
   let total = 0;
   for (let d = firstDay; (d + 1) * MIN_PER_DAY <= t; d++) {
     const eod = snapshotAt(snaps, (d + 1) * MIN_PER_DAY - 1e-6).state;

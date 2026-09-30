@@ -40,9 +40,11 @@ function useIntraday(id: AccountId): IntradayPoint[] {
   return useMemo(() => {
     const start = day * MIN_PER_DAY;
     const pts: IntradayPoint[] = [];
-    for (let m = start; m <= minute; m += 5) pts.push({ m: m - start, total: totalOf(snapshotAt(tl.snaps, m).state, id) });
+    for (let m = start; m <= minute; m += 5)
+      pts.push({ m: m - start, total: totalOf(snapshotAt(tl.snaps, m).state, id) });
     // Exact points at every event of the day, so the steps land on the right minute.
-    for (const s of tl.snaps) if (s.t >= start && s.t <= minute) pts.push({ m: s.t - start, total: totalOf(s.state, id) });
+    for (const s of tl.snaps)
+      if (s.t >= start && s.t <= minute) pts.push({ m: s.t - start, total: totalOf(s.state, id) });
     pts.push({ m: minute - start, total: totalOf(snapshotAt(tl.snaps, minute).state, id) });
     return pts.sort((a, b) => a.m - b.m);
   }, [tl, id, day, minute]);
@@ -51,7 +53,13 @@ function useIntraday(id: AccountId): IntradayPoint[] {
 function Movements({ id }: { id: string }) {
   const { t, tl } = useSim();
   const start = dayIndex(t) * MIN_PER_DAY;
-  const rows = tl.ledger.filter((l) => (l.account === id || l.account === `${id}:blocked`) && l.t >= start && l.t <= t && l.amount !== 0);
+  const rows = tl.ledger.filter(
+    (l) =>
+      (l.account === id || l.account === `${id}:blocked`) &&
+      l.t >= start &&
+      l.t <= t &&
+      l.amount !== 0,
+  );
   return (
     <Card>
       <CardHeader title={A.movements} eyebrow={formatDate(t)} />
@@ -68,7 +76,9 @@ function Movements({ id }: { id: string }) {
                   {l.amount > 0 ? '+' : ''}
                   {fmtAmount(l.amount)}
                 </td>
-                <td className="py-2 pl-3 text-[11.5px] text-muted">{l.account.endsWith(':blocked') ? A.subBlocked.toLowerCase() : l.finality}</td>
+                <td className="py-2 pl-3 text-[11.5px] text-muted">
+                  {l.account.endsWith(':blocked') ? A.subBlocked.toLowerCase() : l.finality}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -87,9 +97,19 @@ function TokenisedPage({ id }: { id: AccountId }) {
   const free = state.bal[id];
   const blocked = id === 'tok-paris' ? state.blocked : 0;
   const inUnit = units.reduce((a, u) => a + u.amount, 0);
-  const onAccount = integrateMinutes(tl.snaps, 0, t, (s) => (Math.max(0, s.bal[id]) + (id === 'tok-paris' ? s.blocked : 0)) * RATES.tokenised) / fx;
-  const inUnits = integrateMinutes(tl.snaps, 0, t, (s) => unitsOf(s, id).reduce((a, u) => a + u.amount * u.rate, 0)) / fx;
-  const debit = integrateMinutes(tl.snaps, 0, t, (s) => Math.max(0, -s.bal[id]) * RATES.intradayDebit) / fx;
+  const onAccount =
+    integrateMinutes(
+      tl.snaps,
+      0,
+      t,
+      (s) => (Math.max(0, s.bal[id]) + (id === 'tok-paris' ? s.blocked : 0)) * RATES.tokenised,
+    ) / fx;
+  const inUnits =
+    integrateMinutes(tl.snaps, 0, t, (s) =>
+      unitsOf(s, id).reduce((a, u) => a + u.amount * u.rate, 0),
+    ) / fx;
+  const debit =
+    integrateMinutes(tl.snaps, 0, t, (s) => Math.max(0, -s.bal[id]) * RATES.intradayDebit) / fx;
   const data = useIntraday(id);
 
   return (
@@ -111,9 +131,45 @@ function TokenisedPage({ id }: { id: AccountId }) {
             }
           />
           <div className="grid grid-cols-3 gap-6">
-            <Stat label={A.subFree} value={<span className={cn(free < 0 && 'text-red')}>{def.currency} {numM(free, 2)}m</span>} tone="new" sub={A.toMinute(fmtPct(free < 0 ? RATES.intradayDebit : RATES.tokenised))} />
-            <Stat label={<span className="flex items-center gap-1">{A.subBlocked}<InfoTip content={en.tips.blockedEarns} /></span>} value={<span>{def.currency} {numM(blocked, 2)}m</span>} sub={blocked > 0 ? A.blockedSub : A.none} />
-            <Stat label={<span className="flex items-center gap-1">{A.subInUnit}<InfoTip content={en.tips.lateCash} /></span>} value={<span>{def.currency} {numM(inUnit, 2)}m</span>} tone="amber" sub={units.length ? units.map((u) => u.tenor).join(', ') : A.none} />
+            <Stat
+              label={A.subFree}
+              value={
+                <span className={cn(free < 0 && 'text-red')}>
+                  {def.currency} {numM(free, 2)}m
+                </span>
+              }
+              tone="new"
+              sub={A.toMinute(fmtPct(free < 0 ? RATES.intradayDebit : RATES.tokenised))}
+            />
+            <Stat
+              label={
+                <span className="flex items-center gap-1">
+                  {A.subBlocked}
+                  <InfoTip content={en.tips.blockedEarns} />
+                </span>
+              }
+              value={
+                <span>
+                  {def.currency} {numM(blocked, 2)}m
+                </span>
+              }
+              sub={blocked > 0 ? A.blockedSub : A.none}
+            />
+            <Stat
+              label={
+                <span className="flex items-center gap-1">
+                  {A.subInUnit}
+                  <InfoTip content={en.tips.lateCash} />
+                </span>
+              }
+              value={
+                <span>
+                  {def.currency} {numM(inUnit, 2)}m
+                </span>
+              }
+              tone="amber"
+              sub={units.length ? units.map((u) => u.tenor).join(', ') : A.none}
+            />
           </div>
           <div className="mt-7">
             <div className="mb-2 flex items-center justify-between">
@@ -124,23 +180,44 @@ function TokenisedPage({ id }: { id: AccountId }) {
           </div>
         </Card>
         <Card className="col-span-12 flex flex-col xl:col-span-4">
-          <CardHeader eyebrow={A.accrued} title={<span className="flex items-center gap-2">{A.accrued}<InfoTip content={en.tips.tokRate} /></span>} />
+          <CardHeader
+            eyebrow={A.accrued}
+            title={
+              <span className="flex items-center gap-2">
+                {A.accrued}
+                <InfoTip content={en.tips.tokRate} />
+              </span>
+            }
+          />
           <div className="flex items-center gap-4">
             <MinuteRing size={64} progress={(t % 60) / 60}>
               <span className="tabular text-[11px] text-muted">{hhmm(t).slice(3)}</span>
             </MinuteRing>
-            <div className="tabular font-serif text-[40px] leading-none text-new" aria-live="polite">
+            <div
+              className="tabular font-serif text-[40px] leading-none text-new"
+              aria-live="polite"
+            >
               <Animated value={onAccount + inUnits - debit} format={(v) => fmtEur(v)} />
             </div>
           </div>
           <div className="mt-6 border-t border-line pt-3">
             <Row k={A.accruedTok} v={fmtEur(onAccount)} />
             <Row k={A.accruedUnits} v={fmtEur(inUnits)} />
-            {debit > 0 && <Row k={en.counters.jitTitle} v={<span className="text-red">−{fmtEur(debit)}</span>} />}
+            {debit > 0 && (
+              <Row
+                k={en.counters.jitTitle}
+                v={<span className="text-red">−{fmtEur(debit)}</span>}
+              />
+            )}
             <Row k={A.rate} v={A.vsCurrent(fmtPct(RATES.tokenised), fmtPct(RATES.current))} />
           </div>
           <p className="mt-4 text-[12.5px] leading-relaxed text-muted">{en.tips.tokRate}</p>
-          <Button variant="ghost" size="sm" className="mt-auto -ml-3 self-start" onClick={() => openHood('accrual', id)}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mt-auto -ml-3 self-start"
+            onClick={() => openHood('accrual', id)}
+          >
             <Wrench /> {en.hood.accrualTitle}
           </Button>
         </Card>
@@ -153,10 +230,21 @@ function TokenisedPage({ id }: { id: AccountId }) {
               {units.map((u) => (
                 <tr key={u.id} className="border-b border-line last:border-0">
                   <td className="py-2 font-mono text-[12px]">{u.id}</td>
-                  <td className="py-2">{u.tenor}{u.blocked && <Chip tone="new" className="ml-2">{A.subBlocked.toLowerCase()}</Chip>}</td>
-                  <td className="tabular py-2 text-right">{u.currency} {fmtAmount(u.amount)}</td>
+                  <td className="py-2">
+                    {u.tenor}
+                    {u.blocked && (
+                      <Chip tone="new" className="ml-2">
+                        {A.subBlocked.toLowerCase()}
+                      </Chip>
+                    )}
+                  </td>
+                  <td className="tabular py-2 text-right">
+                    {u.currency} {fmtAmount(u.amount)}
+                  </td>
                   <td className="tabular py-2 text-right text-amber">{fmtPct(u.rate)}</td>
-                  <td className="tabular py-2 text-right text-muted">→ {formatDateTime(u.maturity)}</td>
+                  <td className="tabular py-2 text-right text-muted">
+                    → {formatDateTime(u.maturity)}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -184,15 +272,25 @@ function CurrentPage() {
             aside={
               <Tip content={en.tips.daily}>
                 <span tabIndex={0}>
-                  <Chip tone="traditional" className="cursor-help">{A.dailyBadge}</Chip>
+                  <Chip tone="traditional" className="cursor-help">
+                    {A.dailyBadge}
+                  </Chip>
                 </span>
               </Tip>
             }
           />
           <div className="grid grid-cols-3 gap-6">
-            <Stat label={en.accounts.cols.balance} value={`EUR ${numM(state.bal['cur-paris'], 2)}m`} />
+            <Stat
+              label={en.accounts.cols.balance}
+              value={`EUR ${numM(state.bal['cur-paris'], 2)}m`}
+            />
             <Stat label={A.rate} value={fmtPct(RATES.current)} tone="muted" sub={en.tips.daily} />
-            <Stat label={A.accrued} value={fmtEur(total)} tone="muted" sub={`${postings.length} × ${A.dailyPosting.toLowerCase()}`} />
+            <Stat
+              label={A.accrued}
+              value={fmtEur(total)}
+              tone="muted"
+              sub={`${postings.length} × ${A.dailyPosting.toLowerCase()}`}
+            />
           </div>
           <div className="mt-7">
             <div className="mb-2 text-[13px] text-muted">{A.intradayCurrent}</div>
@@ -206,8 +304,16 @@ function CurrentPage() {
               <p className="text-[13px] text-muted">{A.none}</p>
             ) : (
               postings.map((p) => {
-                const eod = snapshotAt(tl.snaps, (p.day + 1) * MIN_PER_DAY - 1e-6).state.bal['cur-paris'];
-                return <Row key={p.day} k={`${formatDate(p.day * MIN_PER_DAY)} · EOD ${numM(eod)}m`} v={fmtEur(p.amount)} />;
+                const eod = snapshotAt(tl.snaps, (p.day + 1) * MIN_PER_DAY - 1e-6).state.bal[
+                  'cur-paris'
+                ];
+                return (
+                  <Row
+                    key={p.day}
+                    k={`${formatDate(p.day * MIN_PER_DAY)} · EOD ${numM(eod)}m`}
+                    v={fmtEur(p.amount)}
+                  />
+                );
               })
             )}
           </Card>

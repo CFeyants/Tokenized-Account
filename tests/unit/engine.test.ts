@@ -1,7 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { RATES, UNIT_RATE } from '@/data/rates';
 import { dailyAccrual, integrateEod, integrateMinutes, minuteAccrual } from '@/engine/accrual';
-import { at, dayPhase, formatClock, isBusinessHours, nextOpening, offHoursMinutes, parseParam, toParam } from '@/engine/clock';
+import {
+  at,
+  dayPhase,
+  formatClock,
+  isBusinessHours,
+  nextOpening,
+  offHoursMinutes,
+  parseParam,
+  toParam,
+} from '@/engine/clock';
 import { computeCounters, collateralInterest } from '@/engine/counters';
 import { accrualStart, earningMinutes, finalityOnArrival } from '@/engine/finality';
 import { classicBreakCost, fxNightQuote, unitSaleQuote } from '@/engine/pricing';
@@ -70,7 +79,9 @@ describe('accrual', () => {
     const current = integrateEod(snaps, at(2, '00:00'), (b) => b * RATES.current);
     expect(current).toBeCloseTo(13.89, 2);
     // Tokenised + overnight unit: 12 h in the unit, 2 h on the account.
-    const tok = minuteAccrual(1_000_000, RATES.overnightUnit, 12 * 60) + minuteAccrual(1_000_000, RATES.tokenised, 120);
+    const tok =
+      minuteAccrual(1_000_000, RATES.overnightUnit, 12 * 60) +
+      minuteAccrual(1_000_000, RATES.tokenised, 120);
     expect(tok).toBeCloseTo(25.23, 2);
   });
 

@@ -25,7 +25,12 @@ export const FINALITY_RULES: Record<Rail, FinalityRule> = {
   intragroup: { rail: 'intragroup', immediate: true, mirror: true, stateOnArrival: 'final' },
   sctInst: { rail: 'sctInst', immediate: true, mirror: false, stateOnArrival: 'final' },
   sepa: { rail: 'sepa', immediate: false, mirror: false, stateOnArrival: 'valueTomorrow' },
-  correspondent: { rail: 'correspondent', immediate: false, mirror: false, stateOnArrival: 'pendingCover' },
+  correspondent: {
+    rail: 'correspondent',
+    immediate: false,
+    mirror: false,
+    stateOnArrival: 'pendingCover',
+  },
 };
 
 export const finalityOnArrival = (rail: Rail): Finality => FINALITY_RULES[rail].stateOnArrival;

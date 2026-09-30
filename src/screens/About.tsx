@@ -32,10 +32,22 @@ export function About() {
           <Card>
             <CardHeader title={A.legend} />
             <ul className="space-y-2.5 text-[13.5px]">
-              <li className="flex items-center gap-3"><span className="size-3 rounded-[3px] bg-new" />{A.legendNew}</li>
-              <li className="flex items-center gap-3"><span className="size-3 rounded-[3px] bg-grey" />{A.legendTrad}</li>
-              <li className="flex items-center gap-3"><span className="size-3 rounded-[3px] border border-dashed border-muted" />{A.legendOut}</li>
-              <li className="flex items-center gap-3"><span className="size-3 rounded-[3px] bg-amber-fill" />{A.legendAmber}</li>
+              <li className="flex items-center gap-3">
+                <span className="size-3 rounded-[3px] bg-new" />
+                {A.legendNew}
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="size-3 rounded-[3px] bg-grey" />
+                {A.legendTrad}
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="size-3 rounded-[3px] border border-dashed border-muted" />
+                {A.legendOut}
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="size-3 rounded-[3px] bg-amber-fill" />
+                {A.legendAmber}
+              </li>
             </ul>
           </Card>
         </div>

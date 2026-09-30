@@ -12,7 +12,11 @@ export interface UnitQuote {
 }
 
 /** Price of `nominal` of a term unit sold to the bank at t: par + accrued to the minute − 2 bps. */
-export function unitSaleQuote(unit: Pick<Unit, 'rate' | 'start'>, nominal: number, t: SimTime): UnitQuote {
+export function unitSaleQuote(
+  unit: Pick<Unit, 'rate' | 'start'>,
+  nominal: number,
+  t: SimTime,
+): UnitQuote {
   const minutes = Math.max(0, t - unit.start);
   const accrued = minuteAccrual(nominal, unit.rate, minutes);
   const spread = (nominal * PRICING.unitSpreadBps) / 10_000;

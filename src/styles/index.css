@@ -119,11 +119,7 @@
     border: 1px dashed var(--line-strong);
   }
   .hatch {
-    background-image: repeating-linear-gradient(
-      135deg,
-      var(--new) 0 2px,
-      transparent 2px 7px
-    );
+    background-image: repeating-linear-gradient(135deg, var(--new) 0 2px, transparent 2px 7px);
   }
   .hatch-amber {
     background-image: repeating-linear-gradient(

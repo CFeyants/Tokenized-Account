@@ -29,9 +29,13 @@ export function drawers(s: State): Drawers {
     termUnits: eurUnits.filter((u) => !u.blocked).reduce((a, u) => a + u.amount, 0),
     fund: s.fundUnits,
     otherBanks: s.bal['hsbc-paris'] + s.bal['db-munich'] + STATIC_OTHER_BANKS_EUR,
-    usdUnitsEur: s.units.filter((u) => u.currency === 'USD').reduce((a, u) => a + u.amount / FX_MID.USD, 0),
+    usdUnitsEur: s.units
+      .filter((u) => u.currency === 'USD')
+      .reduce((a, u) => a + u.amount / FX_MID.USD, 0),
     tokOtherCcyEur: s.bal['tok-usd-chicago'] / FX_MID.USD + s.bal['tok-sgd-singapore'] / FX_MID.SGD,
-    pendingEur: s.pending.filter((p) => p.status === 'pendingCover').reduce((a, p) => a + p.amount / FX_MID[p.currency], 0),
+    pendingEur: s.pending
+      .filter((p) => p.status === 'pendingCover')
+      .reduce((a, p) => a + p.amount / FX_MID[p.currency], 0),
   };
 }
 
@@ -55,17 +59,24 @@ export function minuteWeight(s: State): number {
 
 export function minuteWeightParts(s: State) {
   const tok =
-    (Math.max(0, s.bal['tok-paris']) + Math.max(0, s.bal['tok-munich']) + s.blocked) * RATES.tokenised +
-    (Math.max(0, s.bal['tok-usd-chicago']) / FX_MID.USD + Math.max(0, s.bal['tok-sgd-singapore']) / FX_MID.SGD) *
+    (Math.max(0, s.bal['tok-paris']) + Math.max(0, s.bal['tok-munich']) + s.blocked) *
+      RATES.tokenised +
+    (Math.max(0, s.bal['tok-usd-chicago']) / FX_MID.USD +
+      Math.max(0, s.bal['tok-sgd-singapore']) / FX_MID.SGD) *
       RATES.tokenised;
-  const units = s.units.reduce((a, u) => a + (u.amount / (u.currency === 'USD' ? FX_MID.USD : 1)) * u.rate, 0);
+  const units = s.units.reduce(
+    (a, u) => a + (u.amount / (u.currency === 'USD' ? FX_MID.USD : 1)) * u.rate,
+    0,
+  );
   const fund = s.fundUnits * RATES.mmf;
   return { tok, units, fund };
 }
 
 /** Intraday credit weight: Σ |negative tokenised balance| × debit rate. */
 export function debitWeight(s: State): number {
-  return (Math.max(0, -s.bal['tok-paris']) + Math.max(0, -s.bal['tok-munich'])) * RATES.intradayDebit;
+  return (
+    (Math.max(0, -s.bal['tok-paris']) + Math.max(0, -s.bal['tok-munich'])) * RATES.intradayDebit
+  );
 }
 
 export const hasDebit = (s: State) => s.bal['tok-paris'] < 0 || s.bal['tok-munich'] < 0;
@@ -74,7 +85,9 @@ export const hasDebit = (s: State) => s.bal['tok-paris'] < 0 || s.bal['tok-munic
 export const eodWeight = (s: State) => Math.max(0, s.bal['cur-paris']) * RATES.current;
 
 export const tradEodWeight = (s: TradState) =>
-  s.current * RATES.current + (s.usdCurrent / FX_MID.USD) * RATES.usdCurrent + s.classicTD * RATES.classicTD['3m'];
+  s.current * RATES.current +
+  (s.usdCurrent / FX_MID.USD) * RATES.usdCurrent +
+  s.classicTD * RATES.classicTD['3m'];
 export const tradMinuteWeight = (s: TradState) => s.fund * RATES.mmf;
 
 export interface AccountRow {

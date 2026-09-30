@@ -23,7 +23,13 @@ const M = 1_000_000;
 const BUSINESS_H = 5 * ((LAST_CUTOFF - BUSINESS_START) / 60);
 const BLENDED = (BUSINESS_H * RATES.tokenised + (168 - BUSINESS_H) * RATES.overnightUnit) / 168;
 
-type Item = { key: keyof typeof G.items; amount: number; days: number; option: 'block' | 'pledge'; pledgeRate?: number };
+type Item = {
+  key: keyof typeof G.items;
+  amount: number;
+  days: number;
+  option: 'block' | 'pledge';
+  pledgeRate?: number;
+};
 
 const ITEMS: Item[] = [
   { key: 'perf', amount: 6 * M, days: 365, option: 'pledge', pledgeRate: RATES.unit12m },
@@ -39,7 +45,11 @@ function CompareCard({ item }: { item: Item }) {
   const lineFee = (item.amount * 0.006 * item.days) / 360;
   return (
     <Card tone={showNew ? 'new' : 'default'} className="flex flex-col">
-      <CardHeader eyebrow={G.illustrative} title={g.title} aside={<LayerTag layer={showNew ? 'new' : 'traditional'} />} />
+      <CardHeader
+        eyebrow={G.illustrative}
+        title={g.title}
+        aside={<LayerTag layer={showNew ? 'new' : 'traditional'} />}
+      />
       <p className="text-[12.5px] text-muted">{g.who}</p>
       <div className="mt-4">
         <Row k={G.amount} v={fmtM(item.amount, 'EUR', 0)} />
@@ -54,21 +64,31 @@ function CompareCard({ item }: { item: Item }) {
       <div className="mt-auto pt-5">
         {showNew ? (
           <>
-            <p className="text-[12.5px] leading-relaxed">{item.option === 'pledge' ? G.newPledge : G.newBlock}</p>
+            <p className="text-[12.5px] leading-relaxed">
+              {item.option === 'pledge' ? G.newPledge : G.newBlock}
+            </p>
             <div className="mt-2 flex items-baseline justify-between">
               <span className="text-[12px] text-muted">{G.kept}</span>
-              <span className="tabular font-serif text-[28px] text-new">{fmtEur(kept, 'EUR', 0)}</span>
+              <span className="tabular font-serif text-[28px] text-new">
+                {fmtEur(kept, 'EUR', 0)}
+              </span>
             </div>
-            <p className="text-right text-[11.5px] text-muted">{item.option === 'pledge' ? fmtPct(rate) : G.blended(fmtPct(BLENDED))}</p>
+            <p className="text-right text-[11.5px] text-muted">
+              {item.option === 'pledge' ? fmtPct(rate) : G.blended(fmtPct(BLENDED))}
+            </p>
           </>
         ) : (
           <>
             <p className="text-[12.5px] leading-relaxed text-muted">{G.tradGage}</p>
             <div className="mt-2 flex items-baseline justify-between">
               <span className="text-[12px] text-muted">{G.kept}</span>
-              <span className="tabular font-serif text-[28px] text-muted">{fmtEur(0, 'EUR', 0)}</span>
+              <span className="tabular font-serif text-[28px] text-muted">
+                {fmtEur(0, 'EUR', 0)}
+              </span>
             </div>
-            <p className="text-right text-[11.5px] text-muted">{G.tradLine}: −{fmtEur(lineFee, 'EUR', 0)}</p>
+            <p className="text-right text-[11.5px] text-muted">
+              {G.tradLine}: −{fmtEur(lineFee, 'EUR', 0)}
+            </p>
           </>
         )}
       </div>
@@ -105,7 +125,10 @@ function Brazil() {
             </MinuteRing>
             <div>
               <div className="text-[12px] text-muted">{G.brazil.total}</div>
-              <div className="tabular font-serif text-[40px] leading-none text-new" aria-live="polite">
+              <div
+                className="tabular font-serif text-[40px] leading-none text-new"
+                aria-live="polite"
+              >
                 <Animated value={r.total} format={(v) => fmtEur(v)} />
               </div>
             </div>
@@ -116,7 +139,10 @@ function Brazil() {
             <Row k={G.brazil.minutes} v={fmtMinutes(minutes)} />
             <Row k={G.brazil.byDay} v={fmtEur(r.onAccount)} />
             <Row k={G.brazil.byNight} v={fmtEur(r.inUnit)} />
-            <Row k={G.brazil.released} v={col?.releasedAt ? formatDateTime(col.releasedAt) : G.brazil.pending} />
+            <Row
+              k={G.brazil.released}
+              v={col?.releasedAt ? formatDateTime(col.releasedAt) : G.brazil.pending}
+            />
           </div>
         </div>
         <div className="col-span-12 space-y-4 lg:col-span-7">
@@ -128,7 +154,12 @@ function Brazil() {
             <div className="tabular mt-2 font-serif text-[30px] text-muted">{fmtEur(0)}</div>
             <p className="mt-1 text-[12.5px] leading-relaxed text-muted">{G.brazil.tradSide}</p>
           </div>
-          <div className={cn('rounded-2xl border p-5', col?.releasedAt ? 'border-new/40' : 'border-dashed border-line-strong')}>
+          <div
+            className={cn(
+              'rounded-2xl border p-5',
+              col?.releasedAt ? 'border-new/40' : 'border-dashed border-line-strong',
+            )}
+          >
             <div className="flex items-center gap-2 text-[13px] font-medium">
               <CheckCircle2 className={cn('size-4', col?.releasedAt ? 'text-new' : 'text-muted')} />
               {G.brazil.event}

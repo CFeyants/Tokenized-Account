@@ -20,7 +20,14 @@ import { RATES } from '@/data/rates';
 export interface Counters {
   newTotal: number;
   tradTotal: number;
-  newParts: { current: number; tokenised: number; units: number; fund: number; jitCost: number; spread: number };
+  newParts: {
+    current: number;
+    tokenised: number;
+    units: number;
+    fund: number;
+    jitCost: number;
+    spread: number;
+  };
   tradParts: { current: number; td: number; fund: number; penalty: number };
   idleMinutesTrad: number;
   earningMinutesNew: number;
@@ -71,7 +78,9 @@ export function collateralInterest(tl: Timeline, collateralId: string, from: Sim
     return c && c.status === 'active' ? s.blocked * RATES.tokenised : 0;
   });
   const inUnit = integrateMinutes(tl.snaps, from, to, (s) =>
-    s.units.filter((u) => u.blocked && u.collateralId === collateralId).reduce((a, u) => a + u.amount * u.rate, 0),
+    s.units
+      .filter((u) => u.blocked && u.collateralId === collateralId)
+      .reduce((a, u) => a + u.amount * u.rate, 0),
   );
   return { onAccount, inUnit, total: onAccount + inUnit };
 }

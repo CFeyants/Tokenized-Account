@@ -18,8 +18,10 @@ import { cn } from '@/lib/utils';
 const S = en.statements;
 type Acc = 'cur-paris' | 'tok-paris';
 
-const bookBal = (s: State, a: Acc) => (a === 'tok-paris' ? s.bal['tok-paris'] + s.blocked : s.bal['cur-paris']);
-const inUnit = (s: State) => s.units.filter((u) => u.currency === 'EUR').reduce((x, u) => x + u.amount, 0);
+const bookBal = (s: State, a: Acc) =>
+  a === 'tok-paris' ? s.bal['tok-paris'] + s.blocked : s.bal['cur-paris'];
+const inUnit = (s: State) =>
+  s.units.filter((u) => u.currency === 'EUR').reduce((x, u) => x + u.amount, 0);
 const amt = (v: number) => v.toFixed(2);
 
 function Viewer() {
@@ -42,10 +44,19 @@ function Viewer() {
   const end = start + MIN_PER_DAY;
   const open = snapshotAt(tl.snaps, start - 1e-6).state;
   const close = snapshotAt(tl.snaps, end - 1e-6).state;
-  const entries = tl.ledger.filter((l) => l.account === acc && l.t >= start && l.t < end && l.amount !== 0);
+  const entries = tl.ledger.filter(
+    (l) => l.account === acc && l.t >= start && l.t < end && l.amount !== 0,
+  );
   const interest =
     acc === 'tok-paris'
-      ? integrateMinutes(tl.snaps, start, end, (s) => (Math.max(0, s.bal['tok-paris']) + s.blocked) * RATES.tokenised + s.units.filter((u) => u.currency === 'EUR').reduce((x, u) => x + u.amount * u.rate, 0))
+      ? integrateMinutes(
+          tl.snaps,
+          start,
+          end,
+          (s) =>
+            (Math.max(0, s.bal['tok-paris']) + s.blocked) * RATES.tokenised +
+            s.units.filter((u) => u.currency === 'EUR').reduce((x, u) => x + u.amount * u.rate, 0),
+        )
       : (Math.max(0, close.bal['cur-paris']) * RATES.current) / 360;
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -81,16 +92,26 @@ function Viewer() {
       <div className="mb-5 flex flex-wrap items-center gap-3">
         <label className="text-[12px] text-muted">
           {S.account}
-          <select value={acc} onChange={(e) => setAcc(e.target.value as Acc)} className="ml-2 h-9 rounded-lg border border-line-strong bg-surface px-2 text-[13px] text-fg">
+          <select
+            value={acc}
+            onChange={(e) => setAcc(e.target.value as Acc)}
+            className="ml-2 h-9 rounded-lg border border-line-strong bg-surface px-2 text-[13px] text-fg"
+          >
             <option value="tok-paris">{en.product.name} · Paris</option>
             <option value="cur-paris">{en.accounts.currentOf('Paris')}</option>
           </select>
         </label>
         <label className="text-[12px] text-muted">
           {S.day}
-          <select value={day} onChange={(e) => setDay(Number(e.target.value))} className="ml-2 h-9 rounded-lg border border-line-strong bg-surface px-2 text-[13px] text-fg">
+          <select
+            value={day}
+            onChange={(e) => setDay(Number(e.target.value))}
+            className="ml-2 h-9 rounded-lg border border-line-strong bg-surface px-2 text-[13px] text-fg"
+          >
             {Array.from({ length: completed }, (_, d) => (
-              <option key={d} value={d}>{formatDate(d * MIN_PER_DAY)}</option>
+              <option key={d} value={d}>
+                {formatDate(d * MIN_PER_DAY)}
+              </option>
             ))}
           </select>
         </label>
@@ -123,7 +144,9 @@ function Viewer() {
                     <td className="tabular py-1.5 pr-3 text-muted">{hhmmss(l.t)}</td>
                     <td className="py-1.5">{l.memo}</td>
                     <td className="py-1.5 text-muted">{l.amount > 0 ? 'CRDT' : 'DBIT'}</td>
-                    <td className={cn('tabular py-1.5 text-right', l.amount > 0 && 'text-new')}>{fmtAmount(l.amount, 2)}</td>
+                    <td className={cn('tabular py-1.5 text-right', l.amount > 0 && 'text-new')}>
+                      {fmtAmount(l.amount, 2)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -132,7 +155,9 @@ function Viewer() {
           <p className="mt-4 text-[12px] text-muted">{S.camt054}</p>
         </TabsContent>
         <TabsContent value="xml">
-          <pre className="scrollbar-thin max-h-[440px] overflow-auto rounded-xl bg-surface-2 p-4 font-mono text-[11px] leading-relaxed text-muted">{xml}</pre>
+          <pre className="scrollbar-thin max-h-[440px] overflow-auto rounded-xl bg-surface-2 p-4 font-mono text-[11px] leading-relaxed text-muted">
+            {xml}
+          </pre>
         </TabsContent>
       </Tabs>
     </Card>
@@ -149,9 +174,33 @@ function Ias7() {
   return (
     <Card>
       <CardHeader eyebrow={S.ias7Lead} title={S.ias7} />
-      <Row k={<><div>{S.cashEq}</div><div className="text-[11.5px]">{S.cashEqNote}</div></>} v={fmtM(cashEq)} />
-      <Row k={<><div>{S.restricted}</div><div className="text-[11.5px]">{S.restrictedNote}</div></>} v={fmtM(d.tokBlocked)} />
-      <Row k={<><div>{S.shortInv}</div><div className="text-[11.5px]">{S.shortInvNote}</div></>} v={fmtM(other)} />
+      <Row
+        k={
+          <>
+            <div>{S.cashEq}</div>
+            <div className="text-[11.5px]">{S.cashEqNote}</div>
+          </>
+        }
+        v={fmtM(cashEq)}
+      />
+      <Row
+        k={
+          <>
+            <div>{S.restricted}</div>
+            <div className="text-[11.5px]">{S.restrictedNote}</div>
+          </>
+        }
+        v={fmtM(d.tokBlocked)}
+      />
+      <Row
+        k={
+          <>
+            <div>{S.shortInv}</div>
+            <div className="text-[11.5px]">{S.shortInvNote}</div>
+          </>
+        }
+        v={fmtM(other)}
+      />
     </Card>
   );
 }
@@ -172,7 +221,11 @@ function Weekly() {
           <Row k={W.fund} v={fmtEur(c.newParts.fund)} />
           <Row k={W.jit} v={`−${fmtEur(c.newParts.jitCost)}`} />
           {c.newParts.spread > 0 && <Row k={W.spread} v={`−${fmtEur(c.newParts.spread)}`} />}
-          <Row k={en.counters.newShort} v={<span className="text-new">{fmtEur(c.newTotal)}</span>} className="border-t border-line" />
+          <Row
+            k={en.counters.newShort}
+            v={<span className="text-new">{fmtEur(c.newTotal)}</span>}
+            className="border-t border-line"
+          />
         </>
       ) : (
         <p className="text-[13px] text-muted">—</p>

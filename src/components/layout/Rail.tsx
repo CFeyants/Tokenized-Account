@@ -38,10 +38,26 @@ export function Rail() {
         expanded ? 'w-[240px]' : 'w-[72px]',
       )}
     >
-      <div className={cn('flex h-[64px] items-center gap-3 px-5', !expanded && 'justify-center px-0')}>
+      <div
+        className={cn('flex h-[64px] items-center gap-3 px-5', !expanded && 'justify-center px-0')}
+      >
         <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden>
-          <circle cx="16" cy="16" r="13" fill="none" stroke="var(--new)" strokeWidth="1.2" strokeDasharray="1 1.7" />
-          <path d="M16 8v8l5 3.5" stroke="var(--new)" strokeWidth="2" fill="none" strokeLinecap="round" />
+          <circle
+            cx="16"
+            cy="16"
+            r="13"
+            fill="none"
+            stroke="var(--new)"
+            strokeWidth="1.2"
+            strokeDasharray="1 1.7"
+          />
+          <path
+            d="M16 8v8l5 3.5"
+            stroke="var(--new)"
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+          />
         </svg>
         {expanded && (
           <div className="leading-tight">
@@ -59,7 +75,9 @@ export function Rail() {
               className={({ isActive }) =>
                 cn(
                   'flex h-10 items-center gap-3 rounded-xl px-3 text-[14px] transition-colors',
-                  isActive ? 'bg-surface-2 text-fg' : 'text-muted hover:bg-surface-2/60 hover:text-fg',
+                  isActive
+                    ? 'bg-surface-2 text-fg'
+                    : 'text-muted hover:bg-surface-2/60 hover:text-fg',
                   !expanded && 'justify-center px-0',
                 )
               }
@@ -68,13 +86,25 @@ export function Rail() {
               {expanded ? <span>{label}</span> : <span className="sr-only">{label}</span>}
             </NavLink>
           );
-          return <li key={to}>{expanded ? link : <Tip content={label} side="right">{link}</Tip>}</li>;
+          return (
+            <li key={to}>
+              {expanded ? (
+                link
+              ) : (
+                <Tip content={label} side="right">
+                  {link}
+                </Tip>
+              )}
+            </li>
+          );
         })}
       </ul>
       <div className={cn('border-t border-line p-3', !expanded && 'flex flex-col items-center')}>
         {expanded && (
           <div className="mb-2 flex items-center gap-3 px-2 py-1.5">
-            <div className="flex size-9 items-center justify-center rounded-full bg-primary font-serif text-[14px] text-primary-fg">ML</div>
+            <div className="flex size-9 items-center justify-center rounded-full bg-primary font-serif text-[14px] text-primary-fg">
+              ML
+            </div>
             <div className="min-w-0 leading-tight">
               <div className="truncate text-[13px]">{en.nav.persona}</div>
               <div className="truncate text-[11px] text-muted">{en.nav.personaRole}</div>

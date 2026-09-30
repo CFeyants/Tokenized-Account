@@ -1,5 +1,16 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, CalendarRange, FileText, Layers, Moon, Pause, Play, Repeat, Send } from 'lucide-react';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  CalendarRange,
+  FileText,
+  Layers,
+  Moon,
+  Pause,
+  Play,
+  Repeat,
+  Send,
+} from 'lucide-react';
 import { useApp, useCounters, useSim } from '@/app/store';
 import { en } from '@/i18n/en';
 import { fmtEur, fmtHours } from '@/engine/format';
@@ -45,7 +56,15 @@ function Hero() {
       <Card className="col-span-12 xl:col-span-7">
         <CardHeader eyebrow={H.compareTitle} title={H.weekTitle} />
         <div className="grid grid-cols-2 gap-8">
-          <Tip content={<>{C.newFormula}<br /><span className="text-muted">{C.actual360}</span></>}>
+          <Tip
+            content={
+              <>
+                {C.newFormula}
+                <br />
+                <span className="text-muted">{C.actual360}</span>
+              </>
+            }
+          >
             <div tabIndex={0} className="cursor-help">
               <div className="flex items-center gap-2 text-[13px] text-new">
                 <MinuteRing size={18} progress={(c.newTotal % 1000) / 1000} />
@@ -55,18 +74,27 @@ function Hero() {
                 <Animated value={c.newTotal} format={(v) => fmtEur(v, 'EUR', 0)} />
               </div>
               <div className="mt-4 h-2 rounded-full bg-surface-2">
-                <div className="h-full rounded-full bg-new transition-[width] duration-300" style={{ width: `${(c.newTotal / max) * 100}%` }} />
+                <div
+                  className="h-full rounded-full bg-new transition-[width] duration-300"
+                  style={{ width: `${(c.newTotal / max) * 100}%` }}
+                />
               </div>
             </div>
           </Tip>
           <Tip content={C.tradFormula}>
             <div tabIndex={0} className="cursor-help">
               <div className="text-[13px] text-muted">{H.tradLabel}</div>
-              <div className="mt-2 font-serif text-[48px] leading-none text-muted" aria-live="polite">
+              <div
+                className="mt-2 font-serif text-[48px] leading-none text-muted"
+                aria-live="polite"
+              >
                 <Animated value={c.tradTotal} format={(v) => fmtEur(v, 'EUR', 0)} />
               </div>
               <div className="mt-4 h-2 rounded-full bg-surface-2">
-                <div className="h-full rounded-full bg-grey transition-[width] duration-300" style={{ width: `${(Math.max(0, c.tradTotal) / max) * 100}%` }} />
+                <div
+                  className="h-full rounded-full bg-grey transition-[width] duration-300"
+                  style={{ width: `${(Math.max(0, c.tradTotal) / max) * 100}%` }}
+                />
               </div>
             </div>
           </Tip>
@@ -77,7 +105,9 @@ function Hero() {
               <div className="text-[12px] text-muted">{C.hoursTitle}</div>
               <div className="tabular mt-1 text-[20px]">
                 <span className="text-new">{fmtHours(c.earningMinutesNew)}</span>
-                <span className="text-[13px] text-muted">{C.hoursOf(fmtHours(c.idleMinutesTrad))}</span>
+                <span className="text-[13px] text-muted">
+                  {C.hoursOf(fmtHours(c.idleMinutesTrad))}
+                </span>
               </div>
             </div>
           </Tip>
@@ -91,7 +121,8 @@ function Hero() {
             <div tabIndex={0} className="cursor-help">
               <div className="text-[12px] text-muted">{C.jitTitle}</div>
               <div className="tabular mt-1 text-[20px]">
-                {Math.round(c.jitMinutes)} min <span className="text-[13px] text-muted">· {fmtEur(c.jitCost, 'EUR', 0)}</span>
+                {Math.round(c.jitMinutes)} min{' '}
+                <span className="text-[13px] text-muted">· {fmtEur(c.jitCost, 'EUR', 0)}</span>
               </div>
             </div>
           </Tip>
@@ -114,19 +145,31 @@ function RulesTonight() {
   return (
     <Card tone="new" className="h-full">
       <CardHeader
-        eyebrow={phase === 'business' ? (isFriday(t) ? H.rulesFriday : H.rulesFrom) : H.rulesRunning}
+        eyebrow={
+          phase === 'business' ? (isFriday(t) ? H.rulesFriday : H.rulesFrom) : H.rulesRunning
+        }
         title={H.rulesTonight}
         aside={<LayerTag layer="new" />}
       />
       <ul className="space-y-3">
         {rows.map(({ icon: Icon, text, tip }) => {
           const li = (
-            <li key={text} className="flex items-start gap-3 text-[13.5px] leading-snug" tabIndex={tip ? 0 : undefined}>
+            <li
+              key={text}
+              className="flex items-start gap-3 text-[13.5px] leading-snug"
+              tabIndex={tip ? 0 : undefined}
+            >
               <Icon className="mt-0.5 size-4 shrink-0 text-new" aria-hidden />
               {text}
             </li>
           );
-          return tip ? <Tip key={text} content={tip}>{li}</Tip> : li;
+          return tip ? (
+            <Tip key={text} content={tip}>
+              {li}
+            </Tip>
+          ) : (
+            li
+          );
         })}
       </ul>
       <Button asChild variant="ghost" size="sm" className="mt-5 -ml-3">
@@ -153,14 +196,20 @@ function TraditionalRow() {
       </div>
       <div className="grid grid-cols-4 gap-6">
         {tools.map(({ to, icon: Icon, title, sub }) => (
-          <Link key={title} to={to} className="card group flex items-start gap-4 p-5 transition-colors hover:border-line-strong">
+          <Link
+            key={title}
+            to={to}
+            className="card group flex items-start gap-4 p-5 transition-colors hover:border-line-strong"
+          >
             <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-grey-soft text-muted">
               <Icon className="size-[18px]" />
             </span>
             <span className="min-w-0">
               <span className="block text-[15px] font-medium">{title}</span>
               <span className="mt-0.5 block text-[12.5px] text-muted">{sub}</span>
-              <span className="mt-2 block"><LayerTag layer="traditional" /></span>
+              <span className="mt-2 block">
+                <LayerTag layer="traditional" />
+              </span>
             </span>
           </Link>
         ))}

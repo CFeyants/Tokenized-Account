@@ -53,13 +53,19 @@ export function previewNightSweep(banks: { floor: number; balance: number }[]) {
   return { swept, gain: total };
 }
 
-const TENOR_RATE = { '1m': RATES.unit1m, '3m': RATES.unit3m, '6m': RATES.unit6m, '12m': RATES.unit12m } as const;
+const TENOR_RATE = {
+  '1m': RATES.unit1m,
+  '3m': RATES.unit3m,
+  '6m': RATES.unit6m,
+  '12m': RATES.unit12m,
+} as const;
 
 /** Surplus above X laddered in equal slices; compared with leaving it on the current account. */
 export function previewLadder(tl: Timeline, above: number, tenors: (keyof typeof TENOR_RATE)[]) {
   // Average end-of-day current balance in the traditional twin over the five business days.
   let sum = 0;
-  for (let d = 0; d < 5; d++) sum += snapshotAt(tl.trad, (d + 1) * MIN_PER_DAY - 1e-6).state.current;
+  for (let d = 0; d < 5; d++)
+    sum += snapshotAt(tl.trad, (d + 1) * MIN_PER_DAY - 1e-6).state.current;
   const avg = sum / 5;
   const amount = Math.max(0, avg - above);
   const rate = tenors.length ? tenors.reduce((a, k) => a + TENOR_RATE[k], 0) / tenors.length : 0;
@@ -79,7 +85,9 @@ export function previewRelease(tl: Timeline, collateralId: string, from: number,
   const kept = integrateMinutes(tl.snaps, from, to, (s) => {
     const col = s.collateral.find((c) => c.id === collateralId);
     const onAcc = col && col.status === 'active' ? s.blocked * RATES.tokenised : 0;
-    const inUnit = s.units.filter((u) => u.blocked && u.collateralId === collateralId).reduce((a, u) => a + u.amount * u.rate, 0);
+    const inUnit = s.units
+      .filter((u) => u.blocked && u.collateralId === collateralId)
+      .reduce((a, u) => a + u.amount * u.rate, 0);
     return onAcc + inUnit;
   });
   return { kept, gage: 0, minutes: to - from };

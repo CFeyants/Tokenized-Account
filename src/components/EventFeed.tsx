@@ -14,7 +14,10 @@ export function EventFeed({ limit = 5 }: { limit?: number }) {
   const { t, tl } = useSim();
   const openHood = useApp((s) => s.openHood);
   const [open, setOpen] = useState<string | null>(null);
-  const items = tl.events.filter((e) => e.t <= t && e.id !== 'e0').slice(-limit).reverse();
+  const items = tl.events
+    .filter((e) => e.t <= t && e.id !== 'e0')
+    .slice(-limit)
+    .reverse();
 
   if (items.length === 0) return <p className="py-6 text-[14px] text-muted">{en.home.feedEmpty}</p>;
 
@@ -34,7 +37,13 @@ export function EventFeed({ limit = 5 }: { limit?: number }) {
               className="py-3.5"
             >
               <div className="flex items-start gap-3">
-                <Chip tone={e.actor} className={cn('mt-0.5 w-[62px] justify-center', i === 0 && e.actor === 'rule' && 'pulse-once')}>
+                <Chip
+                  tone={e.actor}
+                  className={cn(
+                    'mt-0.5 w-[62px] justify-center',
+                    i === 0 && e.actor === 'rule' && 'pulse-once',
+                  )}
+                >
                   {en.actors[e.actor]}
                 </Chip>
                 <div className="min-w-0 flex-1">
@@ -52,7 +61,9 @@ export function EventFeed({ limit = 5 }: { limit?: number }) {
                       aria-expanded={isOpen}
                       className="mt-1.5 inline-flex cursor-pointer items-center gap-1 text-[12px] text-new hover:underline"
                     >
-                      <ChevronDown className={cn('size-3.5 transition-transform', isOpen && 'rotate-180')} />
+                      <ChevronDown
+                        className={cn('size-3.5 transition-transform', isOpen && 'rotate-180')}
+                      />
                       {isOpen ? en.home.hideEntries : `${en.home.showEntries} (${entries.length})`}
                     </button>
                   )}
@@ -64,10 +75,17 @@ export function EventFeed({ limit = 5 }: { limit?: number }) {
                             <tr key={l.id} className="border-b border-line last:border-0">
                               <td className="tabular px-3 py-1.5 text-muted">{hhmmss(l.t)}</td>
                               <td className="px-2 py-1.5 font-mono text-[11px]">{l.account}</td>
-                              <td className={cn('tabular px-3 py-1.5 text-right', l.amount < 0 ? 'text-fg' : 'text-new')}>
+                              <td
+                                className={cn(
+                                  'tabular px-3 py-1.5 text-right',
+                                  l.amount < 0 ? 'text-fg' : 'text-new',
+                                )}
+                              >
                                 {l.currency} {fmtAmount(l.amount)}
                               </td>
-                              <td className="px-2 py-1.5 text-muted">{l.finality === 'pending' ? 'pending' : 'final'}</td>
+                              <td className="px-2 py-1.5 text-muted">
+                                {l.finality === 'pending' ? 'pending' : 'final'}
+                              </td>
                             </tr>
                           ))}
                         </tbody>

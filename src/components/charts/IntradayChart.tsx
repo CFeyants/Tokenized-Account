@@ -1,5 +1,13 @@
 import { useId } from 'react';
-import { Area, AreaChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import {
+  Area,
+  AreaChart,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import { numM } from '@/engine/format';
 import { en } from '@/i18n/en';
 
@@ -9,13 +17,22 @@ export interface IntradayPoint {
   free?: number;
 }
 
-const hh = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(Math.floor(m % 60)).padStart(2, '0')}`;
+const hh = (m: number) =>
+  `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(Math.floor(m % 60)).padStart(2, '0')}`;
 
 /**
  * Balance over one day, stepwise at minute granularity. Green above zero, red below.
  * `tone="grey"` draws the traditional current account.
  */
-export function IntradayChart({ data, tone = 'new', height = 240 }: { data: IntradayPoint[]; tone?: 'new' | 'grey'; height?: number }) {
+export function IntradayChart({
+  data,
+  tone = 'new',
+  height = 240,
+}: {
+  data: IntradayPoint[];
+  tone?: 'new' | 'grey';
+  height?: number;
+}) {
   const id = useId().replace(/:/g, '');
   const vals = data.map((d) => d.total);
   const max = Math.max(0, ...vals);
@@ -60,10 +77,25 @@ export function IntradayChart({ data, tone = 'new', height = 240 }: { data: Intr
             tickLine={false}
           />
           <ReferenceLine y={0} stroke="var(--line-strong)" />
-          <ReferenceLine x={1080} stroke="var(--line-strong)" strokeDasharray="3 3" label={{ value: '18:00', fill: 'var(--muted)', fontSize: 10, position: 'insideTopRight' }} />
+          <ReferenceLine
+            x={1080}
+            stroke="var(--line-strong)"
+            strokeDasharray="3 3"
+            label={{
+              value: '18:00',
+              fill: 'var(--muted)',
+              fontSize: 10,
+              position: 'insideTopRight',
+            }}
+          />
           <Tooltip
             cursor={{ stroke: 'var(--line-strong)' }}
-            contentStyle={{ background: 'var(--surface-2)', border: '1px solid var(--line-strong)', borderRadius: 12, fontSize: 12 }}
+            contentStyle={{
+              background: 'var(--surface-2)',
+              border: '1px solid var(--line-strong)',
+              borderRadius: 12,
+              fontSize: 12,
+            }}
             labelStyle={{ color: 'var(--muted)' }}
             labelFormatter={(m) => hh(Number(m))}
             formatter={(v) => [`EUR ${numM(Number(v), 2)}m`, en.accounts.balanceLabel]}

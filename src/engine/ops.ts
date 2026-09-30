@@ -101,12 +101,33 @@ export function buyUnit(s: State, ctx: Ctx, a: BuyUnitArgs): Unit | null {
   };
   if (unit.blocked) {
     s.blocked -= a.amount;
-    ctx.post({ account: `${account}:blocked`, currency: a.currency, amount: -a.amount, finality: 'final', unitId: unit.id, memo: a.memo });
+    ctx.post({
+      account: `${account}:blocked`,
+      currency: a.currency,
+      amount: -a.amount,
+      finality: 'final',
+      unitId: unit.id,
+      memo: a.memo,
+    });
   } else {
     s.bal[account] -= a.amount;
-    ctx.post({ account, currency: a.currency, amount: -a.amount, finality: 'final', unitId: unit.id, memo: a.memo });
+    ctx.post({
+      account,
+      currency: a.currency,
+      amount: -a.amount,
+      finality: 'final',
+      unitId: unit.id,
+      memo: a.memo,
+    });
   }
-  ctx.post({ account: `unit:${unit.id}`, currency: a.currency, amount: a.amount, finality: 'final', unitId: unit.id, memo: a.memo });
+  ctx.post({
+    account: `unit:${unit.id}`,
+    currency: a.currency,
+    amount: a.amount,
+    finality: 'final',
+    unitId: unit.id,
+    memo: a.memo,
+  });
   s.units.push(unit);
   return unit;
 }
@@ -119,13 +140,34 @@ export function unwindMatured(s: State, ctx: Ctx): number {
     const short = u.tenor === 'overnight' || u.tenor === 'weekend';
     if (short && u.currency === 'EUR' && u.maturity <= ctx.t) {
       total += u.amount;
-      ctx.post({ account: `unit:${u.id}`, currency: 'EUR', amount: -u.amount, finality: 'final', unitId: u.id, memo: en.ledger.unwind });
+      ctx.post({
+        account: `unit:${u.id}`,
+        currency: 'EUR',
+        amount: -u.amount,
+        finality: 'final',
+        unitId: u.id,
+        memo: en.ledger.unwind,
+      });
       if (u.blocked) {
         s.blocked += u.amount;
-        ctx.post({ account: 'tok-paris:blocked', currency: 'EUR', amount: u.amount, finality: 'final', unitId: u.id, memo: en.ledger.unwind });
+        ctx.post({
+          account: 'tok-paris:blocked',
+          currency: 'EUR',
+          amount: u.amount,
+          finality: 'final',
+          unitId: u.id,
+          memo: en.ledger.unwind,
+        });
       } else {
         s.bal['tok-paris'] += u.amount;
-        ctx.post({ account: 'tok-paris', currency: 'EUR', amount: u.amount, finality: 'final', unitId: u.id, memo: en.ledger.unwind });
+        ctx.post({
+          account: 'tok-paris',
+          currency: 'EUR',
+          amount: u.amount,
+          finality: 'final',
+          unitId: u.id,
+          memo: en.ledger.unwind,
+        });
       }
     } else {
       keep.push(u);
@@ -139,14 +181,24 @@ export function unwindMatured(s: State, ctx: Ctx): number {
 export function partialUnwind(s: State, ctx: Ctx, amount: number): number {
   let left = amount;
   const shorts = s.units
-    .filter((u) => !u.blocked && u.currency === 'EUR' && (u.tenor === 'overnight' || u.tenor === 'weekend'))
+    .filter(
+      (u) =>
+        !u.blocked && u.currency === 'EUR' && (u.tenor === 'overnight' || u.tenor === 'weekend'),
+    )
     .sort((a, b) => b.start - a.start);
   for (const u of shorts) {
     if (left <= 0) break;
     const take = Math.min(left, u.amount);
     u.amount -= take;
     left -= take;
-    ctx.post({ account: `unit:${u.id}`, currency: 'EUR', amount: -take, finality: 'final', unitId: u.id, memo: en.ledger.partialUnwind });
+    ctx.post({
+      account: `unit:${u.id}`,
+      currency: 'EUR',
+      amount: -take,
+      finality: 'final',
+      unitId: u.id,
+      memo: en.ledger.partialUnwind,
+    });
     book(s, ctx, 'tok-paris', take, en.ledger.partialUnwind);
   }
   s.units = s.units.filter((u) => u.amount > 0.005);

@@ -37,7 +37,11 @@ function YieldLadder() {
   const max = RATES.unit12m;
   return (
     <Card>
-      <CardHeader eyebrow={P.ladderLead} title={P.ladderTitle} aside={<InfoTip content={en.tips.tokRate} />} />
+      <CardHeader
+        eyebrow={P.ladderLead}
+        title={P.ladderTitle}
+        aside={<InfoTip content={en.tips.tokRate} />}
+      />
       <div className="grid h-[230px] grid-cols-8 items-end gap-4" role="list">
         {P.ladder.map((l) => {
           const r = LADDER_RATE[l.key];
@@ -45,7 +49,14 @@ function YieldLadder() {
           const isUnit = !['tok', 'cur', 'mmf'].includes(l.key);
           return (
             <div key={l.key} role="listitem" className="flex h-full flex-col justify-end">
-              <div className={cn('tabular mb-2 text-center text-[15px]', isUnit ? 'text-amber' : isTok ? 'text-new' : 'text-muted')}>{fmtPct(r)}</div>
+              <div
+                className={cn(
+                  'tabular mb-2 text-center text-[15px]',
+                  isUnit ? 'text-amber' : isTok ? 'text-new' : 'text-muted',
+                )}
+              >
+                {fmtPct(r)}
+              </div>
               <div
                 className={cn(
                   'w-full rounded-t-lg transition-all',
@@ -64,7 +75,9 @@ function YieldLadder() {
         {P.ladder.map((l) => (
           <div key={l.key} className="text-center">
             <div className="text-[12.5px] leading-tight">{l.label}</div>
-            <div className="mt-1 text-[11px] text-muted">{P.avail[l.avail as keyof typeof P.avail]}</div>
+            <div className="mt-1 text-[11px] text-muted">
+              {P.avail[l.avail as keyof typeof P.avail]}
+            </div>
           </div>
         ))}
       </div>
@@ -83,7 +96,11 @@ function ClassicColumn() {
         <div className="mb-2 text-[12.5px] font-medium">{P.classic.example}</div>
         <Row k={P.classic.forfeited} v={fmtEur(c.forfeited)} />
         <Row k={P.classic.fee} v={fmtEur(c.fee)} />
-        <Row k={P.classic.total} v={<span className="text-red">−{fmtEur(c.total)}</span>} className="border-t border-line" />
+        <Row
+          k={P.classic.total}
+          v={<span className="text-red">−{fmtEur(c.total)}</span>}
+          className="border-t border-line"
+        />
       </div>
     </Card>
   );
@@ -96,13 +113,29 @@ function UnitsColumn() {
   const [done, setDone] = useState(false);
   return (
     <Card tone="new" className="flex flex-col">
-      <CardHeader title={P.units.title} aside={<Tip content={en.tips.unitSold}><span tabIndex={0}><LayerTag layer="new" /></span></Tip>} />
+      <CardHeader
+        title={P.units.title}
+        aside={
+          <Tip content={en.tips.unitSold}>
+            <span tabIndex={0}>
+              <LayerTag layer="new" />
+            </span>
+          </Tip>
+        }
+      />
       <p className="text-[13.5px] leading-relaxed text-muted">{P.units.text}</p>
       <div className="mt-auto pt-6">
         <div className="mb-2 text-[12.5px] font-medium">{P.units.buy}</div>
         <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label={P.units.tenor}>
           {(['overnight', '1m', '3m', '6m', '12m'] as UnitTenor[]).map((k) => (
-            <Button key={k} size="sm" role="radio" aria-checked={tenor === k} variant={tenor === k ? 'new' : 'secondary'} onClick={() => setTenor(k)}>
+            <Button
+              key={k}
+              size="sm"
+              role="radio"
+              aria-checked={tenor === k}
+              variant={tenor === k ? 'new' : 'secondary'}
+              onClick={() => setTenor(k)}
+            >
               {k} · {fmtPct(UNIT_RATE[k])}
             </Button>
           ))}
@@ -112,7 +145,17 @@ function UnitsColumn() {
             <span className="text-muted">{P.units.amount}</span>
             <span className="tabular">{amount}</span>
           </div>
-          <Slider aria-label={P.units.amount} min={1} max={40} step={1} value={[amount]} onValueChange={([v]) => { setAmount(v); setDone(false); }} />
+          <Slider
+            aria-label={P.units.amount}
+            min={1}
+            max={40}
+            step={1}
+            value={[amount]}
+            onValueChange={([v]) => {
+              setAmount(v);
+              setDone(false);
+            }}
+          />
         </div>
         <p className="mt-3 text-[12px] text-muted">{P.units.from}</p>
         <Button
@@ -139,18 +182,35 @@ function FundColumn() {
   const queued = state.fundOrders.filter((o) => o.status === 'queued');
   return (
     <Card className="flex flex-col">
-      <CardHeader title={P.fund.title} aside={<span className="flex gap-1.5"><LayerTag layer="traditional" /><LayerTag layer="new" /></span>} />
+      <CardHeader
+        title={P.fund.title}
+        aside={
+          <span className="flex gap-1.5">
+            <LayerTag layer="traditional" />
+            <LayerTag layer="new" />
+          </span>
+        }
+      />
       <p className="text-[13.5px] leading-relaxed text-muted">{P.fund.text}</p>
       <ul className="mt-4 space-y-2 text-[12.5px]">
-        <li className="flex gap-2 text-muted"><Clock3 className="mt-0.5 size-3.5 shrink-0" />{P.fund.trad}</li>
-        <li className="flex gap-2 text-new"><ArrowRightLeft className="mt-0.5 size-3.5 shrink-0" />{P.fund.tok}</li>
+        <li className="flex gap-2 text-muted">
+          <Clock3 className="mt-0.5 size-3.5 shrink-0" />
+          {P.fund.trad}
+        </li>
+        <li className="flex gap-2 text-new">
+          <ArrowRightLeft className="mt-0.5 size-3.5 shrink-0" />
+          {P.fund.tok}
+        </li>
       </ul>
       <div className="mt-auto pt-6">
         <Row k={P.fund.held} v={`EUR ${numM(state.fundUnits)}m`} />
         <Row k={P.fund.nav} v={fmtPct(RATES.mmf)} />
         {queued.map((o) => (
           <Tip key={o.id} content={en.tips.fundQueued}>
-            <div tabIndex={0} className="my-1 flex cursor-help items-center justify-between rounded-lg bg-amber-soft px-3 py-2 text-[12.5px] text-amber">
+            <div
+              tabIndex={0}
+              className="my-1 flex cursor-help items-center justify-between rounded-lg bg-amber-soft px-3 py-2 text-[12.5px] text-amber"
+            >
               <span>{P.queuedSince(fmtM(o.amount), formatDateTime(o.placedAt))}</span>
               <Clock3 className="size-3.5" />
             </div>
@@ -160,9 +220,22 @@ function FundColumn() {
           <span className="text-muted">{P.units.amount}</span>
           <span className="tabular">{amount}</span>
         </div>
-        <Slider aria-label={P.units.amount} min={1} max={20} step={1} value={[amount]} onValueChange={([v]) => setAmount(v)} />
-        <p className={cn('mt-3 text-[12px]', open ? 'text-muted' : 'text-amber')}>{open ? P.fund.openNote : P.fund.queuedNote}</p>
-        <Button variant="new" className="mt-3 w-full" onClick={() => addAction({ kind: 'fund', amount: amount * M })}>
+        <Slider
+          aria-label={P.units.amount}
+          min={1}
+          max={20}
+          step={1}
+          value={[amount]}
+          onValueChange={([v]) => setAmount(v)}
+        />
+        <p className={cn('mt-3 text-[12px]', open ? 'text-muted' : 'text-amber')}>
+          {open ? P.fund.openNote : P.fund.queuedNote}
+        </p>
+        <Button
+          variant="new"
+          className="mt-3 w-full"
+          onClick={() => addAction({ kind: 'fund', amount: amount * M })}
+        >
           {P.fund.subscribe} {fmtM(amount * M, 'EUR', 0)}
         </Button>
         <p className="mt-2 text-[11.5px] text-muted">{P.fund.pledge}</p>
@@ -185,12 +258,31 @@ function SellDialog({ unit, onClose }: { unit: Unit; onClose: () => void }) {
           <span className="text-muted">{P.nominal}</span>
           <span className="tabular">{nominal}</span>
         </div>
-        <Slider aria-label={P.nominal} min={1} max={Math.max(1, Math.floor(unit.amount / M))} step={1} value={[nominal]} onValueChange={([v]) => setNominal(v)} />
+        <Slider
+          aria-label={P.nominal}
+          min={1}
+          max={Math.max(1, Math.floor(unit.amount / M))}
+          step={1}
+          value={[nominal]}
+          onValueChange={([v]) => setNominal(v)}
+        />
         <div className="mt-5 rounded-xl bg-surface-2 px-4 py-2">
           <Row k={P.par} v={fmtEur(q.nominal)} />
-          <Row k={<span className="flex items-center gap-2"><MinuteRing size={14} progress={1} />{P.accrued} · {fmtMinutes(q.minutes)}</span>} v={<span className="text-new">+{fmtEur(q.accrued)}</span>} />
+          <Row
+            k={
+              <span className="flex items-center gap-2">
+                <MinuteRing size={14} progress={1} />
+                {P.accrued} · {fmtMinutes(q.minutes)}
+              </span>
+            }
+            v={<span className="text-new">+{fmtEur(q.accrued)}</span>}
+          />
           <Row k={P.spread} v={`−${fmtEur(q.spread)}`} />
-          <Row k={<span className="text-fg">{P.price}</span>} v={<span className="text-[16px]">{fmtEur(q.price)}</span>} className="border-t border-line" />
+          <Row
+            k={<span className="text-fg">{P.price}</span>}
+            v={<span className="text-[16px]">{fmtEur(q.price)}</span>}
+            className="border-t border-line"
+          />
         </div>
         <div className="mt-3 flex items-center justify-between rounded-xl border border-line px-4 py-2.5 text-[13px]">
           <span className="text-muted">{P.vsBreak}</span>
@@ -202,7 +294,9 @@ function SellDialog({ unit, onClose }: { unit: Unit; onClose: () => void }) {
           <li>· {P.transferClient}</li>
         </ul>
         <div className="mt-6 flex justify-end gap-2">
-          <Button variant="ghost" onClick={onClose}>{P.cancel}</Button>
+          <Button variant="ghost" onClick={onClose}>
+            {P.cancel}
+          </Button>
           <Button
             variant="primary"
             onClick={() => {
@@ -224,7 +318,17 @@ function Positions() {
   const units = state.units;
   return (
     <Card>
-      <CardHeader eyebrow={P.positionsLead} title={P.positions} aside={<Tip content={en.tips.unitSold}><span tabIndex={0}><LayerTag layer="new" /></span></Tip>} />
+      <CardHeader
+        eyebrow={P.positionsLead}
+        title={P.positions}
+        aside={
+          <Tip content={en.tips.unitSold}>
+            <span tabIndex={0}>
+              <LayerTag layer="new" />
+            </span>
+          </Tip>
+        }
+      />
       {units.length === 0 ? (
         <p className="text-[13.5px] text-muted">{P.noUnits}</p>
       ) : (
@@ -232,7 +336,16 @@ function Positions() {
           <thead>
             <tr className="text-left text-[11.5px] text-muted">
               {P.cols.map((c, i) => (
-                <th key={i} className={cn('pb-2 font-normal', i >= 2 && i !== 4 && i !== 5 && 'text-right', i === 4 && 'pl-4')}>{c}</th>
+                <th
+                  key={i}
+                  className={cn(
+                    'pb-2 font-normal',
+                    i >= 2 && i !== 4 && i !== 5 && 'text-right',
+                    i === 4 && 'pl-4',
+                  )}
+                >
+                  {c}
+                </th>
               ))}
             </tr>
           </thead>
@@ -244,9 +357,15 @@ function Positions() {
                   <td className="py-2.5 font-mono text-[12px]">{u.id}</td>
                   <td className="py-2.5">
                     {u.tenor} {u.currency !== 'EUR' && <Chip tone="neutral">{u.currency}</Chip>}
-                    {u.blocked && <Chip tone="new" className="ml-1.5">{P.blockedNote}</Chip>}
+                    {u.blocked && (
+                      <Chip tone="new" className="ml-1.5">
+                        {P.blockedNote}
+                      </Chip>
+                    )}
                   </td>
-                  <td className="tabular py-2.5 text-right">{u.currency} {fmtAmount(u.amount)}</td>
+                  <td className="tabular py-2.5 text-right">
+                    {u.currency} {fmtAmount(u.amount)}
+                  </td>
                   <td className="tabular py-2.5 text-right text-amber">{fmtPct(u.rate)}</td>
                   <td className="tabular py-2.5 pl-4 text-muted">{formatDateTime(u.start)}</td>
                   <td className="tabular py-2.5 text-muted">{formatDateTime(u.maturity)}</td>

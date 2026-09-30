@@ -14,11 +14,41 @@ export const ENTITIES: Entity[] = [
   { id: 'paris', name: 'Lefèvre Industries SA', city: 'Paris', country: 'France', currency: 'EUR' },
   { id: 'munich', name: 'Lefèvre GmbH', city: 'Munich', country: 'Germany', currency: 'EUR' },
   { id: 'madrid', name: 'Lefèvre Ibérica SL', city: 'Madrid', country: 'Spain', currency: 'EUR' },
-  { id: 'saopaulo', name: 'Lefèvre do Brasil Ltda', city: 'São Paulo', country: 'Brazil', currency: 'BRL' },
-  { id: 'monterrey', name: 'Lefèvre México SA de CV', city: 'Monterrey', country: 'Mexico', currency: 'MXN' },
-  { id: 'singapore', name: 'Lefèvre Asia Pte Ltd', city: 'Singapore', country: 'Singapore', currency: 'SGD' },
-  { id: 'chicago', name: 'Lefèvre Inc.', city: 'Chicago', country: 'United States', currency: 'USD' },
-  { id: 'warsaw', name: 'Lefèvre Polska Sp. z o.o.', city: 'Warsaw', country: 'Poland', currency: 'PLN' },
+  {
+    id: 'saopaulo',
+    name: 'Lefèvre do Brasil Ltda',
+    city: 'São Paulo',
+    country: 'Brazil',
+    currency: 'BRL',
+  },
+  {
+    id: 'monterrey',
+    name: 'Lefèvre México SA de CV',
+    city: 'Monterrey',
+    country: 'Mexico',
+    currency: 'MXN',
+  },
+  {
+    id: 'singapore',
+    name: 'Lefèvre Asia Pte Ltd',
+    city: 'Singapore',
+    country: 'Singapore',
+    currency: 'SGD',
+  },
+  {
+    id: 'chicago',
+    name: 'Lefèvre Inc.',
+    city: 'Chicago',
+    country: 'United States',
+    currency: 'USD',
+  },
+  {
+    id: 'warsaw',
+    name: 'Lefèvre Polska Sp. z o.o.',
+    city: 'Warsaw',
+    country: 'Poland',
+    currency: 'PLN',
+  },
 ];
 
 export const entityById = (id: string): Entity => {

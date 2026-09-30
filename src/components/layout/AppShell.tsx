@@ -73,7 +73,10 @@ function EventToast() {
 
   const e = tl.events.find((x) => x.id === shown);
   return (
-    <div className="pointer-events-none fixed bottom-6 left-1/2 z-50 w-[min(560px,90vw)] -translate-x-1/2" aria-live="polite">
+    <div
+      className="pointer-events-none fixed bottom-6 left-1/2 z-50 w-[min(560px,90vw)] -translate-x-1/2"
+      aria-live="polite"
+    >
       <AnimatePresence>
         {e && (
           <motion.div
@@ -95,7 +98,12 @@ function EventToast() {
               <div className="text-[14px] font-medium leading-snug">{e.title}</div>
               <div className="mt-0.5 text-[12.5px] leading-relaxed text-muted">{e.detail}</div>
             </div>
-            <button type="button" aria-label="Close" onClick={() => setShown(null)} className="cursor-pointer rounded-full p-1 text-muted hover:text-fg">
+            <button
+              type="button"
+              aria-label="Close"
+              onClick={() => setShown(null)}
+              className="cursor-pointer rounded-full p-1 text-muted hover:text-fg"
+            >
               <X className="size-3.5" />
             </button>
           </motion.div>
@@ -117,7 +125,12 @@ export function AppShell() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement;
-      if (e.code !== 'Space' || /INPUT|TEXTAREA|SELECT|BUTTON/.test(el.tagName) || el.getAttribute('role') === 'slider') return;
+      if (
+        e.code !== 'Space' ||
+        /INPUT|TEXTAREA|SELECT|BUTTON/.test(el.tagName) ||
+        el.getAttribute('role') === 'slider'
+      )
+        return;
       e.preventDefault();
       useApp.getState().togglePlay();
     };
@@ -127,7 +140,10 @@ export function AppShell() {
 
   return (
     <div className="flex min-h-screen bg-bg">
-      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[90] focus:rounded-full focus:bg-surface focus:px-4 focus:py-2">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[90] focus:rounded-full focus:bg-surface focus:px-4 focus:py-2"
+      >
         {en.shell.skip}
       </a>
       <Rail />

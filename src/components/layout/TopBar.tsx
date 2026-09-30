@@ -1,8 +1,27 @@
 import { useState } from 'react';
-import { Link2, Moon, Pause, Play, RotateCcw, SkipBack, SkipForward, Sun, Wrench, CalendarClock, Undo2 } from 'lucide-react';
+import {
+  Link2,
+  Moon,
+  Pause,
+  Play,
+  RotateCcw,
+  SkipBack,
+  SkipForward,
+  Sun,
+  Wrench,
+  CalendarClock,
+  Undo2,
+} from 'lucide-react';
 import { useApp, useSim } from '@/app/store';
 import { en } from '@/i18n/en';
-import { dayPhase, formatClock, formatDate, minuteOfDay, toParam, type DayPhase } from '@/engine/clock';
+import {
+  dayPhase,
+  formatClock,
+  formatDate,
+  minuteOfDay,
+  toParam,
+  type DayPhase,
+} from '@/engine/clock';
 import { Button } from '@/components/ui/button';
 import { Tip } from '@/components/ui/tooltip';
 import { Chip } from '@/components/ui/chip';
@@ -48,7 +67,11 @@ function JumpDialog() {
           </Button>
         </DialogTrigger>
       </Tip>
-      <DialogContent title={en.shell.jumpTitle} description={en.shell.jumpDesc} className="w-[min(680px,92vw)]">
+      <DialogContent
+        title={en.shell.jumpTitle}
+        description={en.shell.jumpDesc}
+        className="w-[min(680px,92vw)]"
+      >
         <ol className="scrollbar-thin -mx-2 max-h-[60vh] space-y-0.5 overflow-y-auto">
           {headline.map((e) => (
             <li key={e.id}>
@@ -81,7 +104,8 @@ export function TopBar() {
   const actions = useApp((s) => s.actions);
   const theme = useApp((s) => s.theme);
   const hoodOpen = useApp((s) => s.hoodOpen);
-  const { togglePlay, step, stepBack, restart, setSpeed, setTheme, setHoodOpen, resetActions } = useApp.getState();
+  const { togglePlay, step, stepBack, restart, setSpeed, setTheme, setHoodOpen, resetActions } =
+    useApp.getState();
   const [copied, setCopied] = useState(false);
   const phase = dayPhase(t);
   const dark = phase !== 'business';
@@ -104,7 +128,10 @@ export function TopBar() {
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 transition-opacity duration-[2000ms]"
-        style={{ background: 'linear-gradient(180deg, var(--night), transparent)', opacity: dark ? 1 : 0 }}
+        style={{
+          background: 'linear-gradient(180deg, var(--night), transparent)',
+          opacity: dark ? 1 : 0,
+        }}
       />
       <div className="relative flex h-[64px] items-center gap-5 px-6">
         <div className="flex items-center gap-3">
@@ -113,7 +140,8 @@ export function TopBar() {
           </MinuteRing>
           <div className="leading-tight">
             <div className="tabular font-serif text-[26px] leading-none" aria-live="off">
-              {formatClock(t)} <span className="font-sans text-[12px] text-muted">{en.shell.cet}</span>
+              {formatClock(t)}{' '}
+              <span className="font-sans text-[12px] text-muted">{en.shell.cet}</span>
             </div>
             <div className="mt-1 text-[11.5px] text-muted">{formatDate(t)} 2026</div>
           </div>
@@ -131,23 +159,42 @@ export function TopBar() {
               <SkipBack />
             </Button>
           </Tip>
-          <Button variant="primary" onClick={togglePlay} className="w-[112px]" aria-label={playing ? en.shell.pause : en.shell.play} data-testid="play">
+          <Button
+            variant="primary"
+            onClick={togglePlay}
+            className="w-[112px]"
+            aria-label={playing ? en.shell.pause : en.shell.play}
+            data-testid="play"
+          >
             {playing ? <Pause /> : <Play />}
             {playing ? en.shell.pause : 'Play'}
           </Button>
           <Tip content={en.shell.step}>
-            <Button variant="ghost" size="icon" onClick={step} aria-label={en.shell.step} data-testid="step">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={step}
+              aria-label={en.shell.step}
+              data-testid="step"
+            >
               <SkipForward />
             </Button>
           </Tip>
-          <div className="ml-1 flex rounded-full border border-line p-0.5" role="radiogroup" aria-label={en.shell.speed}>
+          <div
+            className="ml-1 flex rounded-full border border-line p-0.5"
+            role="radiogroup"
+            aria-label={en.shell.speed}
+          >
             {([1, 3, 8] as const).map((s) => (
               <button
                 key={s}
                 role="radio"
                 aria-checked={speed === s}
                 onClick={() => setSpeed(s)}
-                className={cn('h-7 cursor-pointer rounded-full px-2.5 text-[12px] tabular', speed === s ? 'bg-surface-2 text-fg' : 'text-muted hover:text-fg')}
+                className={cn(
+                  'h-7 cursor-pointer rounded-full px-2.5 text-[12px] tabular',
+                  speed === s ? 'bg-surface-2 text-fg' : 'text-muted hover:text-fg',
+                )}
               >
                 {s}×
               </button>
@@ -181,7 +228,12 @@ export function TopBar() {
             {en.shell.hood}
           </Button>
           <Tip content={en.shell.theme}>
-            <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={en.shell.theme}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              aria-label={en.shell.theme}
+            >
               {theme === 'dark' ? <Sun /> : <Moon />}
             </Button>
           </Tip>

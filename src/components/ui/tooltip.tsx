@@ -37,7 +37,13 @@ export function Tip({
 }
 
 /** A small (i) button that explains something on hover or keyboard focus. */
-export function InfoTip({ content, label = 'More information' }: { content: React.ReactNode; label?: string }) {
+export function InfoTip({
+  content,
+  label = 'More information',
+}: {
+  content: React.ReactNode;
+  label?: string;
+}) {
   return (
     <Tip content={content}>
       <button

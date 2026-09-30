@@ -1,7 +1,15 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { useApp, useSim } from '@/app/store';
 import { en } from '@/i18n/en';
-import { BUSINESS_START, LAST_CUTOFF, MIN_PER_DAY, SIM_END, formatClock, formatDate, weekday } from '@/engine/clock';
+import {
+  BUSINESS_START,
+  LAST_CUTOFF,
+  MIN_PER_DAY,
+  SIM_END,
+  formatClock,
+  formatDate,
+  weekday,
+} from '@/engine/clock';
 import { Tip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
@@ -73,14 +81,37 @@ export function WeekTimeline() {
         {/* days */}
         <div className="absolute inset-x-0 top-3 h-3 overflow-hidden rounded-full bg-surface-2">
           {days.map(({ d, start, end, weekend }) => (
-            <div key={d} className="absolute inset-y-0" style={{ left: pct(start), width: pct(end - start) }}>
+            <div
+              key={d}
+              className="absolute inset-y-0"
+              style={{ left: pct(start), width: pct(end - start) }}
+            >
               {weekend ? (
                 <div className="absolute inset-0" style={{ background: 'var(--night)' }} />
               ) : (
                 <>
-                  <div className="absolute inset-y-0 left-0" style={{ width: `${(BUSINESS_START / MIN_PER_DAY) * 100}%`, background: 'linear-gradient(90deg, var(--night), transparent)' }} />
-                  <div className="absolute inset-y-0" style={{ left: `${(BUSINESS_START / MIN_PER_DAY) * 100}%`, width: `${((LAST_CUTOFF - BUSINESS_START) / MIN_PER_DAY) * 100}%`, background: 'color-mix(in srgb, var(--new) 10%, transparent)' }} />
-                  <div className="absolute inset-y-0 right-0" style={{ width: `${((MIN_PER_DAY - LAST_CUTOFF) / MIN_PER_DAY) * 100}%`, background: 'linear-gradient(90deg, transparent, var(--night))' }} />
+                  <div
+                    className="absolute inset-y-0 left-0"
+                    style={{
+                      width: `${(BUSINESS_START / MIN_PER_DAY) * 100}%`,
+                      background: 'linear-gradient(90deg, var(--night), transparent)',
+                    }}
+                  />
+                  <div
+                    className="absolute inset-y-0"
+                    style={{
+                      left: `${(BUSINESS_START / MIN_PER_DAY) * 100}%`,
+                      width: `${((LAST_CUTOFF - BUSINESS_START) / MIN_PER_DAY) * 100}%`,
+                      background: 'color-mix(in srgb, var(--new) 10%, transparent)',
+                    }}
+                  />
+                  <div
+                    className="absolute inset-y-0 right-0"
+                    style={{
+                      width: `${((MIN_PER_DAY - LAST_CUTOFF) / MIN_PER_DAY) * 100}%`,
+                      background: 'linear-gradient(90deg, transparent, var(--night))',
+                    }}
+                  />
                 </>
               )}
               <div className="absolute inset-y-0 left-0 w-px bg-line-strong" />
@@ -90,7 +121,11 @@ export function WeekTimeline() {
         </div>
         {/* day labels */}
         {days.map(({ d, start }) => (
-          <span key={d} className="pointer-events-none absolute top-[22px] pl-1 text-[10.5px] text-muted" style={{ left: pct(start) }}>
+          <span
+            key={d}
+            className="pointer-events-none absolute top-[22px] pl-1 text-[10.5px] text-muted"
+            style={{ left: pct(start) }}
+          >
             {formatDate(start)}
           </span>
         ))}
@@ -98,7 +133,15 @@ export function WeekTimeline() {
         {tl.events
           .filter((e) => e.kind !== 'auto')
           .map((e) => (
-            <Tip key={e.id} content={<span><span className="text-muted">{formatClock(e.t)} · </span>{e.title}</span>}>
+            <Tip
+              key={e.id}
+              content={
+                <span>
+                  <span className="text-muted">{formatClock(e.t)} · </span>
+                  {e.title}
+                </span>
+              }
+            >
               <button
                 type="button"
                 tabIndex={-1}
@@ -119,7 +162,10 @@ export function WeekTimeline() {
             </Tip>
           ))}
         {/* handle */}
-        <div className="pointer-events-none absolute top-0 h-[26px] w-0.5 -translate-x-1/2 rounded-full bg-new" style={{ left: pct(t) }} />
+        <div
+          className="pointer-events-none absolute top-0 h-[26px] w-0.5 -translate-x-1/2 rounded-full bg-new"
+          style={{ left: pct(t) }}
+        />
       </div>
     </div>
   );

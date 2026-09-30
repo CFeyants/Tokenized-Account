@@ -27,7 +27,13 @@ export function PageHeader({
 }
 
 /** "New" (what the ledger adds), "Today" (already works), "Not yet" (interbank, 2028). */
-export function LayerTag({ layer, className }: { layer: 'new' | 'traditional' | 'notYet'; className?: string }) {
+export function LayerTag({
+  layer,
+  className,
+}: {
+  layer: 'new' | 'traditional' | 'notYet';
+  className?: string;
+}) {
   if (layer === 'new')
     return (
       <Chip tone="new" className={className}>
@@ -82,9 +88,19 @@ export function Stat({
   );
 }
 
-export function Row({ k, v, className }: { k: React.ReactNode; v: React.ReactNode; className?: string }) {
+export function Row({
+  k,
+  v,
+  className,
+}: {
+  k: React.ReactNode;
+  v: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className={cn('flex items-baseline justify-between gap-4 py-1.5 text-[13.5px]', className)}>
+    <div
+      className={cn('flex items-baseline justify-between gap-4 py-1.5 text-[13.5px]', className)}
+    >
       <span className="text-muted">{k}</span>
       <span className="tabular text-right">{v}</span>
     </div>

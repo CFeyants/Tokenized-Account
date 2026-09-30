@@ -14,31 +14,129 @@ export const en = {
   },
 
   scenario: {
-    e0: { title: 'Week starts. Payments day.', detail: 'EUR 120m on the group current accounts at the bank. Nothing on the tokenised account yet.' },
-    e1: { title: 'Supplier batch and Spanish payroll approved', detail: 'SEPA supplier batch EUR 8.4m and payroll file for Spain EUR 2.1m. Traditional tools, nothing new.' },
-    e2: { title: 'Instant collection from a key customer, EUR 12m', detail: 'SCT Inst, final at 17:45. On a current account it earns the sight rate for the day.' },
-    e3: { title: 'Cut-off passed: surplus swept, overnight unit bought', detail: 'Rule "sweep surplus above EUR 20m" moves EUR 101.5m to the tokenised account; rule "overnight unit on idle balance" buys a unit that minute.' },
-    e4: { title: 'Night sweep from HSBC and Deutsche Bank, EUR 24m', detail: 'EUR 15m from HSBC and EUR 9m from Deutsche Bank by instant transfer — final at once — straight into the overnight unit.' },
-    e5: { title: 'USD 10m announced by the correspondent', detail: 'Receipt for the US subsidiary. Cover not yet on our nostro: pending, not earning yet.' },
-    e6: { title: 'Opening: overnight unit unwound, cash returned', detail: 'EUR 60m back to the current account, EUR 15m to HSBC, EUR 9m to Deutsche Bank (their day needs). EUR 41.5m stays on the tokenised account as group buffer.' },
-    e7: { title: 'USD cover received: USD 10m is final', detail: 'Default choice applied: kept in USD and placed in a 1-month term unit at 3.90%. Interest counts from 10:30, not from Monday.' },
-    e8: { title: 'Bid bond for Brazil: EUR 15m blocked as collateral', detail: 'Exact amount blocked on the tokenised account; the bank issues the guarantee. The blocked amount keeps earning. Traditional: a cash gage at 0%.' },
-    e9: { title: 'Durable surplus: 3-month term unit, EUR 50m', detail: 'The cash forecast (traditional tool) shows EUR 50m of durable surplus. EUR 50m moved from the current account, 3-month unit bought at 2.20%.' },
-    e10: { title: 'Tokenised fund order, EUR 10m — queued', detail: 'Placed at 17:30, after fund hours (09:00–15:00). Queued for Friday 09:00; the cash stays in the overnight unit meanwhile.' },
-    e11: { title: 'Fund order settled on the ledger', detail: 'EUR 10m of fund units against EUR 10m of cash, in one step (delivery versus payment). No cash left the ledger.' },
-    e12: { title: 'Weekend: three-day unit bought, night sweep again', detail: 'Weekend threshold EUR 5m on the current account. EUR 24m swept from HSBC and Deutsche Bank. The blocked EUR 15m sits inside the unit, flagged not transferable.' },
-    e13: { title: 'Singapore funded on Saturday night, EUR 10m → SGD', detail: 'Supplier due Monday 08:00 in Singapore (Sunday 02:00 in Paris). Out-of-hours FX at the markets desk, within the night limit. The three-day unit is partly unwound to the minute.' },
-    e14: { title: 'Brazil tender lost: guarantee expired, EUR 15m released', detail: 'Release by rule on the tender result. Interest was earned for every minute of the block.' },
-    e15: { title: 'Monday opening: units unwound, week-1 statement', detail: 'EUR 60m back to the current account, EUR 24m returned to HSBC and Deutsche Bank, EUR 30.5m stays on the tokenised account.' },
-    e16: { title: 'Acquisition signs early: EUR 20m of the 3-month unit sold', detail: 'Sold to the bank at the day’s price (par + accrued − 2 bps). Cash on the tokenised account in minutes. Traditional: break a deposit and pay a penalty.' },
-    e17: { title: 'Night payment to a supplier at another bank — not available', detail: 'Available when banks exchange tokenised deposits (interbank ledger, 2028). Use SCT Inst instead.' },
-    a_sweep: { title: 'Cut-off passed: surplus swept, overnight unit bought', detail: 'Same rules as every business night: surplus above the threshold to the tokenised account, idle balance into an overnight unit.' },
-    a_night: { title: 'Night sweep from HSBC and Deutsche Bank', detail: 'Surplus above each bank’s next-day need, by instant transfer, final at once, into the overnight unit.' },
-    a_return: { title: 'Opening: overnight unit unwound, cash returned', detail: 'Each bank gets back what it needs today — not everything. The rest stays on the tokenised account.' },
-    x1: { title: 'Munich pays EUR 4m at 21:15 — funded to the minute', detail: 'Urgent supplier payment by SCT Inst. The Munich account goes EUR 4m below zero; intraday credit counted to the minute until the expected receipt.' },
-    x2: { title: 'Munich receipt EUR 4m: intraday credit repaid', detail: 'Expected customer receipt, final at once. Munich back to zero. It paid only for the minutes it borrowed.' },
-    x3: { title: 'Singapore supplier paid (Mon 08:00 SGT)', detail: 'Local payment from the BNP Paribas Singapore account, on time.' },
-    x4: { title: 'Weekend collections, EUR 44m by instant transfer', detail: 'Distributors pay over the weekend. Final at once, placed in a weekend unit that minute (assumption A-3).' },
+    e0: {
+      title: 'Week starts. Payments day.',
+      detail:
+        'EUR 120m on the group current accounts at the bank. Nothing on the tokenised account yet.',
+    },
+    e1: {
+      title: 'Supplier batch and Spanish payroll approved',
+      detail:
+        'SEPA supplier batch EUR 8.4m and payroll file for Spain EUR 2.1m. Traditional tools, nothing new.',
+    },
+    e2: {
+      title: 'Instant collection from a key customer, EUR 12m',
+      detail: 'SCT Inst, final at 17:45. On a current account it earns the sight rate for the day.',
+    },
+    e3: {
+      title: 'Cut-off passed: surplus swept, overnight unit bought',
+      detail:
+        'Rule "sweep surplus above EUR 20m" moves EUR 101.5m to the tokenised account; rule "overnight unit on idle balance" buys a unit that minute.',
+    },
+    e4: {
+      title: 'Night sweep from HSBC and Deutsche Bank, EUR 24m',
+      detail:
+        'EUR 15m from HSBC and EUR 9m from Deutsche Bank by instant transfer — final at once — straight into the overnight unit.',
+    },
+    e5: {
+      title: 'USD 10m announced by the correspondent',
+      detail:
+        'Receipt for the US subsidiary. Cover not yet on our nostro: pending, not earning yet.',
+    },
+    e6: {
+      title: 'Opening: overnight unit unwound, cash returned',
+      detail:
+        'EUR 60m back to the current account, EUR 15m to HSBC, EUR 9m to Deutsche Bank (their day needs). EUR 41.5m stays on the tokenised account as group buffer.',
+    },
+    e7: {
+      title: 'USD cover received: USD 10m is final',
+      detail:
+        'Default choice applied: kept in USD and placed in a 1-month term unit at 3.90%. Interest counts from 10:30, not from Monday.',
+    },
+    e8: {
+      title: 'Bid bond for Brazil: EUR 15m blocked as collateral',
+      detail:
+        'Exact amount blocked on the tokenised account; the bank issues the guarantee. The blocked amount keeps earning. Traditional: a cash gage at 0%.',
+    },
+    e9: {
+      title: 'Durable surplus: 3-month term unit, EUR 50m',
+      detail:
+        'The cash forecast (traditional tool) shows EUR 50m of durable surplus. EUR 50m moved from the current account, 3-month unit bought at 2.20%.',
+    },
+    e10: {
+      title: 'Tokenised fund order, EUR 10m — queued',
+      detail:
+        'Placed at 17:30, after fund hours (09:00–15:00). Queued for Friday 09:00; the cash stays in the overnight unit meanwhile.',
+    },
+    e11: {
+      title: 'Fund order settled on the ledger',
+      detail:
+        'EUR 10m of fund units against EUR 10m of cash, in one step (delivery versus payment). No cash left the ledger.',
+    },
+    e12: {
+      title: 'Weekend: three-day unit bought, night sweep again',
+      detail:
+        'Weekend threshold EUR 5m on the current account. EUR 24m swept from HSBC and Deutsche Bank. The blocked EUR 15m sits inside the unit, flagged not transferable.',
+    },
+    e13: {
+      title: 'Singapore funded on Saturday night, EUR 10m → SGD',
+      detail:
+        'Supplier due Monday 08:00 in Singapore (Sunday 02:00 in Paris). Out-of-hours FX at the markets desk, within the night limit. The three-day unit is partly unwound to the minute.',
+    },
+    e14: {
+      title: 'Brazil tender lost: guarantee expired, EUR 15m released',
+      detail:
+        'Release by rule on the tender result. Interest was earned for every minute of the block.',
+    },
+    e15: {
+      title: 'Monday opening: units unwound, week-1 statement',
+      detail:
+        'EUR 60m back to the current account, EUR 24m returned to HSBC and Deutsche Bank, EUR 30.5m stays on the tokenised account.',
+    },
+    e16: {
+      title: 'Acquisition signs early: EUR 20m of the 3-month unit sold',
+      detail:
+        'Sold to the bank at the day’s price (par + accrued − 2 bps). Cash on the tokenised account in minutes. Traditional: break a deposit and pay a penalty.',
+    },
+    e17: {
+      title: 'Night payment to a supplier at another bank — not available',
+      detail:
+        'Available when banks exchange tokenised deposits (interbank ledger, 2028). Use SCT Inst instead.',
+    },
+    a_sweep: {
+      title: 'Cut-off passed: surplus swept, overnight unit bought',
+      detail:
+        'Same rules as every business night: surplus above the threshold to the tokenised account, idle balance into an overnight unit.',
+    },
+    a_night: {
+      title: 'Night sweep from HSBC and Deutsche Bank',
+      detail:
+        'Surplus above each bank’s next-day need, by instant transfer, final at once, into the overnight unit.',
+    },
+    a_return: {
+      title: 'Opening: overnight unit unwound, cash returned',
+      detail:
+        'Each bank gets back what it needs today — not everything. The rest stays on the tokenised account.',
+    },
+    x1: {
+      title: 'Munich pays EUR 4m at 21:15 — funded to the minute',
+      detail:
+        'Urgent supplier payment by SCT Inst. The Munich account goes EUR 4m below zero; intraday credit counted to the minute until the expected receipt.',
+    },
+    x2: {
+      title: 'Munich receipt EUR 4m: intraday credit repaid',
+      detail:
+        'Expected customer receipt, final at once. Munich back to zero. It paid only for the minutes it borrowed.',
+    },
+    x3: {
+      title: 'Singapore supplier paid (Mon 08:00 SGT)',
+      detail: 'Local payment from the BNP Paribas Singapore account, on time.',
+    },
+    x4: {
+      title: 'Weekend collections, EUR 44m by instant transfer',
+      detail:
+        'Distributors pay over the weekend. Final at once, placed in a weekend unit that minute (assumption A-3).',
+    },
     userPay: { title: 'Payment approved', detail: '' },
   },
 
@@ -259,10 +357,26 @@ export const en = {
     eyebrow: 'All banks, all entities',
     title: 'Accounts',
     lead: 'Every account of the group, at the bank and elsewhere. Balances follow the clock; finality says from when a euro earns.',
-    cols: { entity: 'Entity', bank: 'Bank', ccy: 'Ccy', type: 'Type', balance: 'Balance', eur: 'EUR eq.', finality: 'Finality', cutoff: 'Cut-off', night: 'At night' },
+    cols: {
+      entity: 'Entity',
+      bank: 'Bank',
+      ccy: 'Ccy',
+      type: 'Type',
+      balance: 'Balance',
+      eur: 'EUR eq.',
+      finality: 'Finality',
+      cutoff: 'Cut-off',
+      night: 'At night',
+    },
     types: { current: 'Current', tokenised: 'Tokenised', otherBank: 'At other bank' },
     finality: { final: 'Final', pendingCover: 'Pending cover', valueTomorrow: 'Value tomorrow' },
-    night: { swept: 'Swept', notSwept: 'Not swept', pooled: 'Pooled to Paris', inUnit: 'In unit by rule', local: 'Local bank' },
+    night: {
+      swept: 'Swept',
+      notSwept: 'Not swept',
+      pooled: 'Pooled to Paris',
+      inUnit: 'In unit by rule',
+      local: 'Local bank',
+    },
     noCutoff: 'none — 24/7',
     open: 'Open account',
     sameEuro: 'Same euro, two accounts',
@@ -270,9 +384,11 @@ export const en = {
     sameCurrent: 'Current account',
     sameCurrentHow: 'Counted for the full day at 0.50% on the end-of-day balance.',
     sameTok: 'Tokenised account + overnight unit',
-    sameTokHow: '12 hours in the overnight unit at 1.80% (19:00 → 07:00), then 2 hours on the account at 0.10% until it leaves.',
+    sameTokHow:
+      '12 hours in the overnight unit at 1.80% (19:00 → 07:00), then 2 hours on the account at 0.10% until it leaves.',
     poolingTitle: 'Cash pooling — zero-balancing',
-    poolingText: 'Munich and Madrid current accounts are zero-balanced into the Paris header every evening, as today. The pool is where the night sweep starts.',
+    poolingText:
+      'Munich and Madrid current accounts are zero-balanced into the Paris header every evening, as today. The pool is where the night sweep starts.',
     pendingUsd: 'USD 10m announced by the correspondent',
     back: 'All accounts',
     subFree: 'Free',
@@ -291,10 +407,13 @@ export const en = {
     movements: 'Movements today',
     noMovements: 'No movement yet today.',
     valueDates: 'Value dates',
-    valueDatesText: 'SEPA credit received: value today if before 18:00, otherwise next business day. Cross-border via correspondent: D+1 / D+2. Instant: value now.',
+    valueDatesText:
+      'SEPA credit received: value today if before 18:00, otherwise next business day. Cross-border via correspondent: D+1 / D+2. Instant: value now.',
     cutoffs: 'Cut-offs',
-    cutoffsText: 'SEPA 18:00 · Urgent (TARGET2) 17:00 · Cross-border USD 16:00 · Intragroup on the ledger: none.',
-    dayConvention: 'A euro that arrives at 19:00 and leaves at 09:00 counts for a full day at the sight rate — and a euro that leaves at 23:00 counts for nothing.',
+    cutoffsText:
+      'SEPA 18:00 · Urgent (TARGET2) 17:00 · Cross-border USD 16:00 · Intragroup on the ledger: none.',
+    dayConvention:
+      'A euro that arrives at 19:00 and leaves at 09:00 counts for a full day at the sight rate — and a euro that leaves at 23:00 counts for nothing.',
     unitsHere: 'Units bought from this account',
     none: '—',
     notFound: 'This account has no detail page in the mock-up.',
@@ -309,22 +428,38 @@ export const en = {
   hood: {
     title: 'Under the hood',
     lead: 'What happens inside the bank, for colleagues from IT, ALM and compliance.',
-    tabs: { ledger: 'Ledger', orchestration: 'Orchestration', accrual: 'Accrual', alm: 'ALM', intragroup: 'Intragroup', notYet: 'Not yet' },
+    tabs: {
+      ledger: 'Ledger',
+      orchestration: 'Orchestration',
+      accrual: 'Accrual',
+      alm: 'ALM',
+      intragroup: 'Intragroup',
+      notYet: 'Not yet',
+    },
     close: 'Close panel',
     ledgerLead: 'Chronological entries up to now, time-stamped to the second.',
-    cols: { time: 'Time', account: 'Account', amount: 'Amount', finality: 'Finality', unit: 'Unit', memo: 'Memo' },
+    cols: {
+      time: 'Time',
+      account: 'Account',
+      amount: 'Amount',
+      finality: 'Finality',
+      unit: 'Unit',
+      memo: 'Memo',
+    },
     filterAll: 'All entries',
     filterToday: 'Today only',
     orchLead: 'Rule → decision → instrument → rail, with screening and limit checks.',
     accrualTitle: 'Accrual, minute by minute',
-    accrualLead: 'For the selected account or unit: the accrual table, the daily amount posted to the classic interest engine, and the formula.',
+    accrualLead:
+      'For the selected account or unit: the accrual table, the daily amount posted to the classic interest engine, and the formula.',
     target: 'Account or unit',
     lastMinutes: 'Last 30 minutes',
     showTable: 'Show minute table',
     hideTable: 'Hide minute table',
     posted: 'Posted to the interest engine, per day',
     formula: 'Formula',
-    formulaText: 'interest = balance × rate × minutes / (360 × 1,440). Each minute uses the time-stamped balance of that minute. Negative balances accrue at the intraday rate.',
+    formulaText:
+      'interest = balance × rate × minutes / (360 × 1,440). Each minute uses the time-stamped balance of that minute. Negative balances accrue at the intraday rate.',
     almLead: 'The bank’s view of the same cash, by behaviour.',
     alm: {
       operational: 'Operational sight (current accounts)',
@@ -336,16 +471,40 @@ export const en = {
       lock: 'locked since',
       release: 'release on',
     },
-    almNote: 'Stability visible on the ledger: a blocked guarantee is a deposit for as long as the guarantee lasts; overnight money is treated as overnight money.',
-    igLead: 'When a transfer crosses two Group entities, a mirror intragroup balance is created at the same instant and remunerated on the same clock.',
-    igEmpty: 'No transfer has crossed two Group entities yet. Jump to Saturday 22:00 (Singapore funding).',
+    almNote:
+      'Stability visible on the ledger: a blocked guarantee is a deposit for as long as the guarantee lasts; overnight money is treated as overnight money.',
+    igLead:
+      'When a transfer crosses two Group entities, a mirror intragroup balance is created at the same instant and remunerated on the same clock.',
+    igEmpty:
+      'No transfer has crossed two Group entities yet. Jump to Saturday 22:00 (Singapore funding).',
     igAccrued: 'accrued on the same clock',
-    labels: { decision: 'Decision', instrument: 'Instrument', rail: 'Rail', owes: 'owes', eurEq: 'EUR eq.', soFar: '(so far)', unit: 'Unit', minCols: ['min', 'balance', 'rate', 'this minute', 'cumulative'] },
+    labels: {
+      decision: 'Decision',
+      instrument: 'Instrument',
+      rail: 'Rail',
+      owes: 'owes',
+      eurEq: 'EUR eq.',
+      soFar: '(so far)',
+      unit: 'Unit',
+      minCols: ['min', 'balance', 'rate', 'this minute', 'cumulative'],
+    },
     notYetLead: 'Deliberately not working in this mock-up. Each needs the interbank layer.',
     notYetItems: [
-      { title: 'Interbank tokenised deposits', text: 'Pay a supplier banked elsewhere at night, final on both ledgers.', year: '2028' },
-      { title: 'PvP FX with another bank', text: 'Payment-versus-payment of two currencies between two banks’ ledgers.', year: '2028–2030' },
-      { title: 'Settlement with non-clients', text: 'Deliver an asset against cash to a counterparty that banks elsewhere.', year: '2028–2030' },
+      {
+        title: 'Interbank tokenised deposits',
+        text: 'Pay a supplier banked elsewhere at night, final on both ledgers.',
+        year: '2028',
+      },
+      {
+        title: 'PvP FX with another bank',
+        text: 'Payment-versus-payment of two currencies between two banks’ ledgers.',
+        year: '2028–2030',
+      },
+      {
+        title: 'Settlement with non-clients',
+        text: 'Deliver an asset against cash to a counterparty that banks elsewhere.',
+        year: '2028–2030',
+      },
       { title: 'Stablecoin corridors', text: 'Not in scope of this mock-up.', year: '—' },
     ],
   },
@@ -371,7 +530,8 @@ export const en = {
       title: 'Night sweep — other banks',
       floor: 'Leave for tomorrow',
       rail: 'By SCT Inst after each bank’s cut-off — the only rail final all night between banks today. Later: interbank tokenised deposits.',
-      gainLine: (g: string, s: string) => `${s} swept over five nights, ${g} earned in overnight units (0% if left at the other bank)`,
+      gainLine: (g: string, s: string) =>
+        `${s} swept over five nights, ${g} earned in overnight units (0% if left at the other bank)`,
     },
     overnight: {
       title: 'Overnight unit',
@@ -389,7 +549,8 @@ export const en = {
       title: 'Ladder',
       above: 'Surplus above',
       text: 'Durable surplus placed in equal slices of 1, 3, 6 and 12-month units. Each slice can be sold before maturity; none is ever broken.',
-      gainLine: (a: string, g: string) => `On ${a} above the threshold: ${g} a year more than the current account`,
+      gainLine: (a: string, g: string) =>
+        `On ${a} above the threshold: ${g} a year more than the current account`,
     },
     funding: {
       title: 'Funding',
@@ -400,13 +561,15 @@ export const en = {
       business: 'Business hours',
       fx: 'Out-of-hours FX allowed within the night limit (EUR 25m)',
       credit: 'Prefer intraday credit when a receipt is expected before opening',
-      gainLine: (m: string, a: string, b: string) => `Munich, Wednesday night: ${m} of intraday credit cost ${a}. Charged by the day, it would have cost ${b}.`,
+      gainLine: (m: string, a: string, b: string) =>
+        `Munich, Wednesday night: ${m} of intraday credit cost ${a}. Charged by the day, it would have cost ${b}.`,
     },
     release: {
       title: 'Collateral release',
       event: 'Release on',
       events: { expiry: 'Expiry date', document: 'Document received', tender: 'Tender result' },
-      gainLine: (k: string) => `Brazil bid bond: ${k} kept while blocked; a cash gage at 0% would have earned nothing.`,
+      gainLine: (k: string) =>
+        `Brazil bid bond: ${k} kept while blocked; a cash gage at 0% would have earned nothing.`,
     },
     forecast: {
       title: 'Cash forecast',
@@ -462,7 +625,8 @@ export const en = {
       trad: 'Classic fund — order by 15:00, settled D or D+1 through the transfer agent',
       tok: 'Tokenised fund — from the tokenised account, delivery versus payment',
       subscribe: 'Subscribe',
-      queuedNote: 'Outside fund hours: the order will be queued for the next opening at 09:00, the cash stays in the overnight unit meanwhile.',
+      queuedNote:
+        'Outside fund hours: the order will be queued for the next opening at 09:00, the cash stays in the overnight unit meanwhile.',
       openNote: 'Fund hours: settled at once on the ledger.',
       held: 'Fund units held',
       nav: 'NAV 1.00, net yield 1.95%',
@@ -475,7 +639,8 @@ export const en = {
     sell: 'Sell',
     blockedNote: 'blocked — not transferable',
     sellTitle: 'Sell before maturity',
-    sellDesc: 'Sold to the bank as market maker at the day’s price. The unit is not broken: the bank holds it to maturity.',
+    sellDesc:
+      'Sold to the bank as market maker at the day’s price. The unit is not broken: the bank holds it to maturity.',
     nominal: 'Nominal to sell (EUR m)',
     par: 'Par',
     accrued: 'Accrued to this minute',
@@ -504,16 +669,19 @@ export const en = {
     approved: 'Approved',
     executed: 'Executed',
     upload: 'Upload a pain.001 file',
-    uploadHint: 'Drop a file here or choose one. In the mock-up any file is read as a 38-payment supplier run.',
+    uploadHint:
+      'Drop a file here or choose one. In the mock-up any file is read as a 38-payment supplier run.',
     choose: 'Choose file',
-    parsed: (n: number, a: string) => `pain.001.001.09 read: ${n} payments, ${a}. Checks passed: IBAN, BIC, duplicates, currency.`,
+    parsed: (n: number, a: string) =>
+      `pain.001.001.09 read: ${n} payments, ${a}. Checks passed: IBAN, BIC, duplicates, currency.`,
     single: 'Single instant payment (SCT Inst)',
     payee: 'Payee',
     amount: 'Amount (EUR m)',
     send: 'Send',
     sent: 'Sent — final in seconds',
     screeningOnTheWay: 'Screening on the way',
-    screeningOnTheWayTip: 'Today, sanctions screening runs while the payment travels; a hit can stop it after departure.',
+    screeningOnTheWayTip:
+      'Today, sanctions screening runs while the payment travels; a hit can stop it after departure.',
     calendar: 'Cut-off calendar',
     calendarRows: [
       ['SEPA credit transfer', 'Mon–Fri 18:00', 'Value D'],
@@ -524,11 +692,18 @@ export const en = {
     ],
     cross: {
       routing: 'Correspondent routing',
-      routingText: 'A USD payment travels from our books to a correspondent bank, then to the beneficiary’s bank. Each leg has its cut-off; the money is final only when the cover lands.',
+      routingText:
+        'A USD payment travels from our books to a correspondent bank, then to the beneficiary’s bank. Each leg has its cut-off; the money is final only when the cover lands.',
       valueDates: 'Value D+1 / D+2',
-      valueDatesText: 'USD sent after 16:00 Paris is valued next business day in New York; exotic currencies can take two days. Unchanged by the ledger.',
+      valueDatesText:
+        'USD sent after 16:00 Paris is valued next business day in New York; exotic currencies can take two days. Unchanged by the ledger.',
       tracker: 'Tracker — USD 10m to Lefèvre Inc., Chicago',
-      steps: ['Message received (MT103)', 'Cover pending on nostro', 'Nostro credited — final', 'Placed in USD unit'],
+      steps: [
+        'Message received (MT103)',
+        'Cover pending on nostro',
+        'Nostro credited — final',
+        'Placed in USD unit',
+      ],
       notEarning: 'Not earning yet',
       earning: 'Earning from 10:30',
       nodes: ['Payer’s bank', 'Correspondent', 'Nostro at BNP Paribas', 'Lefèvre Inc.'],
@@ -539,7 +714,8 @@ export const en = {
       toMunich: 'Lefèvre GmbH, Munich — EUR',
       toSingapore: 'Lefèvre Asia, Singapore — SGD (BNP Paribas Singapore)',
       toChicago: 'Lefèvre Inc., Chicago — USD (BNP Paribas New York)',
-      anyHour: 'At any hour, final at once. From the tokenised account; units are unwound to the minute if needed.',
+      anyHour:
+        'At any hour, final at once. From the tokenised account; units are unwound to the minute if needed.',
       fxQuote: 'FX quote',
       fxDay: 'Markets desk, business hours',
       fxNight: 'Out-of-hours FX — for intragroup funding only',
@@ -552,18 +728,21 @@ export const en = {
       done: 'Done — credited at once',
       mirrorNote: 'Crosses two Group entities: a mirror intragroup balance appears under the hood.',
       nonClient: 'Pay a supplier at another bank',
-      nonClientText: 'From the tokenised account. By day it leaves through the usual rails. At night, both banks would need a shared ledger.',
+      nonClientText:
+        'From the tokenised account. By day it leaves through the usual rails. At night, both banks would need a shared ledger.',
       supplier: 'Nordwerk Maschinenbau — Commerzbank',
       supplierAmount: 'EUR 2.0m, due tonight',
       credited: (c: string) => `${c} credited`,
       whyNot: 'Why not yet?',
       tryPay: 'Pay from the tokenised account',
       notAvailable: 'Not available yet — interbank ledger, 2028',
-      notAvailableMsg: 'Available when banks exchange tokenised deposits (interbank ledger, 2028). Use SCT Inst instead.',
+      notAvailableMsg:
+        'Available when banks exchange tokenised deposits (interbank ledger, 2028). Use SCT Inst instead.',
       fallback: 'Send by SCT Inst instead',
       byDay: 'Business hours: sent through SEPA, as today.',
       pvp: 'FX payment-versus-payment with another bank',
-      pvpText: 'Exchange EUR against USD with a bank that is not on our ledger, both legs final together.',
+      pvpText:
+        'Exchange EUR against USD with a bank that is not on our ledger, both legs final together.',
     },
   },
 
@@ -574,10 +753,26 @@ export const en = {
     live: 'Live in the scenario',
     illustrative: 'Illustrative',
     items: {
-      bidBond: { title: 'Bid bond — Brazil tender', who: 'Lefèvre do Brasil · State utility tender, Rio de Janeiro', release: 'Tender result' },
-      perf: { title: 'Performance bond — Poland', who: 'Lefèvre Polska · rail depot contract, 12 months', release: 'Expiry date' },
-      margin: { title: 'Margin call — energy hedge', who: 'Lefèvre Industries SA · power swap, variation margin', release: 'Document received (margin return)' },
-      escrow: { title: 'Escrow — Mexican acquisition', who: 'Lefèvre México · share purchase, 3 months', release: 'Document received (closing)' },
+      bidBond: {
+        title: 'Bid bond — Brazil tender',
+        who: 'Lefèvre do Brasil · State utility tender, Rio de Janeiro',
+        release: 'Tender result',
+      },
+      perf: {
+        title: 'Performance bond — Poland',
+        who: 'Lefèvre Polska · rail depot contract, 12 months',
+        release: 'Expiry date',
+      },
+      margin: {
+        title: 'Margin call — energy hedge',
+        who: 'Lefèvre Industries SA · power swap, variation margin',
+        release: 'Document received (margin return)',
+      },
+      escrow: {
+        title: 'Escrow — Mexican acquisition',
+        who: 'Lefèvre México · share purchase, 3 months',
+        release: 'Document received (closing)',
+      },
     },
     amount: 'Amount',
     duration: 'Duration',
@@ -601,9 +796,11 @@ export const en = {
       byNight: 'Inside the overnight / weekend unit at night',
       total: 'Earned while blocked',
       minutes: 'Minutes blocked',
-      tradSide: 'Cash gage: 0%, released by the back office on Monday 09:00 — 14 more hours locked.',
+      tradSide:
+        'Cash gage: 0%, released by the back office on Monday 09:00 — 14 more hours locked.',
       event: 'Release event',
-      eventText: 'Tender result received Sunday 18:58 — lost. The guarantee expires; the rule releases the block at 19:00.',
+      eventText:
+        'Tender result received Sunday 18:58 — lost. The guarantee expires; the rule releases the block at 19:00.',
     },
     pledgeFund: 'Fund units can be pledged too — they keep the fund yield.',
   },
@@ -639,7 +836,14 @@ export const en = {
     weekly: 'Week-1 interest statement',
     weeklyLead: 'Produced by the return rule on Monday 07:00.',
     weeklyPending: 'Produced on Monday 12 October at 07:00.',
-    weeklyRows: { current: 'Current account (daily)', tokenised: 'Tokenised account (minute)', units: 'Term units (minute)', fund: 'Tokenised fund', jit: 'Intraday credit', spread: 'Spread on units sold' },
+    weeklyRows: {
+      current: 'Current account (daily)',
+      tokenised: 'Tokenised account (minute)',
+      units: 'Term units (minute)',
+      fund: 'Tokenised fund',
+      jit: 'Intraday credit',
+      spread: 'Spread on units sold',
+    },
     camt054: 'camt.054 notifications continue unchanged for each credit and debit.',
   },
 
@@ -672,14 +876,25 @@ export const en = {
       'Across banks, not yet: paying non-clients at night, PvP with other banks, settlement with non-clients need the interbank layer (2028+).',
     ],
     illustrative: 'Illustrative',
-    illustrativeText: 'All rates, amounts, names, limits and spreads are indicative. The group, its subsidiaries and its counterparties are fictitious. Four small events were added to make the week consistent; see docs/ASSUMPTIONS.md.',
+    illustrativeText:
+      'All rates, amounts, names, limits and spreads are indicative. The group, its subsidiaries and its counterparties are fictitious. Four small events were added to make the week consistent; see docs/ASSUMPTIONS.md.',
     notBuilt: 'Not built',
-    notBuiltText: 'The interbank ledger (tokenised deposits exchanged between banks), PvP FX with other banks, settlement with non-clients, stablecoin corridors. They appear as "Not yet" with a fallback.',
+    notBuiltText:
+      'The interbank ledger (tokenised deposits exchanged between banks), PvP FX with other banks, settlement with non-clients, stablecoin corridors. They appear as "Not yet" with a fallback.',
     roadmap: 'Roadmap',
     road: [
-      { year: '2027', text: 'Tokenised account and term units on one legal entity. Rules, night sweep by SCT Inst, collateral blocking, pre-screening before departure.' },
-      { year: '2028', text: 'Group entities on the ledger with mirror intragroup balances, intraday pricing, tokenised fund.' },
-      { year: '2028–2030', text: 'Interbank layer: tokenised deposits exchanged between banks, PvP, settlement with non-clients.' },
+      {
+        year: '2027',
+        text: 'Tokenised account and term units on one legal entity. Rules, night sweep by SCT Inst, collateral blocking, pre-screening before departure.',
+      },
+      {
+        year: '2028',
+        text: 'Group entities on the ledger with mirror intragroup balances, intraday pricing, tokenised fund.',
+      },
+      {
+        year: '2028–2030',
+        text: 'Interbank layer: tokenised deposits exchanged between banks, PvP, settlement with non-clients.',
+      },
     ],
     legend: 'Colour code',
     legendNew: 'Green — what the ledger adds',

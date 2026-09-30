@@ -38,7 +38,7 @@ interface AppState {
   toggleRail: () => void;
 }
 
-const read = <T,>(key: string, fallback: T): T => {
+const read = <T>(key: string, fallback: T): T => {
   try {
     const v = localStorage.getItem(key);
     return v === null ? fallback : (JSON.parse(v) as T);
@@ -101,7 +101,11 @@ export const useApp = create<AppState>((set, get) => ({
   restart: () => set({ t: SIM_START, playing: false }),
   addAction: (a) => {
     actionSeq += 1;
-    const full = { ...a, id: `USR-${String(actionSeq).padStart(2, '0')}`, t: get().t } as UserAction;
+    const full = {
+      ...a,
+      id: `USR-${String(actionSeq).padStart(2, '0')}`,
+      t: get().t,
+    } as UserAction;
     set({ actions: [...get().actions, full] });
   },
   resetActions: () => set({ actions: [] }),
@@ -110,7 +114,11 @@ export const useApp = create<AppState>((set, get) => ({
     set({ theme });
   },
   openHood: (tab, accrualTarget) =>
-    set((s) => ({ hoodOpen: true, hoodTab: tab ?? s.hoodTab, accrualTarget: accrualTarget ?? s.accrualTarget })),
+    set((s) => ({
+      hoodOpen: true,
+      hoodTab: tab ?? s.hoodTab,
+      accrualTarget: accrualTarget ?? s.accrualTarget,
+    })),
   setHoodOpen: (hoodOpen) => set({ hoodOpen }),
   setHoodTab: (hoodTab) => set({ hoodTab }),
   dismissBanner: () => {

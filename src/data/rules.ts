@@ -64,16 +64,16 @@ export interface ReleaseRule {
 }
 
 export type RuleConfig =
-  | SweepRule
-  | NightSweepRule
-  | OvernightRule
-  | ReturnRule
-  | LadderRule
-  | FundingRule
-  | ReleaseRule;
+  SweepRule | NightSweepRule | OvernightRule | ReturnRule | LadderRule | FundingRule | ReleaseRule;
 
 export const DEFAULT_RULES = {
-  sweep: { id: 'sweep', enabled: true, thresholdWeekday: 20 * M, thresholdFriday: 5 * M, runsAt: '18:30' } as SweepRule,
+  sweep: {
+    id: 'sweep',
+    enabled: true,
+    thresholdWeekday: 20 * M,
+    thresholdFriday: 5 * M,
+    runsAt: '18:30',
+  } as SweepRule,
   nightSweep: {
     id: 'nightSweep',
     enabled: true,
@@ -84,10 +84,28 @@ export const DEFAULT_RULES = {
     runsAt: '19:10',
     rail: 'SCT Inst',
   } as NightSweepRule,
-  overnight: { id: 'overnight', enabled: true, fridayThreeDay: true, includeBlocked: true } as OvernightRule,
+  overnight: {
+    id: 'overnight',
+    enabled: true,
+    fridayThreeDay: true,
+    includeBlocked: true,
+  } as OvernightRule,
   ret: { id: 'ret', enabled: true, runsAt: '07:00', source: 'forecast' } as ReturnRule,
-  ladder: { id: 'ladder', enabled: false, above: 60 * M, tenors: ['1m', '3m', '6m', '12m'] } as LadderRule,
-  funding: { id: 'funding', enabled: true, entity: 'munich', floor: 0, hours: 'any', fxAllowed: true, preferCredit: true } as FundingRule,
+  ladder: {
+    id: 'ladder',
+    enabled: false,
+    above: 60 * M,
+    tenors: ['1m', '3m', '6m', '12m'],
+  } as LadderRule,
+  funding: {
+    id: 'funding',
+    enabled: true,
+    entity: 'munich',
+    floor: 0,
+    hours: 'any',
+    fxAllowed: true,
+    preferCredit: true,
+  } as FundingRule,
   release: { id: 'release', enabled: true, event: 'tender' } as ReleaseRule,
 };
 

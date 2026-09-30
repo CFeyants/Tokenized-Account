@@ -48,7 +48,12 @@ export function buildTimeline(extra: SimEvent[] = []): Timeline {
       t: e.t,
       eventId: e.id,
       post: (p) => {
-        ledger.push({ ...p, id: `L${String(ledger.length + 1).padStart(4, '0')}`, t: e.t + sec / 60, eventId: e.id });
+        ledger.push({
+          ...p,
+          id: `L${String(ledger.length + 1).padStart(4, '0')}`,
+          t: e.t + sec / 60,
+          eventId: e.id,
+        });
         sec += 1;
       },
       orchestrate: (o) => orch.push({ ...o, t: e.t, eventId: e.id }),
@@ -80,7 +85,9 @@ export function stateAfter(tl: Timeline, eventId: string): State {
   return tl.snaps[i].state;
 }
 
-export const eventsUpTo = (tl: Timeline, t: SimTime): SimEvent[] => tl.events.filter((e) => e.t <= t);
-export const nextEvent = (tl: Timeline, t: SimTime): SimEvent | undefined => tl.events.find((e) => e.t > t);
+export const eventsUpTo = (tl: Timeline, t: SimTime): SimEvent[] =>
+  tl.events.filter((e) => e.t <= t);
+export const nextEvent = (tl: Timeline, t: SimTime): SimEvent | undefined =>
+  tl.events.find((e) => e.t > t);
 export const prevEvent = (tl: Timeline, t: SimTime): SimEvent | undefined =>
   [...tl.events].reverse().find((e) => e.t < t);

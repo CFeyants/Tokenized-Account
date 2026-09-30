@@ -15,7 +15,13 @@ import { MinuteRing } from '@/components/MinuteRing';
 import { cn } from '@/lib/utils';
 
 const A = en.accounts;
-const DETAIL = new Set(['cur-paris', 'tok-paris', 'tok-munich', 'tok-usd-chicago', 'tok-sgd-singapore']);
+const DETAIL = new Set([
+  'cur-paris',
+  'tok-paris',
+  'tok-munich',
+  'tok-usd-chicago',
+  'tok-sgd-singapore',
+]);
 
 export function FinalityChip({ f }: { f: 'final' | 'pendingCover' | 'valueTomorrow' }) {
   const chip = (
@@ -29,17 +35,25 @@ export function FinalityChip({ f }: { f: 'final' | 'pendingCover' | 'valueTomorr
 
 function SameEuro() {
   const cur = dailyAccrual(1_000_000, RATES.current);
-  const tok = minuteAccrual(1_000_000, RATES.overnightUnit, 12 * 60) + minuteAccrual(1_000_000, RATES.tokenised, 120);
+  const tok =
+    minuteAccrual(1_000_000, RATES.overnightUnit, 12 * 60) +
+    minuteAccrual(1_000_000, RATES.tokenised, 120);
   return (
     <Card>
-      <CardHeader eyebrow={A.sameEuroLead} title={A.sameEuro} aside={<InfoTip content={en.tips.lateCash} />} />
+      <CardHeader
+        eyebrow={A.sameEuroLead}
+        title={A.sameEuro}
+        aside={<InfoTip content={en.tips.lateCash} />}
+      />
       <div className="grid grid-cols-2 gap-6">
         <div className="rounded-2xl bg-grey-soft p-5">
           <div className="flex items-center justify-between">
             <span className="text-[13px] text-muted">{A.sameCurrent}</span>
             <LayerTag layer="traditional" />
           </div>
-          <div className="tabular mt-3 font-serif text-[40px] leading-none text-muted">{fmtEur(cur)}</div>
+          <div className="tabular mt-3 font-serif text-[40px] leading-none text-muted">
+            {fmtEur(cur)}
+          </div>
           <p className="mt-3 text-[12.5px] leading-relaxed text-muted">{A.sameCurrentHow}</p>
         </div>
         <div className="rounded-2xl bg-new-soft p-5">
@@ -49,7 +63,9 @@ function SameEuro() {
           </div>
           <div className="mt-3 flex items-center gap-3">
             <MinuteRing size={34} progress={14 / 24} />
-            <span className="tabular font-serif text-[40px] leading-none text-new">{fmtEur(tok)}</span>
+            <span className="tabular font-serif text-[40px] leading-none text-new">
+              {fmtEur(tok)}
+            </span>
           </div>
           <p className="mt-3 text-[12.5px] leading-relaxed text-muted">{A.sameTokHow}</p>
         </div>
@@ -94,19 +110,42 @@ export function Accounts() {
                 <tr
                   key={r.def.id}
                   onClick={clickable ? () => navigate(`/accounts/${r.def.id}`) : undefined}
-                  onKeyDown={clickable ? (ev) => ev.key === 'Enter' && navigate(`/accounts/${r.def.id}`) : undefined}
+                  onKeyDown={
+                    clickable
+                      ? (ev) => ev.key === 'Enter' && navigate(`/accounts/${r.def.id}`)
+                      : undefined
+                  }
                   tabIndex={clickable ? 0 : undefined}
-                  className={cn('border-b border-line last:border-0', clickable && 'cursor-pointer hover:bg-surface-2/60', outside && 'text-muted')}
+                  className={cn(
+                    'border-b border-line last:border-0',
+                    clickable && 'cursor-pointer hover:bg-surface-2/60',
+                    outside && 'text-muted',
+                  )}
                 >
                   <td className="px-6 py-3.5">
                     <div className={cn(!outside && 'text-fg')}>{e.city}</div>
                     <div className="text-[11.5px] text-muted">{e.name}</div>
                   </td>
                   <td className="px-3 py-3.5">
-                    <span className={cn(outside && 'rounded-md border border-dashed border-line-strong px-1.5 py-0.5')}>{b.name}</span>
+                    <span
+                      className={cn(
+                        outside &&
+                          'rounded-md border border-dashed border-line-strong px-1.5 py-0.5',
+                      )}
+                    >
+                      {b.name}
+                    </span>
                   </td>
                   <td className="px-3 py-3.5">
-                    <Chip tone={r.def.type === 'tokenised' ? 'new' : r.def.type === 'current' ? 'traditional' : 'outside'}>
+                    <Chip
+                      tone={
+                        r.def.type === 'tokenised'
+                          ? 'new'
+                          : r.def.type === 'current'
+                            ? 'traditional'
+                            : 'outside'
+                      }
+                    >
                       {A.types[r.def.type]}
                     </Chip>
                   </td>
@@ -116,19 +155,39 @@ export function Accounts() {
                     </span>
                     {(r.blocked > 0 || r.inUnit > 0) && (
                       <div className="text-[11px] text-muted">
-                        {r.blocked > 0 && <span className="text-new">{numM(r.blocked)}m {A.subBlocked.toLowerCase()} · </span>}
-                        {r.inUnit > 0 && <span className="text-amber">{numM(r.inUnit)}m {A.subInUnit.toLowerCase()}</span>}
+                        {r.blocked > 0 && (
+                          <span className="text-new">
+                            {numM(r.blocked)}m {A.subBlocked.toLowerCase()} ·{' '}
+                          </span>
+                        )}
+                        {r.inUnit > 0 && (
+                          <span className="text-amber">
+                            {numM(r.inUnit)}m {A.subInUnit.toLowerCase()}
+                          </span>
+                        )}
                       </div>
                     )}
-                    {r.pending > 0 && <div className="text-[11px] text-amber">+ {numM(r.pending)}m {A.finality.pendingCover.toLowerCase()}</div>}
+                    {r.pending > 0 && (
+                      <div className="text-[11px] text-amber">
+                        + {numM(r.pending)}m {A.finality.pendingCover.toLowerCase()}
+                      </div>
+                    )}
                   </td>
-                  <td className="tabular px-3 py-3.5 text-right text-muted">{numM(onBank / FX_MID[r.def.currency])}m</td>
+                  <td className="tabular px-3 py-3.5 text-right text-muted">
+                    {numM(onBank / FX_MID[r.def.currency])}m
+                  </td>
                   <td className="px-3 py-3.5">
                     <FinalityChip f={r.finality} />
                   </td>
-                  <td className="tabular px-3 py-3.5 text-muted">{r.def.cutoff === 'none' ? A.noCutoff : r.def.cutoff}</td>
+                  <td className="tabular px-3 py-3.5 text-muted">
+                    {r.def.cutoff === 'none' ? A.noCutoff : r.def.cutoff}
+                  </td>
                   <td className="px-3 py-3.5 text-[12.5px] text-muted">{A.night[r.def.night]}</td>
-                  <td className="pr-4">{clickable && <ChevronRight className="size-4 text-muted" aria-label={A.open} />}</td>
+                  <td className="pr-4">
+                    {clickable && (
+                      <ChevronRight className="size-4 text-muted" aria-label={A.open} />
+                    )}
+                  </td>
                 </tr>
               );
             })}

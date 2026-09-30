@@ -25,7 +25,11 @@ export function runSurplusSweep(s: State, ctx: Ctx): number {
     instrument: 'Tokenised account',
     rail: 'Internal ledger (same legal entity)',
     checks: [
-      { name: en.checks.balance, ok: true, detail: `Current ${fmtM(s.bal['cur-paris'] + surplus)} → ${fmtM(s.bal['cur-paris'])}` },
+      {
+        name: en.checks.balance,
+        ok: true,
+        detail: `Current ${fmtM(s.bal['cur-paris'] + surplus)} → ${fmtM(s.bal['cur-paris'])}`,
+      },
       { name: en.checks.finality, ok: true, detail: en.checks.finalOk },
     ],
   });
@@ -49,7 +53,11 @@ export function runNightSweep(s: State, ctx: Ctx): number {
       rail: 'SCT Inst (final at once)',
       checks: [
         { name: en.checks.finality, ok: true, detail: 'Instant transfer: final on receipt' },
-        { name: 'Cut-off at sending bank', ok: true, detail: `${b.bank} cut-off ${b.cutoff} passed` },
+        {
+          name: 'Cut-off at sending bank',
+          ok: true,
+          detail: `${b.bank} cut-off ${b.cutoff} passed`,
+        },
       ],
     });
   }
@@ -63,7 +71,14 @@ export function runOvernightUnit(s: State, ctx: Ctx): void {
   const maturity = nextOpening(ctx.t);
   const memo = friday ? en.ledger.buyWeekend : en.ledger.buyOvernight;
   const free = Math.max(0, s.bal['tok-paris']);
-  const u = buyUnit(s, ctx, { currency: 'EUR', amount: free, tenor, maturity, origin: 'rule', memo });
+  const u = buyUnit(s, ctx, {
+    currency: 'EUR',
+    amount: free,
+    tenor,
+    maturity,
+    origin: 'rule',
+    memo,
+  });
   let blockedMsg = '';
   if (s.blocked > 0 && DEFAULT_RULES.overnight.includeBlocked) {
     const active = s.collateral.find((c) => c.status === 'active' && c.mode === 'blockOnAccount');
@@ -82,9 +97,13 @@ export function runOvernightUnit(s: State, ctx: Ctx): void {
   ctx.orchestrate({
     rule: R.overnight,
     decision: `${friday ? 'Three-day' : 'Overnight'} unit on idle ${fmtM(free)}${blockedMsg}`,
-    instrument: u ? `Unit ${u.id}, ${friday ? 'three-day' : 'overnight'}, 1.80%` : 'No idle balance',
+    instrument: u
+      ? `Unit ${u.id}, ${friday ? 'three-day' : 'overnight'}, 1.80%`
+      : 'No idle balance',
     rail: 'Internal ledger',
-    checks: [{ name: 'After last cut-off (18:00)', ok: true, detail: 'Late cash earns from this minute' }],
+    checks: [
+      { name: 'After last cut-off (18:00)', ok: true, detail: 'Late cash earns from this minute' },
+    ],
   });
 }
 
@@ -103,7 +122,10 @@ export function runReturn(s: State, ctx: Ctx): void {
     s.sweptTonight[b.account] = 0;
   }
   const need = FORECAST_NEEDS[dayIndex(ctx.t)]?.current ?? s.bal['cur-paris'];
-  const toCurrent = Math.min(Math.max(0, need - s.bal['cur-paris']), Math.max(0, s.bal['tok-paris']));
+  const toCurrent = Math.min(
+    Math.max(0, need - s.bal['cur-paris']),
+    Math.max(0, s.bal['tok-paris']),
+  );
   move(s, ctx, 'tok-paris', 'cur-paris', toCurrent, en.ledger.returnCurrent);
   s.fxNightUsed = 0;
   ctx.orchestrate({
