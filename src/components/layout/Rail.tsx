@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   Timer,
+  Zap,
   TrendingUp,
 } from 'lucide-react';
 import { useApp } from '@/app/store';
@@ -22,6 +23,7 @@ export const NAV = [
   { to: '/accounts', label: en.nav.accounts, icon: Landmark },
   { to: '/minute', label: en.minute.nav, icon: Timer },
   { to: '/payments', label: en.nav.payments, icon: CreditCard },
+  { to: '/funding', label: en.funding.nav, icon: Zap },
   { to: '/rules', label: en.nav.rules, icon: SlidersHorizontal },
   { to: '/placements', label: en.nav.placements, icon: TrendingUp },
   { to: '/guarantees', label: en.nav.guarantees, icon: ShieldCheck },

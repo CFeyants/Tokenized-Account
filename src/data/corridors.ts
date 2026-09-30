@@ -55,7 +55,7 @@ export const CORRIDORS: Corridor[] = [
     label: 'EUR / USD → JPY, SAR, SGD — group entities',
     from: 'EUR',
     to: 'JPY',
-    counterparty: 'BNP Paribas Tokyo, Riyadh, Singapore',
+    counterparty: 'Norvane Bank Tokyo, Riyadh, Singapore',
     rails: ['intragroup', 'traditional'],
     status: 'live',
     hours: '24/7 within the night FX limit',
@@ -193,4 +193,4 @@ export const WALLET_ADDRESS: Record<WalletId, string> = {
 };
 
 /** Master account receiving the euro stablecoin, redeemed at par into the tokenised account. */
-export const MASTER_ADDRESS = '0xB9e1…04aD (BNP Paribas SA — Lefèvre Industries master account)';
+export const MASTER_ADDRESS = '0xB9e1…04aD (Norvane Bank SA — Lefèvre Industries master account)';

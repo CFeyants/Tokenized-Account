@@ -29,10 +29,10 @@ const R = en.rulesNames;
 
 export type JitTarget = 'tok-jpy-tokyo' | 'tok-sar-riyadh' | 'tok-sgd-singapore' | 'tok-munich';
 export const JIT_TARGET: Record<JitTarget, { ccy: string; bank: string; entity: string }> = {
-  'tok-jpy-tokyo': { ccy: 'JPY', bank: 'BNP Paribas Tokyo', entity: 'tokyo' },
-  'tok-sar-riyadh': { ccy: 'SAR', bank: 'BNP Paribas Riyadh', entity: 'riyadh' },
-  'tok-sgd-singapore': { ccy: 'SGD', bank: 'BNP Paribas Singapore', entity: 'singapore' },
-  'tok-munich': { ccy: 'EUR', bank: 'BNP Paribas SA', entity: 'munich' },
+  'tok-jpy-tokyo': { ccy: 'JPY', bank: 'Norvane Bank Tokyo', entity: 'tokyo' },
+  'tok-sar-riyadh': { ccy: 'SAR', bank: 'Norvane Bank Riyadh', entity: 'riyadh' },
+  'tok-sgd-singapore': { ccy: 'SGD', bank: 'Norvane Bank Singapore', entity: 'singapore' },
+  'tok-munich': { ccy: 'EUR', bank: 'Norvane Bank SA', entity: 'munich' },
 };
 
 export type AdvancedAction =
@@ -206,7 +206,7 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
             s.mirrors.push({
               id: nextId(s, 'IG'),
               t: c.t,
-              debtorBank: a.source === 'USD' ? 'BNP Paribas New York' : 'BNP Paribas SA',
+              debtorBank: a.source === 'USD' ? 'Norvane Bank New York' : 'Norvane Bank SA',
               creditorBank: tgt.bank,
               currency: tgt.ccy as never,
               amount: q.foreign,

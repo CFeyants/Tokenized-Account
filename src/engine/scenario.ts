@@ -248,7 +248,7 @@ export const SCENARIO: SimEvent[] = [
         rail: 'Internal ledger',
         checks: [
           { name: en.checks.balance, ok: true, detail: 'Free 41.5 → 26.5' },
-          { name: 'Guarantee issued', ok: true, detail: 'Bid bond BRL-equivalent, BNP Paribas' },
+          { name: 'Guarantee issued', ok: true, detail: 'Bid bond BRL-equivalent, Norvane Bank' },
         ],
       });
     },
@@ -399,8 +399,8 @@ export const SCENARIO: SimEvent[] = [
       s.mirrors.push({
         id: nextId(s, 'IG'),
         t: c.t,
-        debtorBank: 'BNP Paribas SA',
-        creditorBank: 'BNP Paribas Singapore',
+        debtorBank: 'Norvane Bank SA',
+        creditorBank: 'Norvane Bank Singapore',
         currency: 'SGD',
         amount: q.foreign,
         eur,
@@ -410,7 +410,7 @@ export const SCENARIO: SimEvent[] = [
         rule: R.fx,
         decision: `EUR 10.0m → SGD ${(q.foreign / M).toFixed(2)}m at ${q.rate.toFixed(4)} (mid ${q.mid} − 10 bps)`,
         instrument: 'Intragroup funding, Lefèvre Asia Pte Ltd',
-        rail: 'Ledger: BNP Paribas SA → BNP Paribas Singapore',
+        rail: 'Ledger: Norvane Bank SA → Norvane Bank Singapore',
         checks: [
           screeningCheck,
           {

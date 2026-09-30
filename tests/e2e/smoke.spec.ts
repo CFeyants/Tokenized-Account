@@ -50,5 +50,5 @@ test('under the hood opens with its tabs', async ({ page }) => {
     await panel.getByRole('tab', { name: tab }).click();
   }
   await panel.getByRole('tab', { name: 'Intragroup' }).click();
-  await expect(panel).toContainText('BNP Paribas Singapore');
+  await expect(panel).toContainText('Norvane Bank Singapore');
 });

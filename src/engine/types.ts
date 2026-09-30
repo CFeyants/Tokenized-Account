@@ -130,7 +130,7 @@ export interface FundOrder {
 export interface MirrorBalance {
   id: string;
   t: SimTime;
-  /** Entity of the bank that owes (e.g. BNP Paribas SA). */
+  /** Entity of the bank that owes (e.g. Norvane Bank SA). */
   debtorBank: string;
   creditorBank: string;
   currency: Currency;

@@ -139,11 +139,11 @@ export function actionToEvents(a: UserAction): SimEvent[] {
               );
               book(s, c, a.to, q.foreign, `${ccy} credited — intragroup funding`);
               if (!isBusinessHours(c.t)) s.fxNightUsed += a.amountEur;
-              const bank = ccy === 'SGD' ? 'BNP Paribas Singapore' : 'BNP Paribas New York';
+              const bank = ccy === 'SGD' ? 'Norvane Bank Singapore' : 'Norvane Bank New York';
               s.mirrors.push({
                 id: nextId(s, 'IG'),
                 t: c.t,
-                debtorBank: 'BNP Paribas SA',
+                debtorBank: 'Norvane Bank SA',
                 creditorBank: bank,
                 currency: ccy,
                 amount: q.foreign,
@@ -154,7 +154,7 @@ export function actionToEvents(a: UserAction): SimEvent[] {
                 rule: R.fx,
                 decision: `EUR → ${ccy} at ${q.rate.toFixed(4)}`,
                 instrument: 'Intragroup funding',
-                rail: `Ledger: BNP Paribas SA → ${bank}`,
+                rail: `Ledger: Norvane Bank SA → ${bank}`,
                 checks: [
                   screeningCheck,
                   {
