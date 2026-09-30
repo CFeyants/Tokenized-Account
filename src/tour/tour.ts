@@ -1,5 +1,5 @@
 /**
- * The guided tour: Marie's week told in ten steps. The tour replays a fixed set of actions on the
+ * The guided tour: Marie's week told in eleven steps. The tour replays a fixed set of actions on the
  * scenario, so every figure the narrator shows comes from the same engine as the screens.
  */
 import { at, type SimTime } from '@/engine/clock';
@@ -17,9 +17,10 @@ import { repatriationQuote } from '@/engine/advanced';
 import { ledgerOpportunity } from '@/engine/markets';
 import { fxCostEur, fxFloor } from '@/engine/fx';
 import { minuteAccrual } from '@/engine/accrual';
-import { fmtEur, fmtM } from '@/engine/format';
+import { fmtAmount, fmtEur, fmtM } from '@/engine/format';
 import { BRAZIL_BID_BOND } from '@/engine/scenario';
 import { weekMetrics } from '@/engine/weekMetrics';
+import { usClientValue } from '@/data/tmmf';
 
 const M = 1_000_000;
 const T = en.tour;
@@ -186,6 +187,16 @@ export const FULL: TourStep[] = [
         .reduce((a, u) => a + u.amount, 0);
       return S.friday.bankV(fmtEur(minuteAccrual(units, 0.0025, 60.5 * 60), 'EUR', 0));
     },
+  },
+  {
+    id: 'us',
+    t: at(4, '20:00'),
+    path: '/us-surplus',
+    target: 'us-rule',
+    label: 'Fri 20:00',
+    ...S.us,
+    marie: () => S.us.marieV(`USD ${fmtAmount(usClientValue().pickup)}`),
+    bank: () => S.us.bankV,
   },
   {
     id: 'incident',

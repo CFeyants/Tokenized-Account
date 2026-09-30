@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { ArrowRightLeft, Repeat } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, ArrowRightLeft, Repeat } from 'lucide-react';
 import { useSim } from '@/app/store';
 import { en } from '@/i18n/en';
 import { RATES } from '@/data/rates';
-import { TMMF, US_ENTITY } from '@/data/tmmf';
+import { usClientValue } from '@/data/tmmf';
 import { previewMmfSweep } from '@/engine/preview';
 import { fmtAmount, fmtEur, fmtM, fmtPct } from '@/engine/format';
 import { Card, CardHeader } from '@/components/ui/card';
-import { Chip } from '@/components/ui/chip';
+import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { InfoTip } from '@/components/ui/tooltip';
 import { HorizonTag, JourneyHeader } from '@/components/Journey';
 import { ApprovalButton } from '@/components/ApprovalButton';
 import { RateGrid } from '@/components/RateGrid';
@@ -157,100 +157,34 @@ function EurSweep() {
 }
 
 function UsdSweep() {
-  const [threshold, setThreshold] = useState(US_ENTITY.thresholdUsd / M);
-  const surplus = US_ENTITY.surplusUsd + US_ENTITY.thresholdUsd - threshold * M;
-  const rows = [
-    { key: 'ecr' as const, rate: US_ENTITY.ecr },
-    { key: 'tmmf' as const, rate: TMMF.yield },
-    { key: 'cashLeg' as const, rate: TMMF.cashLeg },
-  ];
+  const v = usClientValue();
   return (
     <div className="grid grid-cols-12 gap-6">
-      <div className="col-span-12 space-y-6 xl:col-span-5">
-        <Card>
-          <CardHeader title={U.entityTitle} />
-          {U.entity.map(([k, v]) => (
-            <Row key={k} k={k} v={v} />
-          ))}
-          <Row
-            k={U.ecr(fmtPct(US_ENTITY.ecr))}
-            v={U.fees(`USD ${fmtAmount(US_ENTITY.feesOffsetUsdYear)}`)}
-          />
-          <p className="mt-2 text-[12px] text-muted">
-            {U.surplus(usd(Math.max(0, surplus)), usd(threshold * M))}
-          </p>
-        </Card>
-        <Card tone="new" data-tour="sweep-usd">
-          <CardHeader title={U.ruleTitle} aside={<HorizonTag id="tmmfUsd" />} />
-          <div className="mb-2 flex justify-between text-[13px]">
-            <span className="text-muted">{S.threshold}</span>
-            <span className="tabular">{usd(threshold * M)}</span>
-          </div>
-          <Slider
-            aria-label={S.threshold}
-            min={5}
-            max={40}
-            step={5}
-            value={[threshold]}
-            onValueChange={([v]) => setThreshold(v)}
-          />
-          <RuleLines lines={U.ruleLines} />
-          <p className="mt-4 text-[12.5px]">{U.norm}</p>
-          <p className="mt-2 rounded-lg border border-dashed border-line-strong px-3 py-2 text-[12px] text-muted">
-            {U.cashLegNote} <Chip tone="outside">{U.fallback}</Chip>
-          </p>
-          <div className="mt-5">
-            <ApprovalButton
-              request={{
-                title: U.ruleApproval,
-                detail: U.ruleDetail(usd(threshold * M)),
-                amountEur: 0,
-                rule: {
-                  kind: 'mmf',
-                  name: U.ruleApproval,
-                  params: [`${S.threshold}: ${usd(threshold * M)}`, ...U.ruleLines],
-                },
-              }}
-            >
-              {U.setRule}
-            </ApprovalButton>
-          </div>
-        </Card>
-      </div>
-      <div className="col-span-12 space-y-6 xl:col-span-7">
-        <Card>
-          <CardHeader title={U.yields} eyebrow={en.value.illustrative} />
-          {rows.map((r) => (
-            <Row
-              key={r.key}
-              k={`${U.yieldRows[r.key]} · ${fmtPct(r.rate)}`}
-              v={
-                <span className={cn(r.key === 'tmmf' && 'text-new')}>
-                  {`USD ${fmtAmount(Math.max(0, surplus) * r.rate)}`}
-                </span>
-              }
-            />
-          ))}
-        </Card>
-        <Card>
-          <CardHeader title={U.eligTitle} />
-          {U.elig.map(([k, v]) => (
-            <Row
-              key={k}
-              k={
-                <span className="flex items-center gap-1">
-                  {k} <InfoTip content={v} />
-                </span>
-              }
-              v={<span className="text-[12px] text-muted">{v}</span>}
-            />
-          ))}
-        </Card>
-        <Card className="border-dashed">
-          <CardHeader title={U.collateralTitle} aside={<HorizonTag id="tmmfCollateral" />} />
-          <p className="text-[12.5px] leading-relaxed text-muted">{U.collateral}</p>
-        </Card>
-      </div>
+      <Card tone="new" className="col-span-12 xl:col-span-7" data-tour="sweep-usd">
+        <CardHeader
+          title={en.journeys.list.find((j) => j.id === 'us')!.title}
+          aside={<HorizonTag id="us" />}
+        />
+        <p className="text-[13px] leading-relaxed">{U.norm}</p>
+        <Row className="mt-3" k={en.us.surplus} v={usd(v.surplus)} />
+        <Row k={en.us.valueRows.pickup} v={`USD ${fmtAmount(v.pickup)}`} />
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Button asChild variant="primary">
+            <Link to="/us-surplus">
+              {en.us.alert.action} <ArrowRight />
+            </Link>
+          </Button>
+          <Button asChild variant="secondary">
+            <Link to="/settle-fund">
+              {en.settle.title} <ArrowRight />
+            </Link>
+          </Button>
+        </div>
+      </Card>
+      <Card className="col-span-12 border-dashed xl:col-span-5">
+        <CardHeader title={U.collateralTitle} aside={<HorizonTag id="tmmfCollateral" />} />
+        <p className="text-[12.5px] leading-relaxed text-muted">{U.collateral}</p>
+      </Card>
     </div>
   );
 }

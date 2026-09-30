@@ -196,3 +196,20 @@ building.
 - **A-50 · Multi-time-zone day.** EUR 50m held by Singapore from Paris midnight, sent to Paris at
   14:00 Paris, priced at €STR as an arm's-length intragroup rate. Group effect ≈ 0; the allocation
   between entities changes (transfer pricing, local tax — to validate).
+- **A-51 · Brazil spread.** The EUR/BRL spread (35 bps) and the service fee (10 bps) are the off-ramp
+  partner's, not bank revenue. The bank keeps the euro deposit that lands on the tokenised account.
+- **A-52 · Keep the US surplus working.** Lefèvre Inc. (Chicago): target balance USD 15m on the
+  earnings credit rate (2.00%), average surplus USD 42m. Fund yield = secured overnight financing
+  rate (parameter, 3.60%) − 15 bps. Client pickup = fund yield − earnings credit given up; the Tokyo
+  buffer is counted once, in just-in-time funding. Bank: US operating deposits retained (target
+  balance × (secured overnight financing rate − earnings credit rate); reference scenario: the
+  sweep leaves for a competitor and the operating account follows), US sweep captured (8 bps
+  distribution + 2 bps cash leg), US costs (fund partner, transfer agent, compliance; EUR 180k at the
+  large profile). All to validate with Asset Management and US Compliance.
+- **A-53 · Settling a fund order.** Six clocks in Paris time: euro fund orders 09:00–15:00, US fund
+  cut-off 21:00 (15:00 New York); underlying market EUR 09:00–17:30, USD 14:00–23:00; T2
+  07:00–18:00, Fedwire 03:00–24:00 on business days. Sunday exception: USD 30m, instant cap USD 25m
+  per investor, our credit backed by units with a 2% haircut at the secured overnight financing rate
+  + 50 bps until the fund pays on Monday 21:00. Market figures as of September 2026, to validate.
+  With USD on Friday 18:30 Paris the US fund is still open (12:30 in New York); the "exit rests on a
+  balance sheet" message shows when the fund is closed.

@@ -99,6 +99,7 @@ Choices made where the brief was silent: [docs/ASSUMPTIONS.md](docs/ASSUMPTIONS.
 | ![Pre-validation](docs/screenshots/pre-validation.png) **Pre-validation** — inbound stablecoin corridor checks, and large payments (available today). | ![Sweep](docs/screenshots/sweep.png) **Sweep** — EUR to a term unit (or fund), USD to a tokenised government fund. |
 | ![TMS](docs/screenshots/tms.png) **In your TMS** — position, rule by API, statement line, onboarding. | ![Business case](docs/screenshots/business-case.png) **Business case** — client value, bank account, horizons. |
 | ![Incidents](docs/screenshots/incidents.png) **Incidents** — what stops, who is notified, how it is resolved. | ![Approvals](docs/screenshots/approvals.png) **Approvals & audit** — maker / checker, standing rules, trail. |
+| ![US surplus](docs/screenshots/us-surplus.png) **Keep the US surplus working** — target balance kept, surplus to a tokenised government fund, cash leg on our ledger. | ![Settle a fund order](docs/screenshots/settle-fund.png) **Settle a fund order** — stablecoin vs tokenised deposit, step by step, the six clocks. |
 
 ![Why the minute](docs/screenshots/minute.png) **Why the minute** — seven cases, including a multi-time-zone day between Singapore and Paris.
 

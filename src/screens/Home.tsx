@@ -53,7 +53,7 @@ const FORECAST = [
 
 function Alerts() {
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
       {C.alerts.map((a) => (
         <Card key={a.key} tone="new" className="flex flex-col p-5">
           <div className="flex items-start gap-3">

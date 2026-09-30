@@ -8,9 +8,9 @@
  *    night FX margin.
  * Every figure is illustrative; every assumption is exported so the UI can show it on hover.
  */
-import { MARKET, RATES } from '@/data/rates';
+import { FX_MID, MARKET, RATES } from '@/data/rates';
 import { TOTAL_BUFFERS } from '@/data/buffers';
-import { TMMF, US_ENTITY } from '@/data/tmmf';
+import { US_ENTITY, usClientValue } from '@/data/tmmf';
 
 export type ProfileId = 'midcap' | 'large' | 'multi';
 
@@ -33,10 +33,9 @@ export interface Profile {
   unitBalance: number;
   /** Average EUR surplus swept into a money market fund (leaves the balance sheet). */
   sweptEurToFund: number;
-  /** Average USD surplus in money market funds today, and share captured through our cash leg. */
-  usdInFunds: number;
-  /** USD surplus left on earnings-credit balances today (US subsidiaries). */
-  usdOnEcr: number;
+  /** US subsidiaries: operating balance (earnings credit) and surplus above operating needs, USD. */
+  usOperating: number;
+  usSurplus: number;
   /** EUR equivalent repatriated from Brazil a year. */
   brlVolume: number;
   /** Night FX that is incremental (off-hours premium on volume that would not come to us by day). */
@@ -63,8 +62,8 @@ const P = (id: ProfileId, s: number, o: Partial<Profile>): Profile => ({
   depositsAtBank: 120e6 * s,
   unitBalance: 90e6 * s,
   sweptEurToFund: 20e6 * s,
-  usdInFunds: 60e6 * s,
-  usdOnEcr: 20e6 * s,
+  usOperating: US_ENTITY.targetUsd * s,
+  usSurplus: US_ENTITY.surplusUsd * s,
   brlVolume: 72e6 * s,
   nightFxIncremental: 120e6 * s,
   activeRules: Math.round(18 * s),
@@ -115,8 +114,11 @@ export const ASSUMPTIONS = {
   feePreValidation: 1_500,
   escrowAgentBps: 10,
   guaranteeBps: 40,
-  tmmfCashLegBps: 3,
-  usdCaptureShare: 0.25,
+  /** US surplus kept working with us: distribution / sweep fee and cash-leg settlement, bps a year. */
+  usDistributionBps: 8,
+  usCashLegBps: 2,
+  /** US costs a year at the large profile: fund partner, transfer agent connection, US compliance. */
+  usCosts: { fundPartner: 40_000, transferAgent: 60_000, compliance: 80_000 },
   costPerTransaction: 8,
   swiftFeesLostPerOp: 40,
   hqlaCarry: 0.003,
@@ -135,7 +137,7 @@ export function clientValue(p: Profile) {
   // Yield pickup on the swept surplus, per currency.
   const eurPickup = p.sweptEurToFund * (RATES.unit3m - RATES.current);
   // USD already in funds: a change of rail. The pickup is on balances left on earnings credits.
-  const usdPickup = p.usdOnEcr * (TMMF.yield - US_ENTITY.ecr);
+  const usdPickup = usClientValue(p.usSurplus).pickup / FX_MID.USD;
   return {
     buffers: p.buffers,
     buffersInterest,
@@ -168,7 +170,6 @@ export function bankView(p: Profile, ftp: number = MARKET.estr) {
     earmarked: 3e6 * (p.brlVolume / 72e6),
     preValidated: 4e6 * (p.brlVolume / 72e6),
     brazil: 2e6 * (p.brlVolume / 72e6),
-    usFunds: p.usdInFunds * A.usdCaptureShare,
   };
   const captured = Object.values(sources).reduce((a, b) => a + b, 0);
 
@@ -180,14 +181,21 @@ export function bankView(p: Profile, ftp: number = MARKET.estr) {
     p.activeRules * A.subscriptionPerRuleMonth * 12 +
     p.preValidations * A.feePreValidation +
     p.escrowAverage * (A.escrowAgentBps / 10_000) +
-    p.collateralAverage * (A.guaranteeBps / 10_000) +
-    p.usdInFunds * A.usdCaptureShare * (A.tmmfCashLegBps / 10_000);
+    p.collateralAverage * (A.guaranteeBps / 10_000);
   const running = -p.runningCost;
   const costToServe = -p.transactions * A.costPerTransaction;
   const swiftLost =
     -(p.brlVolume / 6e6) * A.swiftFeesLostPerOp - p.transactions * 0.1 * A.swiftFeesLostPerOp;
   const cannibalisation = -p.intradayLineFees;
   const nightFx = p.nightFxIncremental * (A.nightFxNetBps / 10_000);
+  // United States. Reference scenario: the sweep leaves for a competitor's fund and the operating
+  // relationship follows. The surplus is already in funds there: capturing it cannibalises little.
+  const usOperatingEur = p.usOperating / FX_MID.USD;
+  const usSurplusEur = p.usSurplus / FX_MID.USD;
+  const usRetained = usOperatingEur * (MARKET.sofr - US_ENTITY.ecr);
+  const usSweep = usSurplusEur * ((A.usDistributionBps + A.usCashLegBps) / 10_000);
+  const usScale = Math.sqrt(p.usSurplus / US_ENTITY.surplusUsd);
+  const usCosts = -Object.values(A.usCosts).reduce((a, b) => a + b, 0) * usScale;
 
   const lines: BankLine[] = [
     {
@@ -209,6 +217,19 @@ export function bankView(p: Profile, ftp: number = MARKET.estr) {
     { key: 'costToServe', value: costToServe },
     { key: 'swiftLost', value: swiftLost },
     { key: 'cannibalisation', value: cannibalisation },
+    {
+      key: 'usRetained',
+      value: usRetained,
+      base: usOperatingEur,
+      rate: MARKET.sofr - US_ENTITY.ecr,
+    },
+    {
+      key: 'usSweep',
+      value: usSweep,
+      base: usSurplusEur,
+      rate: (A.usDistributionBps + A.usCashLegBps) / 10_000,
+    },
+    { key: 'usCosts', value: usCosts },
   ];
   const netWithout = lines.reduce((a, l) => a + l.value, 0);
   const net = netWithout + nightFx;
@@ -220,8 +241,9 @@ export function bankView(p: Profile, ftp: number = MARKET.estr) {
     sources.escrow +
     sources.earmarked +
     sources.preValidated +
-    sources.jitBuffers;
-  const nonOperational = p.unitBalance + sources.brazil + sources.usFunds;
+    sources.jitBuffers +
+    usOperatingEur;
+  const nonOperational = p.unitBalance + sources.brazil;
   const hqlaWith =
     operational * A.lcrOutflow.operational + nonOperational * A.lcrOutflow.nonOperational;
   const hqlaIfAllNonOp = (operational + nonOperational) * A.lcrOutflow.nonOperational;

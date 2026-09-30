@@ -23,6 +23,8 @@ const shots = [
   { name: 'approvals', path: '/approvals' },
   { name: 'hood', path: '/week?t=2026-10-10T22:00', hood: true },
   { name: 'minute', path: '/minute#group-day' },
+  { name: 'us-surplus', path: '/us-surplus' },
+  { name: 'settle-fund', path: '/settle-fund' },
 ].filter((s) => only.length === 0 || only.includes(s.name));
 
 const browser = await chromium.launch();

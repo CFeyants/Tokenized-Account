@@ -30,6 +30,17 @@ export const HORIZONS: Record<string, HorizonInfo> = {
       'Tokenised USD account, New York',
     ],
   },
+  us: {
+    horizon: 'H2',
+    dependencies: ['Tokenised USD deposit', 'The fund’s transfer agent accepting it'],
+  },
+  settleB: {
+    horizon: 'H2',
+    dependencies: [
+      'EUR tokenised deposit mid-2027, USD end 2027',
+      'Partner fund’s custodian keeping its accounts with us (to validate)',
+    ],
+  },
   tmmfCollateral: {
     horizon: 'H3',
     dependencies: [

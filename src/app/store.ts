@@ -8,7 +8,7 @@ import { computeCounters } from '@/engine/counters';
 import { snapshotAt } from '@/engine/accrual';
 
 export type HoodTab =
-  'ledger' | 'orchestration' | 'accrual' | 'alm' | 'fx' | 'intragroup' | 'notYet';
+  'ledger' | 'orchestration' | 'accrual' | 'alm' | 'fx' | 'bank' | 'intragroup' | 'notYet';
 export type Speed = 1 | 3 | 8;
 
 interface AppState {

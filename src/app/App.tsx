@@ -19,6 +19,8 @@ const BusinessCase = load(() => import('@/screens/BusinessCase'), 'BusinessCase'
 const PutToWork = load(() => import('@/screens/PutToWork'), 'PutToWork');
 const PreValidation = load(() => import('@/screens/PreValidation'), 'PreValidation');
 const JustInTime = load(() => import('@/screens/JustInTime'), 'JustInTime');
+const UsSurplus = load(() => import('@/screens/UsSurplus'), 'UsSurplus');
+const SettleFund = load(() => import('@/screens/SettleFund'), 'SettleFund');
 // Everyday banking and the week in detail.
 const Week = load(() => import('@/screens/Week'), 'Week');
 const Accounts = load(() => import('@/screens/Accounts'), 'Accounts');
@@ -52,6 +54,8 @@ export function App() {
             <Route path="put-to-work" element={page(<PutToWork />)} />
             <Route path="pre-validation" element={page(<PreValidation />)} />
             <Route path="just-in-time" element={page(<JustInTime />)} />
+            <Route path="us-surplus" element={page(<UsSurplus />)} />
+            <Route path="settle-fund" element={page(<SettleFund />)} />
             <Route path="week" element={page(<Week />)} />
             <Route path="accounts" element={page(<Accounts />)} />
             <Route path="accounts/:id" element={page(<AccountPage />)} />

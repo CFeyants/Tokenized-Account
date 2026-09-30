@@ -81,7 +81,7 @@ export function BusinessCase() {
             v={fmtEur(c.buffersInterest, 'EUR', 0)}
           />
           <Row
-            k={`${B.lines.hours} — ${Math.round(c.hours)} h, ${c.fte.toFixed(1)} full-time equivalents`}
+            k={`${B.lines.hours} — ${Math.round(c.hours)} h, ${c.fte.toFixed(1)} people`}
             v={fmtEur(c.hoursValue, 'EUR', 0)}
           />
           <Row
@@ -166,6 +166,7 @@ export function BusinessCase() {
             }
           />
           <p className="mt-3 text-[12px] leading-relaxed text-muted">{B.niiNote}</p>
+          <p className="mt-2 text-[12px] leading-relaxed text-muted">{B.usRoadmap}</p>
         </Card>
       </div>
 

@@ -23,7 +23,7 @@ import {
   type WindowKey,
   type JitCcy,
 } from '@/engine/markets';
-import { JIT_TARGET, jitQuote, type JitTarget } from '@/engine/advanced';
+import { JIT_TARGET, jitQuote, type JitSource, type JitTarget } from '@/engine/advanced';
 import { FRIDAY_LOCK_BPS, WINDOW_BPS, fxCostEur, fxFloor, fxWindow } from '@/engine/fx';
 import { TOTAL_BUFFERS, bufferOf } from '@/data/buffers';
 import { cascade } from '@/data/tmmf';
@@ -39,6 +39,11 @@ import { HorizonTag, LaterTag } from '@/components/Journey';
 
 const F = en.funding;
 const M = 1_000_000;
+const SOURCE_LABEL: Record<JitSource, string> = {
+  EUR: F.sourceEur,
+  USD: F.sourceUsd,
+  FUND: F.sourceFund,
+};
 
 const ROWS: (WindowKey | 'ledger')[] = [
   'parisDesk',
@@ -133,7 +138,7 @@ const PRESETS: {
   to: JitTarget;
   need: SimTime;
   amount: number;
-  source: 'EUR' | 'USD';
+  source: JitSource;
 }[] = [
   { key: 'presetTokyo', to: 'tok-jpy-tokyo', need: at(7, '02:00'), amount: 8, source: 'EUR' },
   { key: 'presetRiyadh', to: 'tok-sar-riyadh', need: at(6, '09:00'), amount: 5, source: 'USD' },
@@ -289,7 +294,10 @@ export function JitTab() {
   const [to, setTo] = useState<JitTarget>(PRESETS[first].to);
   const [need, setNeed] = useState<SimTime>(PRESETS[first].need);
   const [amount, setAmount] = useState(PRESETS[first].amount);
-  const [source, setSource] = useState<'EUR' | 'USD'>(PRESETS[first].source);
+  const [source, setSource] = useState<JitSource>(
+    params.get('source') === 'fund' ? 'FUND' : PRESETS[first].source,
+  );
+  const srcLabel = SOURCE_LABEL[source];
   const [, setDone] = useState<string | null>(null);
   const [lock, setLock] = useState(false);
   const tgt = JIT_TARGET[to];
@@ -390,12 +398,12 @@ export function JitTab() {
           </label>
           <div className="mt-4 text-[12px] text-muted">{F.source}</div>
           <div className="mt-1 space-y-1.5" role="radiogroup" aria-label={F.source}>
-            {(['EUR', 'USD'] as const).map((s) => (
+            {(['EUR', 'USD', 'FUND'] as const).map((s) => (
               <button
                 key={s}
                 role="radio"
                 aria-checked={source === s}
-                disabled={s === 'USD' && ccy === ('EUR' as string)}
+                disabled={s !== 'EUR' && ccy === ('EUR' as string)}
                 onClick={() => {
                   setSource(s);
                   setDone(null);
@@ -405,7 +413,7 @@ export function JitTab() {
                   source === s ? 'border-new/50 bg-new-soft' : 'border-line hover:bg-surface-2',
                 )}
               >
-                {s === 'EUR' ? F.sourceEur : F.sourceUsd}
+                {SOURCE_LABEL[s]}
               </button>
             ))}
           </div>
@@ -432,7 +440,7 @@ export function JitTab() {
               disabled={need - 5 <= t}
               request={{
                 title: F.approvalSchedule(JIT_TARGET[to].bank, formatDateTime(need - 5)),
-                detail: F.approvalDetail(tgt.ccy, source),
+                detail: F.approvalDetail(tgt.ccy, srcLabel),
                 amountEur: amount * M,
                 action: { kind: 'jit', to, source, amountEur: amount * M, lockFriday: lock },
                 at: need - 5,
@@ -444,7 +452,7 @@ export function JitTab() {
               variant="secondary"
               request={{
                 title: F.approvalNow(JIT_TARGET[to].bank),
-                detail: F.approvalDetail(tgt.ccy, source),
+                detail: F.approvalDetail(tgt.ccy, srcLabel),
                 amountEur: amount * M,
                 action: { kind: 'jit', to, source, amountEur: amount * M, lockFriday: lock },
               }}
@@ -455,12 +463,12 @@ export function JitTab() {
               variant="new"
               request={{
                 title: F.ruleTitle(JIT_TARGET[to].bank),
-                detail: F.ruleDetail(tgt.ccy, source),
+                detail: F.ruleDetail(tgt.ccy, srcLabel),
                 amountEur: amount * M,
                 rule: {
                   kind: 'jit',
                   name: F.ruleTitle(JIT_TARGET[to].bank),
-                  params: F.ruleParams(tgt.ccy, source, fmtM(amount * M, 'EUR', 0)),
+                  params: F.ruleParams(tgt.ccy, srcLabel, fmtM(amount * M, 'EUR', 0)),
                 },
               }}
             >
@@ -506,7 +514,7 @@ export function JitTab() {
         </Card>
       </div>
 
-      {source === 'USD' && (
+      {source !== 'EUR' && (
         <UsdCascade needUsd={q.sourceAmount} tokUsd={state.bal['tok-usd-chicago']} />
       )}
       <FxCost

@@ -455,6 +455,7 @@ export const en = {
       accrual: 'Accrual',
       alm: 'Asset-liability management',
       fx: 'Foreign exchange & position',
+      bank: 'Bank view',
       intragroup: 'Intragroup',
       notYet: 'Not yet',
     },
@@ -1050,8 +1051,9 @@ export const en = {
     entity: 'Subsidiary',
     source: 'Funded from',
     sourceEur: 'Euro — tokenised account, Paris',
-    sourceUsd:
-      'Dollar — tokenised account, United States, refilled from the USD fund redemption (capped)',
+    sourceUsd: 'Dollar — tokenised account, Lefèvre Inc., Chicago',
+    sourceFund:
+      'USD fund redemption (Lefèvre Inc.) — fund units → tokenised USD deposit → target currency, no EUR step',
     usdNote:
       'SAR is pegged to the dollar: funding Riyadh from the dollar leg avoids a EUR/USD step.',
     amount: 'Amount (EUR m equivalent)',
@@ -1374,7 +1376,7 @@ export const en = {
     moreHint: 'Accounts, payments, placements, statements — as today',
     homeTitle: 'What would you like to do?',
     homeLead:
-      'Six things the tokenised account lets you do. Pick one — each takes a couple of minutes.',
+      'Seven things the tokenised account lets you do. Pick one — each takes a couple of minutes.',
     start: 'Start',
     step: 'Step',
     later: 'Not right away',
@@ -1442,6 +1444,15 @@ export const en = {
           'Compare with pre-funding',
           'Schedule it for that minute',
         ],
+      },
+      {
+        id: 'us',
+        path: '/us-surplus',
+        title: 'Keep the US surplus working — with us',
+        short: 'US surplus',
+        promise:
+          'Lefèvre Inc.’s dollar surplus goes into a tokenised government fund by rule, with the cash leg on our ledger — and comes back to it, never to a third bank.',
+        steps: ['See how it works today', 'Set the rule', 'Redeem when a need comes'],
       },
     ],
   },
@@ -1698,6 +1709,277 @@ export const en = {
       'Dashed: checks performed at the partner. The decision — Accept, Review, Reject — is always ours, and logged.',
   },
 
+  us: {
+    alert: {
+      title: 'Lefèvre Inc. holds USD 42m above its operating needs',
+      text: 'Your US relationship bank proposes to sweep it into its own tokenised fund.',
+      action: 'Keep it working with us',
+      gain: 'Fund yield, with the cash leg on our ledger',
+    },
+    entity: 'Lefèvre Inc. — Chicago · operating account in USD at Norvane Bank New York',
+    todayTitle: 'Today',
+    todayLead:
+      'The American set-up: a target balance calibrated so that the earnings credit rate covers the fees; every evening, the surplus goes into another bank’s money market fund.',
+    todayFlow: [
+      'Operating account — target balance, earnings credit offsets fees',
+      'Every evening: surplus → the other bank’s money market fund',
+      'Redemption comes back to an account at a third bank',
+    ],
+    consequences: [
+      'The surplus leaves the relationship — and the operating account tends to follow',
+      'Redemptions land on a third-party account',
+      'The group cannot mobilise this cash at the weekend',
+      'Paris sees it the next day',
+    ],
+    ledgerTitle: 'With the ledger',
+    ledgerLead: 'One standing rule, in three steps.',
+    steps: [
+      {
+        k: 'Target balance stays with us',
+        v: 'On Lefèvre Inc.’s tokenised USD account at Norvane Bank New York. The earnings credit rate is kept.',
+      },
+      {
+        k: 'Above the threshold: subscription by rule',
+        v: 'Into a tokenised government money market fund (rule 2a-7). The cash leg settles in tokenised USD deposit on our ledger — delivery versus payment.',
+      },
+      {
+        k: 'Automatic redemption',
+        v: 'When the balance falls below the threshold or a need is forecast (Tokyo just in time, US suppliers). The proceeds come back to our ledger — never to a third party.',
+      },
+    ],
+    badge: 'Tokenised USD deposit · the fund’s transfer agent accepting it',
+    cashLegTitle: 'Who holds the cash leg keeps the flows',
+    cashLeg:
+      'The subscription leaves from the register of the bank that holds the cash leg, and the redemption comes back to it. No tokenised money market fund in the world settles in a tokenised bank deposit today — the place is free.',
+    threshold: 'Target balance',
+    surplus: 'Surplus above the target',
+    setRule: 'Make it a standing rule',
+    ruleTitle: 'Standing rule — Lefèvre Inc. surplus to the tokenised government fund',
+    ruleDetail: (thr: string) =>
+      `Every business day, surplus above ${thr} into the tokenised government fund, cash leg on the tokenised USD account; automatic redemption when needed.`,
+    ruleParams: (thr: string) => [
+      `Target balance: ${thr}`,
+      'Destination: tokenised government money market fund (rule 2a-7)',
+      'Cash leg: tokenised USD deposit, delivery versus payment',
+      'Redemption: below the threshold or on a forecast need',
+    ],
+    toJit: 'Fund Tokyo from the US surplus',
+    toSettle: 'How the fund order settles',
+    honestTitle: 'Honestly',
+    honest: [
+      {
+        k: '24/7 is the payment, not the fund',
+        v: 'The order cut-off and the daily net asset value remain. At the weekend, the exit rests on a balance sheet — ours, as credit backed by the fund units — not on the fund.',
+        tip: '',
+      },
+      {
+        k: 'Eligibility',
+        v: 'A US subsidiary is a US person: it can use onshore government funds, but not funds reserved for non-US investors; some funds require qualified-purchaser status and a high minimum. As of September 2026, to validate.',
+        tip: 'Market examples: USYC is open to non-US investors only; BUIDL requires qualified purchasers.',
+      },
+      {
+        k: 'Which fund',
+        v: 'A third-party partner fund distributed by us, or a group vehicle if one exists. To validate with Asset Management and US Compliance.',
+        tip: '',
+      },
+      {
+        k: 'Fallback if the tokenised deposit leg is not ready',
+        v: 'USDC, accepted by almost every US tokenised fund — with the issuer risk shown.',
+        tip: '',
+      },
+    ],
+    valueTitle: 'Value for Lefèvre Inc., a year',
+    valueRows: {
+      fund: (r: string) =>
+        `Fund yield (secured overnight financing rate of the day − 15 bps = ${r})`,
+      ecr: (r: string) => `Earnings credit given up on the surplus (${r})`,
+      pickup: 'Pickup',
+      mobility:
+        '24/7 group mobility — the Tokyo buffer goes (already counted in just-in-time funding, not counted twice)',
+      visibility: 'USD position visible in Paris in real time, not the next day',
+    },
+    rateParam: 'Secured overnight financing rate (parameter)',
+  },
+
+  settle: {
+    title: 'Settle a fund order',
+    lead: 'The same subscription and redemption of a tokenised money market fund, settled two ways: (A) in a stablecoin, as the market works today; (B) in the bank’s tokenised deposit.',
+    ccy: 'Currency',
+    moment: 'Moment',
+    moments: { tue: 'Tuesday 11:00', fri: 'Friday 18:30', sun: 'Sunday 10:00' },
+    next: 'Next step',
+    restart: 'Start again',
+    stepOf: (i: number, n: number) => `Step ${i} of ${n}`,
+    holder: 'Who holds the money',
+    risk: 'Risk carried',
+    pathA: '(A) Stablecoin — the market today',
+    pathB: '(B) Tokenised deposit — the target',
+    stepsA: (coin: string) => [
+      {
+        k: `The client sends ${coin}`,
+        h: 'The stablecoin issuer',
+        r: 'Claim on a non-bank issuer, which can freeze',
+      },
+      {
+        k: 'A third party converts to cash',
+        h: 'The converter (payment firm, affiliated broker-dealer)',
+        r: 'Intraday counterparty risk moved to the converter, not removed',
+      },
+      {
+        k: 'The order waits for the fund cut-off',
+        h: 'The fund’s cash account at a third bank',
+        r: 'Timing — nothing moves before the cut-off',
+      },
+      { k: 'Net asset value of the day', h: 'The fund', r: 'Price fixed once a day' },
+      {
+        k: 'Units issued',
+        h: 'The client holds units',
+        r: 'Not delivery versus payment: the cash left before the units arrived',
+      },
+    ],
+    stepsB: [
+      {
+        k: 'The client pays in tokenised deposit on our ledger',
+        h: 'Norvane Bank',
+        r: 'A supervised bank’s liability',
+      },
+      {
+        k: 'Units and cash exchange, delivery versus payment',
+        h: 'Norvane Bank',
+        r: 'Atomic on the same ledger — or synchronised if the fund’s register is elsewhere (e.g. Canton)',
+      },
+      {
+        k: 'The fund’s cash account is with us (custodian bank)',
+        h: 'Norvane Bank',
+        r: '“On-us” on both sides: no third bank, no non-bank issuer, the cash stays on our balance sheet. To validate: the partner fund’s custodian keeps its accounts with us',
+      },
+      {
+        k: 'Net asset value of the day',
+        h: 'The fund, cash with us',
+        r: 'Same cut-off, same daily price as (A)',
+      },
+      {
+        k: 'Units issued',
+        h: 'The client holds units',
+        r: 'Delivery versus payment: no step where one side is exposed',
+      },
+    ],
+    redemptionA:
+      'On redemption, the exit in stablecoin goes through a discretionary, capped window: a fund capped per 24 hours overall and per investor; an issuer deciding at its discretion; a dealer acting as principal on its own inventory.',
+    redemptionTip:
+      'Market examples, as of September 2026, to validate: OUSG capped at USD 50m per 24 hours overall and USD 25m per investor; BUIDL’s USDC exit at Circle’s discretion; WisdomTree acting as principal on its inventory.',
+    clocksTitle: 'The six clocks of a tokenised fund',
+    clocks: {
+      token: 'Unit transfer',
+      exit: 'Exit window',
+      order: 'Order to the fund',
+      nav: 'Net asset value',
+      market: 'Underlying market',
+      centralBank: 'Central bank money settlement',
+    },
+    clockNotes: {
+      token: '24/7',
+      exit: '24/7 but discretionary, on a balance sheet',
+      order: 'Cut-off',
+      nav: 'Once a day',
+      market: 'Business hours',
+      centralBank: 'T2 or Fedwire, business hours',
+    },
+    open: 'Open',
+    closed: 'Closed',
+    clocksMessage: 'Tokenisation moves the register, not the other five clocks.',
+    onBalanceSheet:
+      'Fund closed: in both paths the exit rests on a balance sheet. In (A), a third-party dealer’s. In (B), ours — credit backed by the units, with a haircut.',
+    fundOpen: 'Fund open: the order reaches today’s net asset value in both paths.',
+    tableTitle: 'Side by side',
+    tableCols: ['', '(A) Stablecoin', '(B) Tokenised deposit'],
+    table: [
+      [
+        'Settlement asset',
+        'Claim on a non-bank issuer, with power to freeze',
+        'Liability of a supervised bank',
+      ],
+      ['Delivery versus payment', 'No: conversion by a third party', 'Yes, atomic'],
+      [
+        'Finality',
+        'Commercial bank money',
+        'Commercial bank money; central bank money only with Pontes (24/7 targeted mid-2028)',
+      ],
+      ['Hours', 'Payment 24/7, fund not', 'Payment 24/7, fund not'],
+      ['Caps and discretion', 'Set by the issuer or the dealer', 'Our limits, known in advance'],
+      ['Travel Rule', 'Yes: data set and acknowledgement', 'No: a transfer inside the bank'],
+      [
+        'Accounting',
+        'A third-party stablecoin is not a cash equivalent (cash-flow accounting standard)',
+        'A deposit is cash',
+      ],
+      ['Who keeps the deposit', 'The issuer (Circle…)', 'Us'],
+      [
+        'Available today',
+        'USD: USDC almost everywhere, PYUSD, RLUSD. EUR: EURC at Spiko only; Qivalis not yet licensed',
+        'No fund in the world: the place is free. 2028 (EUR tokenised deposit mid-2027; USD end 2027)',
+      ],
+      [
+        'Regulatory cap',
+        'European digital-asset rules, article 23: a non-euro stablecoin is capped (1 million transactions and EUR 200m a day in the EU)',
+        'None',
+      ],
+    ] as [string, string, string][],
+    asOf: 'Market figures as of September 2026, to validate.',
+    exceptionTitle: 'Exception: redeem USD 30m on Sunday, above the instant cap',
+    exceptionA: (q: string, until: string) =>
+      `(A) ${q} above the window’s cap: queued until ${until}, or refused by the window.`,
+    exceptionB: (units: string, haircut: string, rate: string, cost: string) =>
+      `(B) Our credit backed by ${units} of units (haircut ${haircut}) until the fund pays on Monday, at ${rate}: ${cost}.`,
+    bankTitle: 'For the bank',
+    bankA: '(A) The cash leaves our balance sheet for the issuer.',
+    bankB:
+      '(B) It stays on our balance sheet as a deposit (liquidity coverage by deposit category).',
+    bankRevenues:
+      'Revenues: cash-leg settlement, custody of the fund’s cash, weekend credit backed by units.',
+    bankCosts: 'Costs: transfer agent connection, haircut, capital.',
+    conclusion:
+      'Stablecoin settlement exists today and works in USD. Tokenised deposit settlement does not exist anywhere yet — whoever does it first holds the cash leg of the fund, and the flows that come with it.',
+    competitionTitle: 'Who captures Lefèvre Inc.',
+    competitionCols: ['', 'Operating account', 'Fund', 'Cash leg', '24/7', 'Works with Paris'],
+    competition: [
+      [
+        'JPMorgan',
+        'Yes',
+        'Tokenised government fund (JLTXX) via Morgan Money',
+        'Kinexys, tokenised deposit (JPMD) — not accepted on its own fund platform',
+        'Yes',
+        'Through its own network',
+      ],
+      [
+        'Citi',
+        'Yes',
+        'Third-party funds',
+        'Its tokenised deposit service, USD 24/7',
+        'Yes',
+        'Through its own network',
+      ],
+      [
+        'The Clearing House consortium (JPMorgan, Bank of America, Citi)',
+        '—',
+        '—',
+        'Interbank tokenised deposits, first half 2027',
+        'Targeted',
+        'United States only',
+      ],
+      [
+        'Norvane Bank',
+        'Yes',
+        'Partner fund, distributed',
+        'Tokenised USD deposit on our ledger (2028)',
+        'Yes',
+        'One ledger: Paris, Chicago, Tokyo',
+      ],
+    ] as [string, string, string, string, string, string][],
+    competitionEdge: 'Our edge is the group view: one ledger from Paris to Chicago to Tokyo.',
+    competitionNote: 'Public information, as of September 2026, to validate.',
+  },
+
   fxTab: {
     lead: 'The night price can never go below what delivering the currency costs the bank. For each conversion: the bank’s position at that minute, where the currency comes from, until when, and the margin left.',
     rule: 'Quote ≥ floor; otherwise fall back to Friday pre-funding.',
@@ -1721,7 +2003,8 @@ export const en = {
 
   tour: {
     start: 'Start the guided tour',
-    startSub: 'Marie’s week in ten steps — five minutes. You press Next; nothing runs on its own.',
+    startSub:
+      'Marie’s week in eleven steps — five minutes. You press Next; nothing runs on its own.',
     explore: 'Explore freely',
     cfo: '3-minute Chief Financial Officer tour',
     bankTour: 'Bank view tour',
@@ -1791,6 +2074,15 @@ export const en = {
         marieV: (m: string, v: string) => `${m} in the weekend unit — ${v} over the weekend`,
         bankV: (v: string) => `${v} margin: overnight money priced euro short-term rate − 25 bps`,
         today: 'Idle at 0.50% by the day over the weekend.',
+      },
+      us: {
+        title: 'Friday 20:00 — Lefèvre Inc. keeps its dollar surplus working, with us',
+        what: 'It is 13:00 in Chicago. USD 42m sits above operating needs; the US relationship bank offers to sweep it into its own fund. Marie sets one rule: target balance kept with us, surplus into a tokenised government fund, cash leg on our ledger.',
+        marieV: (v: string) => `${v} a year: fund yield minus the earnings credit given up`,
+        bankV:
+          'The operating account and the cash leg stay with us — the flows come back to our ledger',
+        today:
+          'The surplus leaves every evening for another bank’s fund; the operating account follows.',
       },
       incident: {
         title: 'Saturday — a partial Travel Rule acknowledgement',
@@ -1897,6 +2189,14 @@ export const en = {
         action: 'Qualify and repatriate',
         gain: 'EUR 5.9m home, rate locked',
         path: '/repatriation',
+      },
+      {
+        key: 'us',
+        title: 'Lefèvre Inc. holds USD 42m above its operating needs',
+        text: 'Your US relationship bank proposes to sweep it into its own tokenised fund.',
+        action: 'Keep it working with us',
+        gain: 'Fund yield, with the cash leg on our ledger',
+        path: '/us-surplus',
       },
     ],
     positionTitle: 'Position by entity, currency and bank',
@@ -2126,8 +2426,9 @@ export const en = {
     failureTypes: (t: string) => `Failures counted: ${t}. Illustrative cost per failure.`,
     eurPickup: 'Yield pickup on the EUR surplus swept into term units (vs current account)',
     usdPickup:
-      'Yield pickup on the USD surplus moved from earnings credits into the tokenised government fund',
-    usdNote: 'USD already in money funds: a change of rail, not a pickup.',
+      'Lefèvre Inc.: fund yield minus the earnings credit given up on the USD surplus (EUR equivalent)',
+    usdNote:
+      'The Tokyo buffer released by funding from the US surplus is already counted above — not counted twice.',
     lineLabels: {
       defended: 'Deposits defended — without the programme, 30% leave by 2030',
       captured: 'Deposits captured, by source (table below)',
@@ -2140,7 +2441,13 @@ export const en = {
       costToServe: 'Cost to serve, per transaction',
       swiftLost: 'SWIFT and correspondent fees no longer earned',
       cannibalisation: 'Intraday credit lines no longer used',
+      usRetained:
+        'US operating deposits retained — otherwise the relationship follows the sweep to a competitor',
+      usSweep: 'US sweep captured from competitor funds: distribution fee and cash-leg settlement',
+      usCosts: 'US costs: fund partner, transfer agent connection, US compliance',
     },
+    usRoadmap:
+      'United States roadmap: tokenised USD deposit and connection to The Clearing House network (end 2027). Night foreign exchange for the group (EUR/USD, USD/JPY) is in the night line, not here.',
     lineTip: (base: string, rate: string) => `${base} × ${rate}`,
     netWithout: 'Net for the bank — without night foreign exchange',
     nightFxLine: 'Night foreign exchange: (price − floor) × incremental volume only',
@@ -2161,7 +2468,6 @@ export const en = {
       earmarked: 'Earmarked amounts, cascades',
       preValidated: 'Pre-validated payments, provisioned',
       brazil: 'Brazil repatriation in transit to use',
-      usFunds: 'Captured from American money funds (cash leg)',
       total: 'Total',
     },
     bridgeTitle: 'Where each released euro goes',
@@ -2293,7 +2599,7 @@ export const en = {
     buffersTip: (n: number, per: string, r: string) =>
       `${n} subsidiaries in time zones where European desks are closed when they need cash keep ${per} in total "just in case". Funded just in time, the buffer goes; redeployed at ${r} (overnight unit — conservative; paying down debt is worth more). Illustrative.`,
     hours: 'Treasury time saved',
-    hoursMain: (h: string, fte: string) => `${h} h · ${fte} full-time equivalents`,
+    hoursMain: (h: string, fte: string) => `${h} h · ${fte} people`,
     valueSub: (v: string) => `${v} a year`,
     hoursTip: (h: string, share: string, per: number, cost: string) =>
       `${h} hours a year of pre-funding, manual sweeps, releases and repatriations; ${share} handled by standing rules. ${per} hours per full-time equivalent at ${cost}. Illustrative.`,
@@ -2349,6 +2655,8 @@ export const en = {
     fxMemo: (from: string, to: string, day: boolean) =>
       `${day ? 'Foreign exchange' : 'Out-of-hours foreign exchange'} ${from} → ${to} (markets desk)`,
     mirrorMemo: 'Mirror intragroup balance created at the same instant.',
+    fundRedeemMemo:
+      'Tokenised government fund units redeemed — instant window, Lefèvre Inc. (credit backed by the units if the fund is closed)',
     jitDecision: (src: string, ccy: string, rate: string, bps: number) =>
       `${src} → ${ccy} at ${rate} (mid − ${bps} bps)`,
     ledgerRail: 'Ledger — final at once',

@@ -3,7 +3,8 @@ import { at } from '@/engine/clock';
 import { buildTimeline, stateAt } from '@/engine/timeline';
 import { actionToEvents, type UserAction } from '@/engine/userActions';
 import { groupDay } from '@/engine/minuteCases';
-import { cascade, TMMF, US_ENTITY } from '@/data/tmmf';
+import { cascade, TMMF, usClientValue } from '@/data/tmmf';
+import { FX_MID } from '@/data/rates';
 import { PROFILES, clientValue } from '@/engine/businessCase';
 import { FRIDAY_LOCK_BPS, fxFloor } from '@/engine/fx';
 
@@ -58,7 +59,7 @@ describe('US money funds', () => {
 
   it('the USD pickup is on balances left on earnings credits', () => {
     const v = clientValue(PROFILES.large);
-    expect(v.usdPickup).toBeCloseTo(PROFILES.large.usdOnEcr * (TMMF.yield - US_ENTITY.ecr), 6);
+    expect(v.usdPickup).toBeCloseTo(usClientValue(PROFILES.large.usSurplus).pickup / FX_MID.USD, 6);
   });
 });
 

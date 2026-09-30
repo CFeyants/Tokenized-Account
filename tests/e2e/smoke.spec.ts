@@ -20,7 +20,9 @@ test('cockpit opens on Monday 08:30 with value, alerts and approvals — without
   await expect(page.getByRole('heading', { name: 'Group cash position' })).toBeVisible();
   await expect(page.locator('header')).toContainText('Mon 08:30');
   await expect(page.getByText('Local buffers released')).toBeVisible();
-  await expect(page.getByText('Tokyo needs JPY 1.37bn on Mon 12 Oct, 09:00 Tokyo time')).toBeVisible();
+  await expect(
+    page.getByText('Tokyo needs JPY 1.37bn on Mon 12 Oct, 09:00 Tokyo time'),
+  ).toBeVisible();
   await expect(page.getByText('Waiting for your approval')).toBeVisible();
   const total = await page.getByText('Total value, a year').locator('..').innerText();
   expect(total).toMatch(/EUR [1-9]/);
@@ -70,7 +72,15 @@ test('under the hood opens with its tabs and links to the business case', async 
   await page.goto('/week?t=2026-10-10T22:00');
   await page.getByTestId('hood-toggle').click();
   const panel = page.getByTestId('hood-panel');
-  for (const tab of ['Ledger', 'Orchestration', 'Accrual', 'Asset-liability management', 'Intragroup', 'Not yet']) {
+  for (const tab of [
+    'Ledger',
+    'Orchestration',
+    'Accrual',
+    'Asset-liability management',
+    'Bank view',
+    'Intragroup',
+    'Not yet',
+  ]) {
     await panel.getByRole('tab', { name: tab }).click();
   }
   await panel.getByRole('tab', { name: 'Intragroup' }).click();
@@ -127,7 +137,9 @@ test('incidents, TMS and sweep pages render', async ({ page }) => {
   await expect(page.getByText('If this rule had run last week')).toBeVisible();
 });
 
-test('guided tour: ten steps, the presenter advances, each step on its page', async ({ page }) => {
+test('guided tour: eleven steps, the presenter advances, each step on its page', async ({
+  page,
+}) => {
   await page.goto('/');
   await page.getByTestId('tour-start').click();
   const expected = [
@@ -137,13 +149,14 @@ test('guided tour: ten steps, the presenter advances, each step on its page', as
     '/put-to-work',
     '/pre-validation',
     '/put-to-work',
+    '/us-surplus',
     '/incidents',
     '/just-in-time',
     '/just-in-time',
     '/tour-recap',
   ];
   for (let i = 0; i < expected.length; i++) {
-    await expect(page.getByTestId('tour-panel')).toContainText(`Step ${i + 1} of 10`);
+    await expect(page.getByTestId('tour-panel')).toContainText(`Step ${i + 1} of 11`);
     await expect.poll(() => new URL(page.url()).pathname).toBe(expected[i]);
     await expect(page.getByText('This step is on another page.')).toHaveCount(0);
     if (i < expected.length - 1) await page.getByTestId('tour-next').click();
@@ -170,9 +183,34 @@ test('brief of 30/09: stablecoin pre-validation, just-in-time foreign exchange c
 
   await page.goto('/sweep');
   await page.getByRole('tab', { name: 'Dollar — Lefèvre Inc (United States)' }).click();
-  await expect(page.getByText('The rule — surplus to a tokenised government fund')).toBeVisible();
+  await expect(page.getByRole('link', { name: /Keep it working with us/ })).toBeVisible();
 
   await page.goto('/minute#group-day');
   await expect(page.getByText('A multi-time-zone day')).toBeVisible();
   await expect(page.getByText('Lefèvre Singapore', { exact: true })).toBeVisible();
+});
+
+test('US surplus: alert, rule, fund settlement step by step, bank view', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: /Keep it working with us/ }).click();
+  await expect(
+    page.getByRole('heading', { name: 'Keep the US surplus working — with us' }),
+  ).toBeVisible();
+  await expect(page.getByText('Who holds the cash leg keeps the flows')).toBeVisible();
+  await page.getByRole('link', { name: /How the fund order settles/ }).click();
+  await expect(page.getByText('Step 1 of 5')).toBeVisible();
+  await page.getByTestId('settle-next').click();
+  await expect(page.getByText('Step 2 of 5')).toBeVisible();
+  await expect(
+    page.getByText('Tokenisation moves the register, not the other five clocks.'),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Sunday 10:00' }).click();
+  await expect(page.getByText(/Fund closed: in both paths/)).toBeVisible();
+
+  await page.goto('/just-in-time?preset=tokyo&source=fund');
+  await expect(page.getByRole('radio', { name: /USD fund redemption/ })).toHaveAttribute(
+    'aria-checked',
+    'true',
+  );
+  await expect(page.getByText('Where the dollars come from, in order')).toBeVisible();
 });

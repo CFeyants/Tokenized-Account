@@ -24,6 +24,7 @@ import {
   TrendingUp,
   Workflow,
   Zap,
+  DollarSign,
   type LucideIcon,
 } from 'lucide-react';
 import { useApp } from '@/app/store';
@@ -41,6 +42,7 @@ const JOURNEY_ICONS: Record<string, LucideIcon> = {
   work: Lock,
   prevalidation: ShieldCheck,
   jit: Zap,
+  us: DollarSign,
 };
 
 export const TOP: Item[] = [

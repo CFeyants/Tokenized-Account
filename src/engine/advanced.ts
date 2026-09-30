@@ -45,7 +45,8 @@ export type AdvancedAction =
       id: string;
       t: SimTime;
       to: JitTarget;
-      source: 'EUR' | 'USD';
+      /** FUND: redeem Lefèvre Inc.'s tokenised government fund units, then as USD — no EUR step. */
+      source: JitSource;
       amountEur: number;
       /** Rate locked on the Friday desk, delivered at the minute: no night FX used. */
       lockFriday?: boolean;
@@ -131,9 +132,11 @@ function payOutEarmarked(s: State, c: C, amount: number, memo: string) {
 }
 
 /** Quote for a JIT conversion: day desk mid ± 5 bps, out of hours ± 10 bps. */
+export type JitSource = 'EUR' | 'USD' | 'FUND';
+
 export function jitQuote(
   ccy: string,
-  source: 'EUR' | 'USD',
+  source: JitSource,
   amountEur: number,
   t: SimTime,
   lockFriday = false,
@@ -216,6 +219,16 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
               }
               book(s, c, 'tok-paris', -a.amountEur, A.fxMemo('EUR', tgt.ccy, isBusinessHours(c.t)));
             } else {
+              if (a.source === 'FUND') {
+                c.post({
+                  account: 'fund:usd-government',
+                  currency: 'USD',
+                  amount: -q.sourceAmount,
+                  finality: 'final',
+                  memo: A.fundRedeemMemo,
+                });
+                book(s, c, 'tok-usd-chicago', q.sourceAmount, A.fundRedeemMemo);
+              }
               ensureUsd(s, c, q.sourceAmount);
               book(
                 s,
@@ -230,7 +243,7 @@ export function advancedToEvents(a: AdvancedAction): SimEvent[] {
             s.mirrors.push({
               id: nextId(s, 'IG'),
               t: c.t,
-              debtorBank: a.source === 'USD' ? 'Norvane Bank New York' : 'Norvane Bank SA',
+              debtorBank: a.source !== 'EUR' ? 'Norvane Bank New York' : 'Norvane Bank SA',
               creditorBank: tgt.bank,
               currency: tgt.ccy as never,
               amount: q.foreign,
